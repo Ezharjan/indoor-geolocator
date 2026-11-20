@@ -54,6 +54,24 @@ AI エージェント向けのオープンソース OSINT 画像ジオロケー�
 
 ## インストール
 
+### ひとことでインストール
+
+Claude Code や、シェルコマンドを実行できるエージェントなら、**「https://github.com/Ezharjan/indoor-geolocator から indoor-geolocator スキルをインストールして」**と伝えるだけです。この節の残りはエージェント向けに書かれています。
+
+**AI エージェント向けの手順。** ユーザーのためにこのスキルをインストールするには、次を実行します。
+
+```bash
+curl -L -o indoor-geolocator.zip https://github.com/Ezharjan/indoor-geolocator/releases/latest/download/indoor-geolocator.zip
+mkdir -p ~/.claude/skills && unzip -o indoor-geolocator.zip -d ~/.claude/skills    # ~/.claude/skills/indoor-geolocator/ が作られます
+python3 -m pip install -r ~/.claude/skills/indoor-geolocator/requirements.txt
+python3 ~/.claude/skills/indoor-geolocator/scripts/igl.py doctor                   # 使えるものと足りないものを報告
+```
+
+- Windows では、スキルのフォルダーは `%USERPROFILE%\.claude\skills\` です。`Expand-Archive` で展開し、`python3` の代わりに `python` を使います。
+- 任意の追加パッケージを黙ってインストールしないでください。`doctor` が不足と報告したものをユーザーに示し、`requirements-optional.txt` を提案します。これらのパッケージは大きいためです。
+- `~/.claude/skills/indoor-geolocator/SKILL.md` があることを確認し、新しいセッションで `/indoor-geolocator` として使えることをユーザーに伝えます。
+- claude.ai や Claude Desktop のチャットでは、エージェントが自分でスキルを追加することはできません。上の zip のリンクと下の 3 つのアップロード手順をユーザーに渡してください。
+
 **claude.ai、Claude Desktop、Cowork。**
 1. コード実行が有効になっていることを確認します（*Settings → Capabilities*）。コード実行にネットワークアクセスがあると役立ちます（ツールボックスが地図サービスと逆検索サービスに自分で到達できます）。ない場合は、エージェントが自身のウェブ検索、フェッチ、ブラウザーの各ツールでその手順を行います。
 2. *Customize → Skills* を開き、**+** をクリックし、**+ Create skill → Upload a skill** を選んで `indoor-geolocator.zip` を指定します。

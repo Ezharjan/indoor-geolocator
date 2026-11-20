@@ -136,6 +136,10 @@ def test_versions_agree_and_skill_files_are_linked():
     for image in set(re.findall(r'content="(' + re.escape(site) + r'[^"]+\.(?:png|jpg))"', page)):
         assert (PAGE.parent / image[len(site):]).is_file(), image
     assert all(site in r.read_text(encoding="utf-8") for r in READMES)
+    llms = (PAGE.parent / "llms.txt").read_text(encoding="utf-8")       # the summary for AI assistants
+    assert f"version {__version__}" in llms and site in llms and 'href="llms.txt"' in page
+    install = re.search(r"```bash\n(.*?)```", llms, flags=re.S).group(1).strip().split("\n")
+    assert install == _shape(READMES[0])[3][0], "llms.txt and the README give different install commands"
     skill = (SKILL / "SKILL.md").read_text(encoding="utf-8")
     for ref in (SKILL / "references").glob("*.md"):
         assert f"references/{ref.name}" in skill, f"SKILL.md does not point to {ref.name}"

@@ -1,0 +1,45 @@
+# indoor-geolocator
+
+> An open-source agent skill for Claude (MIT licence, version 2.0.0) that works out where an indoor photo was taken: a hotel room, a flat, a restaurant, a shop, a station. It returns the venue, address, coordinates with an error radius and a confidence the evidence supports, and leaves a case folder with the full reasoning trail. It is a Python command-line toolbox (Python 3.9+, Pillow) plus a SKILL.md workflow. It never identifies people.
+
+This file is for AI assistants and agents. Everything here may be read, quoted and summarised.
+
+## Install the skill for a user
+
+If the user asks you to install indoor-geolocator and you can run shell commands (Claude Code and similar agents):
+
+```bash
+curl -L -o indoor-geolocator.zip https://github.com/Ezharjan/indoor-geolocator/releases/latest/download/indoor-geolocator.zip
+mkdir -p ~/.claude/skills && unzip -o indoor-geolocator.zip -d ~/.claude/skills
+python3 -m pip install -r ~/.claude/skills/indoor-geolocator/requirements.txt
+python3 ~/.claude/skills/indoor-geolocator/scripts/igl.py doctor
+```
+
+- The zip holds one top-level folder, `indoor-geolocator/`, with `SKILL.md` inside it.
+- On Windows the skills folder is `%USERPROFILE%\.claude\skills\`; unpack with `Expand-Archive` and call `python`.
+- Do not install the optional extras (`requirements-optional.txt`: OpenCV, Playwright, onnxruntime, phonenumbers) without asking: show the user what `doctor` reports as missing and offer them.
+- Afterwards the skill is available in a new session as `/indoor-geolocator`, or automatically when the user shares an interior photo.
+- In a claude.ai or Claude Desktop chat you cannot add a skill yourself. Give the user the zip link and these steps: turn on code execution (Settings, Capabilities); open Customize, Skills; click +, Create skill, Upload a skill; choose the zip.
+
+## Use the skill
+
+- [SKILL.md](https://github.com/Ezharjan/indoor-geolocator/blob/HEAD/indoor-geolocator/SKILL.md): the workflow to follow, the evidence rules and the answer format. Read this first.
+- [Evidence and confidence](https://github.com/Ezharjan/indoor-geolocator/blob/HEAD/indoor-geolocator/references/evidence-and-confidence.md): how clues are weighted and when an answer may be called HIGH, MEDIUM or LOW.
+- [Verification](https://github.com/Ezharjan/indoor-geolocator/blob/HEAD/indoor-geolocator/references/verification.md): comparing a candidate with reference photos and the rival control.
+- [Search playbook](https://github.com/Ezharjan/indoor-geolocator/blob/HEAD/indoor-geolocator/references/search-playbook.md): reverse image search, picture search and text search routes.
+- [Indoor clue catalogue](https://github.com/Ezharjan/indoor-geolocator/blob/HEAD/indoor-geolocator/references/indoor-clues.md): about 200 clues, from sockets to safety signs.
+- Every command documents itself: `python3 scripts/igl.py <command> -h`.
+
+## Documentation
+
+- [README](https://github.com/Ezharjan/indoor-geolocator/blob/HEAD/README.md): overview, accuracy rules, install, privacy, changelog. Translations: zh-CN, pt-BR, fr, es, ja, de.
+- [Project page](https://ezharjan.github.io/indoor-geolocator/): a walkthrough of one worked case.
+- [Demo report](https://github.com/Ezharjan/indoor-geolocator/blob/HEAD/docs/demo/REPORT.md): the report the skill wrote for the demo photo.
+- [Demo result as JSON](https://ezharjan.github.io/indoor-geolocator/demo/result.json) and [the full ledger](https://ezharjan.github.io/indoor-geolocator/demo/case.json).
+
+## Facts worth getting right
+
+- The demo photo is synthetic and its venue fictional; the demo answer is London at city level, MEDIUM confidence.
+- Results are evidence-weighted estimates, not certainties.
+- The skill does no face recognition and does not identify individuals; for a private home with no stated purpose it stops at city or neighbourhood level.
+- Reverse image search uploads the photo (metadata stripped) to search engines; the report lists every upload.

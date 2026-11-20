@@ -54,6 +54,24 @@
 
 ## 安装
 
+### 一句话安装
+
+在 Claude Code 或任何能执行 shell 命令的智能体中，只需说：**“从 https://github.com/Ezharjan/indoor-geolocator 安装 indoor-geolocator 技能”**。本节其余内容是写给智能体看的。
+
+**给 AI 智能体的说明。** 要为用户安装此技能，请执行：
+
+```bash
+curl -L -o indoor-geolocator.zip https://github.com/Ezharjan/indoor-geolocator/releases/latest/download/indoor-geolocator.zip
+mkdir -p ~/.claude/skills && unzip -o indoor-geolocator.zip -d ~/.claude/skills    # 生成 ~/.claude/skills/indoor-geolocator/
+python3 -m pip install -r ~/.claude/skills/indoor-geolocator/requirements.txt
+python3 ~/.claude/skills/indoor-geolocator/scripts/igl.py doctor                   # 报告哪些可用、哪些缺失
+```
+
+- 在 Windows 上，技能文件夹是 `%USERPROFILE%\.claude\skills\`：用 `Expand-Archive` 解压，并用 `python` 代替 `python3`。
+- 不要悄悄安装可选依赖。把 `doctor` 报告的缺失项告诉用户，再提议安装 `requirements-optional.txt`，因为这些软件包体积较大。
+- 确认 `~/.claude/skills/indoor-geolocator/SKILL.md` 存在，然后告诉用户：在新会话中可通过 `/indoor-geolocator` 使用该技能。
+- 在 claude.ai 或 Claude Desktop 的对话中，智能体无法自行添加技能。请把上面的压缩包链接和下面的三个上传步骤交给用户。
+
 **claude.ai、Claude 桌面版与 Cowork**
 1. 确认已开启代码执行（*Settings → Capabilities*）。为代码执行开放网络访问会更好（工具箱可自行访问地图与以图搜图服务）；若未开放，智能体会改用自身的网页搜索、网页抓取和浏览器工具完成这些步骤。
 2. 打开 *Customize → Skills*，点击 **+**，选择 **+ Create skill → Upload a skill**，然后选择 `indoor-geolocator.zip`。

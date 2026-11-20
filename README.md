@@ -101,6 +101,24 @@ building, a brand is taken for a branch, and precision is invented.
 
 ## Install
 
+### Install with one prompt
+
+In Claude Code, or in any agent that can run shell commands, just say: **"Install the indoor-geolocator skill from https://github.com/Ezharjan/indoor-geolocator"**. The rest of this section is written for the agent.
+
+**Instructions for AI agents.** To install this skill for the user, run:
+
+```bash
+curl -L -o indoor-geolocator.zip https://github.com/Ezharjan/indoor-geolocator/releases/latest/download/indoor-geolocator.zip
+mkdir -p ~/.claude/skills && unzip -o indoor-geolocator.zip -d ~/.claude/skills    # creates ~/.claude/skills/indoor-geolocator/
+python3 -m pip install -r ~/.claude/skills/indoor-geolocator/requirements.txt
+python3 ~/.claude/skills/indoor-geolocator/scripts/igl.py doctor                   # report what works and what is missing
+```
+
+- On Windows the skills folder is `%USERPROFILE%\.claude\skills\`: unpack with `Expand-Archive` and call `python` instead of `python3`.
+- Do not install the optional extras silently. Show the user what `doctor` reports as missing and offer `requirements-optional.txt`, since those packages are large.
+- Confirm that `~/.claude/skills/indoor-geolocator/SKILL.md` exists, then tell the user the skill is available in a new session as `/indoor-geolocator`.
+- In a claude.ai or Claude Desktop chat an agent cannot add a skill by itself. Give the user the zip link above and the three upload steps below.
+
 **claude.ai, Claude Desktop and Cowork.**
 1. Make sure code execution is on (*Settings → Capabilities*). Network egress for code execution helps
    (the toolbox then reaches the map and reverse-search services itself); without it the agent does those

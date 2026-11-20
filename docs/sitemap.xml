@@ -6,4 +6,8 @@
     <image:image><image:loc>https://ezharjan.github.io/indoor-geolocator/og-image.png</image:loc></image:image>
     <image:image><image:loc>https://ezharjan.github.io/indoor-geolocator/demo/input/larkspur-room.jpg</image:loc></image:image>
   </url>
+  <url>
+    <loc>https://ezharjan.github.io/indoor-geolocator/llms.txt</loc>
+    <lastmod>2026-11-20</lastmod>
+  </url>
 </urlset>

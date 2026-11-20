@@ -114,6 +114,24 @@ pour une succursale, et la précision est inventée.
 
 ## Installation
 
+### Installer en un seul prompt
+
+Dans Claude Code, ou dans tout agent capable d'exécuter des commandes shell, dites simplement : **« Installe la skill indoor-geolocator depuis https://github.com/Ezharjan/indoor-geolocator »**. Le reste de cette section est écrit pour l'agent.
+
+**Instructions pour les agents d'IA.** Pour installer cette skill pour l'utilisateur, exécutez :
+
+```bash
+curl -L -o indoor-geolocator.zip https://github.com/Ezharjan/indoor-geolocator/releases/latest/download/indoor-geolocator.zip
+mkdir -p ~/.claude/skills && unzip -o indoor-geolocator.zip -d ~/.claude/skills    # crée ~/.claude/skills/indoor-geolocator/
+python3 -m pip install -r ~/.claude/skills/indoor-geolocator/requirements.txt
+python3 ~/.claude/skills/indoor-geolocator/scripts/igl.py doctor                   # indique ce qui fonctionne et ce qui manque
+```
+
+- Sous Windows, le dossier des skills est `%USERPROFILE%\.claude\skills\` : décompressez avec `Expand-Archive` et appelez `python` au lieu de `python3`.
+- N'installez pas les compléments facultatifs en silence. Montrez à l'utilisateur ce que `doctor` signale comme manquant et proposez `requirements-optional.txt`, car ces paquets sont volumineux.
+- Vérifiez que `~/.claude/skills/indoor-geolocator/SKILL.md` existe, puis dites à l'utilisateur que la skill est disponible dans une nouvelle session sous `/indoor-geolocator`.
+- Dans une conversation claude.ai ou Claude Desktop, un agent ne peut pas ajouter une skill lui-même. Donnez à l'utilisateur le lien du zip ci-dessus et les trois étapes d'envoi ci-dessous.
+
 **claude.ai, Claude Desktop et Cowork.**
 1. Assurez-vous que l'exécution de code est activée (*Settings → Capabilities*). L'accès réseau pour
    l'exécution de code aide (la boîte à outils joint alors elle-même les services de cartes et de
