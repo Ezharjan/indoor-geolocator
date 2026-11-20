@@ -10,15 +10,24 @@ worked case is on the [project page](https://ezharjan.github.io/indoor-geolocato
 
 ## Install
 
-In Claude Code 2.1.275 or later:
+In a terminal (PowerShell, Terminal or bash) on a computer where Claude Code is installed:
+
+```
+claude plugin marketplace add Ezharjan/indoor-geolocator
+claude plugin install indoor-geolocator@ezharjan-plugins
+pip install pillow
+```
+
+On Windows also run `pip install tzdata`. The plugin is then available in the Claude Code terminal, in the
+desktop app's local Code sessions and in the VS Code extension, from the next session on. Inside a session of
+the Claude Code terminal (version 2.1.275 or later) the first two steps can also be done in one:
 
 ```
 /plugin install indoor-geolocator --marketplace Ezharjan/indoor-geolocator
 ```
 
-On older versions, add the marketplace first with `/plugin marketplace add Ezharjan/indoor-geolocator` and then
-run `/plugin install indoor-geolocator@ezharjan-plugins`. Then install the one required Python package:
-`pip install pillow` (and `tzdata` on Windows).
+The `/plugin` command belongs to the terminal. Where it is not available, such as the desktop app, use the
+commands above.
 
 The same skill can also be installed on its own, without the plugin (see the project README). Use one or the
 other, not both: as a plugin it is called `/indoor-geolocator:indoor-geolocator`, as a skill `/indoor-geolocator`.

@@ -19,7 +19,7 @@ python3 ~/.claude/skills/indoor-geolocator/scripts/igl.py doctor
 - On Windows the skills folder is `%USERPROFILE%\.claude\skills\`; unpack with `Expand-Archive` and call `python`.
 - Do not install the optional extras (`requirements-optional.txt`: OpenCV, Playwright, onnxruntime, phonenumbers) without asking: show the user what `doctor` reports as missing and offer them.
 - Afterwards the skill is available in a new session as `/indoor-geolocator`, or automatically when the user shares an interior photo.
-- Alternative in Claude Code: the same skill is published as a plugin. `/plugin install indoor-geolocator --marketplace Ezharjan/indoor-geolocator` (Claude Code 2.1.275 or later), then `pip install pillow`; it is then called `/indoor-geolocator:indoor-geolocator`. Install the skill or the plugin, not both.
+- Alternative in Claude Code: the same skill is published as a plugin. From a shell: `claude plugin marketplace add Ezharjan/indoor-geolocator`, then `claude plugin install indoor-geolocator@ezharjan-plugins`, then `pip install pillow`; it is then called `/indoor-geolocator:indoor-geolocator`. Install the skill or the plugin, not both.
 - In a claude.ai or Claude Desktop chat you cannot add a skill yourself. Give the user the zip link and these steps: turn on code execution (Settings, Capabilities); open Customize, Skills; click +, Create skill, Upload a skill; choose the zip.
 
 ## Use the skill
