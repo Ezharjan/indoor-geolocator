@@ -1,6 +1,6 @@
 # indoor-geolocator
 
-**English** · [简体中文](README.zh-CN.md)
+**English** · [简体中文](README.zh-CN.md) · [Português](README.pt-BR.md) · [Français](README.fr.md) · [Español](README.es.md) · [日本語](README.ja.md) · [Deutsch](README.de.md)
 
 An agent skill that works out **where an indoor photo was taken**: a hotel room, a flat, a restaurant, a
 shop, a station, a museum, a classroom, a car. It returns the venue, the street address, coordinates with
@@ -218,7 +218,7 @@ and the "not verified" line before acting on an answer.
 ├── docs/                       project page (GitHub Pages) with the published demo case
 ├── LICENSE
 ├── README.md
-└── README.zh-CN.md            this README in Simplified Chinese
+└── README.*.md                 this README in other languages (zh-CN, pt-BR, fr, es, ja, de)
 ```
 
 ## Development

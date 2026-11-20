@@ -17,7 +17,8 @@ from iglib.case import ATTEMPT_STATUS, CORE_METHODS, GRADE, KINDS, OPTIONAL_METH
 
 REPO = Path(__file__).resolve().parent.parent
 SKILL = REPO / "indoor-geolocator"
-DOCS = [SKILL / "SKILL.md", *sorted((SKILL / "references").glob("*.md")), REPO / "README.md", REPO / "README.zh-CN.md"]
+READMES = [REPO / "README.md", *sorted(REPO.glob("README.*.md"))]     # English first, then the translations
+DOCS = [SKILL / "SKILL.md", *sorted((SKILL / "references").glob("*.md")), *READMES]
 PAGE = REPO / "docs" / "index.html"                             # the project page (GitHub Pages)
 DEMO = REPO / "docs" / "demo"                                   # the case it walks through
 
@@ -102,10 +103,28 @@ def _zip_builder():
     return module
 
 
+def _shape(readme: Path) -> tuple:
+    """What every translation must share with the English README: the heading levels, the number of list
+    items, and every code block with its comments and prose removed (the commands themselves)."""
+    text = readme.read_text(encoding="utf-8")
+    blocks = re.findall(r"^```(\w*)\n(.*?)^```", text, flags=re.S | re.M)
+    commands = [[ln.split("  #")[0].rstrip() for ln in body.splitlines() if not ln.lstrip().startswith("#")]
+                for lang, body in blocks if lang == "bash"]
+    trees = [re.findall(r"^[│ ]*[├└]── \S+", body, flags=re.M) for lang, body in blocks if not lang]
+    prose = re.sub(r"^```.*?^```", "", text, flags=re.S | re.M)
+    return (re.findall(r"^#+", prose, flags=re.M), len(re.findall(r"^\s*(?:-|\d+\.) ", prose, flags=re.M)),
+            sorted(set(re.findall(r"`[^`\n]+`", prose))), commands, trees[1:])
+
+
 def test_versions_agree_and_skill_files_are_linked():
     assert f"v{__version__}" in PAGE.read_text(encoding="utf-8")
-    for readme in ("README.md", "README.zh-CN.md"):
-        assert f"### {__version__}" in (REPO / readme).read_text(encoding="utf-8"), readme
+    english = _shape(READMES[0])
+    assert len(READMES) == 7, [r.name for r in READMES]
+    for readme in READMES:
+        text = readme.read_text(encoding="utf-8")
+        assert f"### {__version__}" in text, readme.name
+        assert all(f"]({r.name})" in text or r == readme for r in READMES), f"{readme.name}: language links"
+        assert _shape(readme) == english, f"{readme.name} has drifted from README.md (headings, lists or commands)"
     assert _zip_builder().__version__ == __version__
     skill = (SKILL / "SKILL.md").read_text(encoding="utf-8")
     for ref in (SKILL / "references").glob("*.md"):

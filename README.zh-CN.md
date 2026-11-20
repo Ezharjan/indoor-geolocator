@@ -1,6 +1,6 @@
 # indoor-geolocator
 
-[English](README.md) · **简体中文**
+[English](README.md) · **简体中文** · [Português](README.pt-BR.md) · [Français](README.fr.md) · [Español](README.es.md) · [日本語](README.ja.md) · [Deutsch](README.de.md)
 
 一个智能体技能（Agent Skill），根据**一张室内照片判断拍摄地点**：酒店客房、公寓、餐厅、商店、车站、博物馆、教室、车内等。它给出场所名称、街道地址、带误差半径的坐标，以及证据真正支持的置信度；同时留下一个整洁的案例文件夹，记录推理的每一步。
 
@@ -59,7 +59,7 @@
 
 压缩包顶层就是 `indoor-geolocator/` 文件夹，符合上传要求。
 
-**Claude Code**：把 `indoor-geolocator/` 文件夹复制到 `~/.claude/skills/`（所有项目）或 `<项目>/.claude/skills/`（单个项目）。用 `/indoor-geolocator` 调用，或在分享室内照片时由 Claude 自动启用。
+**Claude Code**：把 `indoor-geolocator/` 文件夹复制到 `~/.claude/skills/`（所有项目）或 `<project>/.claude/skills/`（单个项目）。用 `/indoor-geolocator` 调用，或在分享室内照片时由 Claude 自动启用。
 
 **其他智能体**（Codex、Gemini CLI、Cursor 等）：让智能体读取 `indoor-geolocator/SKILL.md` 即可。工具箱是普通的 Python 命令行程序。
 
@@ -100,7 +100,7 @@ $IGL check CASE
 $IGL finalize CASE
 ```
 
-`$IGL <命令> -h` 可查看全部选项。Windows 上请用 `python` 代替 `python3`。南纬、西经坐标可直接输入（`--at -33.86,151.21`）。
+`$IGL <command> -h` 可查看全部选项。Windows 上请用 `python` 代替 `python3`。南纬、西经坐标可直接输入（`--at -33.86,151.21`）。
 
 ## 输出内容
 
@@ -147,7 +147,7 @@ photo-geolocation/
 ├── docs/                       项目主页（GitHub Pages）及公开的演示案例
 ├── LICENSE
 ├── README.md                   英文版说明
-└── README.zh-CN.md             简体中文版说明（本文件）
+└── README.*.md                 其他语言版本（zh-CN、pt-BR、fr、es、ja、de）
 ```
 
 ## 开发
