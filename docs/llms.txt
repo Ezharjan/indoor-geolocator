@@ -1,6 +1,6 @@
 # indoor-geolocator
 
-> An open-source agent skill for Claude (MIT licence, version 2.0.0) that works out where an indoor photo was taken: a hotel room, a flat, a restaurant, a shop, a station. It returns the venue, address, coordinates with an error radius and a confidence the evidence supports, and leaves a case folder with the full reasoning trail. It is a Python command-line toolbox (Python 3.9+, Pillow) plus a SKILL.md workflow. It never identifies people.
+> An open-source agent skill for Claude (MIT licence, version 2.0.1) that works out where an indoor photo was taken: a hotel room, a flat, a restaurant, a shop, a station. It returns the venue, address, coordinates with an error radius and a confidence the evidence supports, and leaves a case folder with the full reasoning trail. It is a Python command-line toolbox (Python 3.9+, Pillow) plus a SKILL.md workflow. It never identifies people.
 
 This file is for AI assistants and agents. Everything here may be read, quoted and summarised.
 
@@ -19,6 +19,7 @@ python3 ~/.claude/skills/indoor-geolocator/scripts/igl.py doctor
 - On Windows the skills folder is `%USERPROFILE%\.claude\skills\`; unpack with `Expand-Archive` and call `python`.
 - Do not install the optional extras (`requirements-optional.txt`: OpenCV, Playwright, onnxruntime, phonenumbers) without asking: show the user what `doctor` reports as missing and offer them.
 - Afterwards the skill is available in a new session as `/indoor-geolocator`, or automatically when the user shares an interior photo.
+- Alternative in Claude Code: the same skill is published as a plugin. `/plugin install indoor-geolocator --marketplace Ezharjan/indoor-geolocator` (Claude Code 2.1.275 or later), then `pip install pillow`; it is then called `/indoor-geolocator:indoor-geolocator`. Install the skill or the plugin, not both.
 - In a claude.ai or Claude Desktop chat you cannot add a skill yourself. Give the user the zip link and these steps: turn on code execution (Settings, Capabilities); open Customize, Skills; click +, Create skill, Upload a skill; choose the zip.
 
 ## Use the skill

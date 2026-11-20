@@ -70,6 +70,8 @@ python3 ~/.claude/skills/indoor-geolocator/scripts/igl.py doctor                
 - 在 Windows 上，技能文件夹是 `%USERPROFILE%\.claude\skills\`：用 `Expand-Archive` 解压，并用 `python` 代替 `python3`。
 - 不要悄悄安装可选依赖。把 `doctor` 报告的缺失项告诉用户，再提议安装 `requirements-optional.txt`，因为这些软件包体积较大。
 - 确认 `~/.claude/skills/indoor-geolocator/SKILL.md` 存在，然后告诉用户：在新会话中可通过 `/indoor-geolocator` 使用该技能。
+
+**作为插件安装。** 技能文件夹同时也是一个 Claude 插件。在 Claude Code 中先运行 `claude plugin marketplace add Ezharjan/indoor-geolocator`，再运行 `claude plugin install indoor-geolocator@ezharjan-plugins`。隐私说明列出了技能可能联系的每一项服务，见 https://ezharjan.github.io/indoor-geolocator/privacy.html。与技能一样，插件也需要 Pillow：`pip install pillow`（Windows 上还需 `tzdata`）。技能和插件二者择一安装，不要同时安装：作为插件时，调用名是 `/indoor-geolocator:indoor-geolocator`，而不是 `/indoor-geolocator`。
 - 在 claude.ai 或 Claude Desktop 的对话中，智能体无法自行添加技能。请把上面的压缩包链接和下面的三个上传步骤交给用户。
 
 **claude.ai、Claude 桌面版与 Cowork**
@@ -181,6 +183,14 @@ python build_skill_zip.py          # 技能文件夹有变动时重建压缩包�
 ```
 
 ## 更新日志
+
+### 2.0.1
+
+仅涉及打包：技能的行为与 2.0.0 相同。
+
+- **插件**：技能文件夹现在同时是一个 Claude 插件（`.claude-plugin/plugin.json`、图标，以及一份列出技能运行、发送和获取的全部内容的 README），仓库本身也是一个插件市场。
+- **数据**：`countries.json` 改为每个国家一行：数据不变，文件更小。
+- **隐私说明**：新增页面，列出技能可能联系的每一项服务以及发送的内容。
 
 ### 2.0.0
 

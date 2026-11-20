@@ -1,0 +1,15 @@
+{
+  "name": "ezharjan-plugins",
+  "owner": {
+    "name": "Alexander Ezharjan",
+    "url": "https://github.com/Ezharjan"
+  },
+  "description": "Plugins by Alexander Ezharjan: indoor-geolocator, a skill that finds where an indoor photo was taken.",
+  "plugins": [
+    {
+      "name": "indoor-geolocator",
+      "source": "./indoor-geolocator",
+      "description": "Find where an indoor photo was taken, with evidence and a confidence level that is computed, not claimed."
+    }
+  ]
+}

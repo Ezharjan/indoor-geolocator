@@ -24,7 +24,7 @@
 <meta name="twitter:title" content="indoor-geolocator: where was this indoor photo taken?">
 <meta name="twitter:description" content="An open-source agent skill for Claude that geolocates interior photos with evidence, a capped confidence and a full audit trail.">
 <meta name="twitter:image" content="https://ezharjan.github.io/indoor-geolocator/og-image.png">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "indoor-geolocator", "alternateName": "Indoor photo geolocation skill for Claude", "description": "Find where an indoor photo was taken. An open-source agent skill for Claude that geolocates interior photos with OSINT methods (reverse image search, OCR, EXIF, reference-photo matching) and reports venue, address, coordinates and an evidence-backed confidence.", "url": "https://ezharjan.github.io/indoor-geolocator/", "image": "https://ezharjan.github.io/indoor-geolocator/og-image.png", "applicationCategory": "DeveloperApplication", "operatingSystem": "Windows, macOS, Linux", "softwareVersion": "2.0.0", "license": "https://opensource.org/licenses/MIT", "isAccessibleForFree": true, "downloadUrl": "https://github.com/Ezharjan/indoor-geolocator/releases/latest/download/indoor-geolocator.zip", "codeRepository": "https://github.com/Ezharjan/indoor-geolocator", "programmingLanguage": "Python", "softwareRequirements": "Python 3.9+, Pillow", "keywords": "indoor geolocation, image geolocation, OSINT, GEOINT, photo geolocation, reverse image search, Claude skill, agent skill, AI agent", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Alexander Ezharjan", "url": "https://github.com/Ezharjan"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "indoor-geolocator", "alternateName": "Indoor photo geolocation skill for Claude", "description": "Find where an indoor photo was taken. An open-source agent skill for Claude that geolocates interior photos with OSINT methods (reverse image search, OCR, EXIF, reference-photo matching) and reports venue, address, coordinates and an evidence-backed confidence.", "url": "https://ezharjan.github.io/indoor-geolocator/", "image": "https://ezharjan.github.io/indoor-geolocator/og-image.png", "applicationCategory": "DeveloperApplication", "operatingSystem": "Windows, macOS, Linux", "softwareVersion": "2.0.1", "license": "https://opensource.org/licenses/MIT", "isAccessibleForFree": true, "downloadUrl": "https://github.com/Ezharjan/indoor-geolocator/releases/latest/download/indoor-geolocator.zip", "codeRepository": "https://github.com/Ezharjan/indoor-geolocator", "programmingLanguage": "Python", "softwareRequirements": "Python 3.9+, Pillow", "keywords": "indoor geolocation, image geolocation, OSINT, GEOINT, photo geolocation, reverse image search, Claude skill, agent skill, AI agent", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Alexander Ezharjan", "url": "https://github.com/Ezharjan"}}</script>
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='2' width='28' height='28' rx='8' fill='%2315171a'/%3E%3Cpath d='M16 7.5c-3.6 0-6.4 2.8-6.4 6.3 0 4.6 6.4 10.7 6.4 10.7s6.4-6.1 6.4-10.7c0-3.5-2.8-6.3-6.4-6.3z' fill='%23e34948'/%3E%3Ccircle cx='16' cy='13.8' r='2.3' fill='%2315171a'/%3E%3C/svg%3E">
 <style>
@@ -347,7 +347,7 @@ footer p{margin:0 0 10px}
   <div class="wrap">
     <div class="hero-grid">
       <div>
-        <div class="eyebrow">Agent skill for Claude · v2.0.0 · MIT</div>
+        <div class="eyebrow">Agent skill for Claude · v2.0.1 · MIT</div>
         <h1>Where was this indoor photo <em>taken?</em></h1>
         <p class="lead">One photo in. Venue, address and coordinates out, with a confidence the evidence actually supports and a tidy case folder that shows every step.</p>
         <div class="cta">
@@ -744,6 +744,7 @@ finalized CASE
 <span class="p">$</span> cp -r indoor-geolocator/indoor-geolocator ~/.claude/skills/
 <span class="p">$</span> pip install -r ~/.claude/skills/indoor-geolocator/requirements.txt
 <span class="p">$</span> python3 ~/.claude/skills/indoor-geolocator/scripts/igl.py doctor</pre></div>
+        <div class="note" style="margin-top:12px"><svg><use href="#i-info"/></svg><span><b>Or as a plugin</b> (Claude Code 2.1.275 or later): <code>/plugin install indoor-geolocator --marketplace Ezharjan/indoor-geolocator</code>, then <code>pip install pillow</code>. Install the skill or the plugin, not both; the plugin's command is <code>/indoor-geolocator:indoor-geolocator</code>.</span></div>
       </div>
       <div role="tabpanel" id="ip3" aria-labelledby="it3" hidden>
         <ol>
@@ -764,7 +765,7 @@ finalized CASE
 <footer>
   <div class="wrap">
     <div>
-      <p><b style="color:var(--ink)">indoor-geolocator</b> · MIT License · <a href="https://github.com/Ezharjan/indoor-geolocator">GitHub</a> · <a href="https://github.com/Ezharjan/indoor-geolocator/releases">Releases</a> · <a href="llms.txt">llms.txt</a></p>
+      <p><b style="color:var(--ink)">indoor-geolocator</b> · MIT License · <a href="https://github.com/Ezharjan/indoor-geolocator">GitHub</a> · <a href="https://github.com/Ezharjan/indoor-geolocator/releases">Releases</a> · <a href="privacy.html">Privacy</a> · <a href="llms.txt">llms.txt</a></p>
       <p>Geolocation results are evidence-weighted estimates, not certainties. Read the confidence and the “not verified” line before acting on an answer.</p>
     </div>
     <div>

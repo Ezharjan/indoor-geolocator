@@ -1,0 +1,26 @@
+{
+  "name": "indoor-geolocator",
+  "displayName": "Indoor Geolocator",
+  "version": "2.0.1",
+  "description": "Find where an indoor photo was taken: venue, address, coordinates and a confidence level the evidence supports, with a case folder that shows every step. Never identifies people.",
+  "author": {
+    "name": "Alexander Ezharjan",
+    "url": "https://github.com/Ezharjan"
+  },
+  "homepage": "https://ezharjan.github.io/indoor-geolocator/",
+  "repository": "https://github.com/Ezharjan/indoor-geolocator",
+  "license": "MIT",
+  "keywords": [
+    "geolocation",
+    "osint",
+    "image-geolocation",
+    "photo-verification",
+    "reverse-image-search",
+    "ocr",
+    "exif"
+  ],
+  "icon": "./icon.svg",
+  "documentationUrl": "https://ezharjan.github.io/indoor-geolocator/",
+  "supportUrl": "https://github.com/Ezharjan/indoor-geolocator/issues",
+  "privacyPolicyUrl": "https://ezharjan.github.io/indoor-geolocator/privacy.html"
+}

@@ -1,7 +1,7 @@
 {
   "schema": "igl.result/1",
-  "generated": "2026-11-20T12:13:49-05:00",
-  "tool_version": "2.0.0",
+  "generated": "2026-11-20T17:27:44-05:00",
+  "tool_version": "2.0.1",
   "image": {
     "file": "input/larkspur-room.jpg",
     "sha256": "907d63b789f4c4944939d68836d8708d2e488ccfb6eccb1f37b273387edabe08",

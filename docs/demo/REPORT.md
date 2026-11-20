@@ -6,7 +6,7 @@
 | **Coordinates** | 51.507200, -0.127600 (WGS84) ± 25000 m — [OpenStreetMap](https://www.openstreetmap.org/?mlat=51.507200&mlon=-0.127600#map=19/51.507200/-0.127600) · [Google Maps](https://www.google.com/maps/search/?api=1&query=51.507200,-0.127600) |
 | **Confidence** | **MEDIUM** at city level · share 0.80 of the city board |
 | **Photo** | `input/larkspur-room.jpg` · sha256 `907d63b789f4c494…` |
-| **Generated** | 2026-11-20 12:13 · indoor-geolocator 2.0.0 |
+| **Generated** | 2026-11-20 17:27 · indoor-geolocator 2.0.1 |
 
 > A '+44 20' phone number read on the tent card places the room in London (libphonenumber, decisive). Independent fixed standards agree on the UK: a BS 1363 Type G switched socket and £ prices with VAT. The venue named on the card is fictional, so no site candidate exists and the site level stays open.
 
@@ -53,35 +53,35 @@
 
 ## Reasoning timeline
 
-1. `12:13` case created for larkspur-room.jpg
-2. `12:13` A1 metadata: results - no EXIF - stripped (messaging/social upload, screenshot, export) or synthetic; absence proves nothing; C2PA content credentials present (is…
-3. `12:13` metadata read: 4 notable fields; overview grid 8x5
-4. `12:13` N1 [inferred/image] Hypotheses: scene=hotel room desk. 1) United Kingdom: switched three-pin socket and £ prices; 2) another British Isles or Commonwealth territory sharing the so…
-5. `12:13` A2 text_ocr/tesseract: results - tesseract: 8 language-like line(s) [THE LARKSPUR, Guest Wi-Fi, Welcome to your room, Breakfast 7:00 - 10:30, £14.50 per person incl. VAT, R…
-6. `12:13` A3 codes: results - 1 code(s): WIFI:T:WPA;S:Larkspur-Guest;P:<redacted>;;
-7. `12:13` scan: 8 OCR lines, 1 codes, tiles 3x3
-8. `12:13` N2 [observed/image] Double switched socket: per outlet one vertical earth slot above two horizontal slots, rocker switch with red indicator = BS 1363 (Type G)
-9. `12:13` N3 [read/text] '£14.50 per person incl. VAT' read on the tent card
-10. `12:13` N4 [computed/text] '+44 20 7946 0321' read on the tent card; libphonenumber: GB, London (area code 20)
-11. `12:13` N5 [observed/text] English on every item, no other script
-12. `12:13` N6 [computed/text] Venue name 'THE LARKSPUR' and Wi-Fi SSID 'Larkspur-Guest' (password redacted by the decoder); the demo venue is fictional, so it is not searched
-13. `12:13` countries filter via N2: 55 countries linked x6 (55 new candidates)
-14. `12:13` countries filter via N3: 10 countries linked x20 (3 new candidates)
-15. `12:13` countries filter via N5: 118 countries linked x1.5 (76 new candidates)
-16. `12:13` N4 linked: N4 -> C52 United Kingdom: LR 30
-17. `12:13` C135 city: London @ 51.50720,-0.12760
-18. `12:13` N4 linked: N4 -> C135 London: LR 30
-19. `12:13` A4 visual_sweep: results - 9 tiles: tent card, Wi-Fi card, double socket, lamp, framed print; no window or reflection
-20. `12:13` A5 standards: results - BS 1363 Type G socket; £ prices with VAT
-21. `12:13` A6 culture_style: results - generic international hotel decor; English only; no cultural or religious markers
-22. `12:13` A7 consistency: results - socket, currency, language and phone agree on GB/London; no EXIF time to test sun or time zone
-23. `12:13` A8 reverse_search: not_applicable - demo photo is synthetic and the venue fictional: online routes skipped on purpose
-24. `12:13` A9 text_search: not_applicable - demo photo is synthetic and the venue fictional: online routes skipped on purpose
-25. `12:13` A10 social_search: not_applicable - demo photo is synthetic and the venue fictional: online routes skipped on purpose
-26. `12:13` A11 candidate_enum: not_applicable - demo photo is synthetic and the venue fictional: online routes skipped on purpose
-27. `12:13` A12 reference_match: not_applicable - demo photo is synthetic and the venue fictional: online routes skipped on purpose
-28. `12:13` A13 window_view: not_applicable - no window, door or reflection in the frame
-29. `12:13` answer C135 London (city, confidence medium, cap medium)
+1. `17:27` case created for larkspur-room.jpg
+2. `17:27` A1 metadata: results - no EXIF - stripped (messaging/social upload, screenshot, export) or synthetic; absence proves nothing; C2PA content credentials present (is…
+3. `17:27` metadata read: 4 notable fields; overview grid 8x5
+4. `17:27` N1 [inferred/image] Hypotheses: scene=hotel room desk. 1) United Kingdom: switched three-pin socket and £ prices; 2) another British Isles or Commonwealth territory sharing the so…
+5. `17:27` A2 text_ocr/tesseract: results - tesseract: 8 language-like line(s) [THE LARKSPUR, Guest Wi-Fi, Welcome to your room, Breakfast 7:00 - 10:30, £14.50 per person incl. VAT, R…
+6. `17:27` A3 codes: results - 1 code(s): WIFI:T:WPA;S:Larkspur-Guest;P:<redacted>;;
+7. `17:27` scan: 8 OCR lines, 1 codes, tiles 3x3
+8. `17:27` N2 [observed/image] Double switched socket: per outlet one vertical earth slot above two horizontal slots, rocker switch with red indicator = BS 1363 (Type G)
+9. `17:27` N3 [read/text] '£14.50 per person incl. VAT' read on the tent card
+10. `17:27` N4 [computed/text] '+44 20 7946 0321' read on the tent card; libphonenumber: GB, London (area code 20)
+11. `17:27` N5 [observed/text] English on every item, no other script
+12. `17:27` N6 [computed/text] Venue name 'THE LARKSPUR' and Wi-Fi SSID 'Larkspur-Guest' (password redacted by the decoder); the demo venue is fictional, so it is not searched
+13. `17:27` countries filter via N2: 55 countries linked x6 (55 new candidates)
+14. `17:27` countries filter via N3: 10 countries linked x20 (3 new candidates)
+15. `17:27` countries filter via N5: 118 countries linked x1.5 (76 new candidates)
+16. `17:27` N4 linked: N4 -> C52 United Kingdom: LR 30
+17. `17:27` C135 city: London @ 51.50720,-0.12760
+18. `17:27` N4 linked: N4 -> C135 London: LR 30
+19. `17:27` A4 visual_sweep: results - 9 tiles: tent card, Wi-Fi card, double socket, lamp, framed print; no window or reflection
+20. `17:27` A5 standards: results - BS 1363 Type G socket; £ prices with VAT
+21. `17:27` A6 culture_style: results - generic international hotel decor; English only; no cultural or religious markers
+22. `17:27` A7 consistency: results - socket, currency, language and phone agree on GB/London; no EXIF time to test sun or time zone
+23. `17:27` A8 reverse_search: not_applicable - demo photo is synthetic and the venue fictional: online routes skipped on purpose
+24. `17:27` A9 text_search: not_applicable - demo photo is synthetic and the venue fictional: online routes skipped on purpose
+25. `17:27` A10 social_search: not_applicable - demo photo is synthetic and the venue fictional: online routes skipped on purpose
+26. `17:27` A11 candidate_enum: not_applicable - demo photo is synthetic and the venue fictional: online routes skipped on purpose
+27. `17:27` A12 reference_match: not_applicable - demo photo is synthetic and the venue fictional: online routes skipped on purpose
+28. `17:27` A13 window_view: not_applicable - no window, door or reflection in the frame
+29. `17:27` answer C135 London (city, confidence medium, cap medium)
 
 ## Methods attempted
 

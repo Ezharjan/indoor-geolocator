@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="indoor-geolocator">
+  <rect x="2" y="2" width="28" height="28" rx="8" fill="#15171a"/>
+  <path d="M16 7.5c-3.6 0-6.4 2.8-6.4 6.3 0 4.6 6.4 10.7 6.4 10.7s6.4-6.1 6.4-10.7c0-3.5-2.8-6.3-6.4-6.3z" fill="#e34948"/>
+  <circle cx="16" cy="13.8" r="2.3" fill="#15171a"/>
+</svg>

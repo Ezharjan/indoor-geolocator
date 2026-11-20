@@ -9,6 +9,6 @@ search engines), refs (reference photos: image search, gallery pages, ranking ag
 (REPORT.md / result.json), doctor (environment check), common (helpers shared by the command modules),
 commands (ledger, knowledge and geodata subcommands), visual (revsearch, refs, compare, share, snapshot).
 """
-__version__ = "2.0.0"
+__version__ = "2.0.1"
 SCHEMA_CASE = "igl.case/1"
 SCHEMA_RESULT = "igl.result/1"

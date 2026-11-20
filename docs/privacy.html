@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy notice · indoor-geolocator</title>
+<meta name="description" content="What the indoor-geolocator skill does with photos and data: nothing is collected by its author; this page lists every service the skill can contact and what is sent.">
+<link rel="canonical" href="https://ezharjan.github.io/indoor-geolocator/privacy.html">
+<meta name="color-scheme" content="light dark">
+<style>
+:root{--bg:#f6f4ef;--ink:#15171a;--muted:#5d5c57;--line:#d9d4c8;--link:#1c5cab;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1012;--ink:#f0efec;--muted:#a3a299;--line:#34353b;--link:#86b6ef;color-scheme:dark}}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+main{max-width:760px;margin:0 auto;padding:48px 16px 80px}
+h1{font-size:2rem;line-height:1.2;margin:0 0 8px} h2{font-size:1.25rem;margin:40px 0 8px}
+p,li{color:var(--ink)} .muted{color:var(--muted)} a{color:var(--link)}
+.table{overflow-x:auto} table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{text-align:left;vertical-align:top;padding:8px 12px 8px 0;border-bottom:1px solid var(--line)}
+</style>
+</head>
+<body>
+<main>
+<p><a href="./">← indoor-geolocator</a></p>
+<h1>Privacy notice</h1>
+<p class="muted">Applies to the indoor-geolocator skill and plugin, version 2.0.1. Last updated 20 November 2026.</p>
+
+<h2>In short</h2>
+<p>indoor-geolocator is open-source software that runs inside your own Claude session or on your own computer. Its author runs no server for it, collects no data, and receives nothing about you, your photos or your results. There is no account, no telemetry and no analytics in the skill.</p>
+<p>To do its work the skill contacts third-party services, and some of them receive the photo you are investigating. This page lists them. Each case report also lists the services that were actually used.</p>
+
+<h2>What the skill processes</h2>
+<ul>
+<li>The photo you give it, including its metadata (which can contain GPS coordinates, a capture time and a device model).</li>
+<li>Text, codes and objects visible in the photo.</li>
+<li>Public web pages, map data and pictures of candidate places.</li>
+</ul>
+<p>Photos can show people or private places. The skill does no face recognition and does not identify individuals. For a private home with no stated purpose it asks what the result is for and otherwise stops at city or neighbourhood level. Wi-Fi passwords, IBANs and names on contact cards found in a photo are redacted.</p>
+
+<h2>What is sent to other services</h2>
+<div class="table"><table>
+<thead><tr><th>Purpose</th><th>Service</th><th>What is sent</th></tr></thead>
+<tbody>
+<tr><td>Reverse image search</td><td>Yandex, TinEye, Baidu</td><td>The photo or a crop of it, with metadata removed</td></tr>
+<tr><td>Reverse image search by link (Google Lens, Bing; optionally SerpApi with your own key)</td><td>A temporary file host: uguu.se, tmpfiles.org or litterbox.catbox.moe</td><td>A copy of the photo or crop with metadata removed. The host deletes it after 1 to 3 hours</td></tr>
+<tr><td>Picture search by text</td><td>Brave Search, Startpage</td><td>Search words only</td></tr>
+<tr><td>Places and maps</td><td>OpenStreetMap Nominatim, Photon, Overpass servers, Wikidata, Wikimedia Commons</td><td>Place names, coordinates and map queries</td></tr>
+<tr><td>Time zone and past weather</td><td>timeapi.io, Open-Meteo</td><td>Coordinates and a date</td></tr>
+<tr><td>Public posts about places</td><td>Bluesky, Flickr, Openverse, Mastodon, Lemmy</td><td>Search words only</td></tr>
+<tr><td>Wi-Fi network names (optional, with your own key)</td><td>WiGLE</td><td>A network name</td></tr>
+<tr><td>Pages and pictures of candidate venues</td><td>The websites found by the searches above</td><td>Ordinary page requests</td></tr>
+<tr><td>Similarity model, on first use</td><td>huggingface.co</td><td>Nothing about the photo. A model file is downloaded once</td></tr>
+</tbody></table></div>
+<p>These services are run by other organisations under their own privacy policies. A photo uploaded to a search engine may be kept or processed by that engine. If that is not acceptable for a photo, tell Claude the photo is private: the skill then uploads nothing without asking, and it can work from text, metadata and map data alone.</p>
+
+<h2>What is stored, and for how long</h2>
+<ul>
+<li>A case folder for each photo, where the skill runs: a copy of the photo, the evidence, a report and a ledger. It stays until you delete it. In a Claude chat it lives in that session's files.</li>
+<li>The similarity model file, in your cache folder, until you delete it.</li>
+<li>Temporary public copies made for search by link are deleted by their host after 1 to 3 hours.</li>
+</ul>
+<p>The skill keeps no profile of you and carries nothing from one session to the next.</p>
+
+<h2>Claude itself</h2>
+<p>Your conversation with Claude, including the photo you attach, is handled by Anthropic under Anthropic's own privacy policy. This notice covers only what the skill adds.</p>
+
+<h2>Responsible use</h2>
+<p>Working out where a photo was taken can affect other people. Use the skill for legitimate purposes such as verification, research and your own photos, and not to locate, follow or harass anyone. Results are estimates, not certainties.</p>
+
+<h2>Children</h2>
+<p>The skill is not directed at children and is not intended for people under 18.</p>
+
+<h2>Contact</h2>
+<p>Questions or concerns: open an issue at <a href="https://github.com/Ezharjan/indoor-geolocator/issues">https://github.com/Ezharjan/indoor-geolocator/issues</a>.</p>
+</main>
+</body>
+</html>

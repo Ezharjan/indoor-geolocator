@@ -108,6 +108,8 @@ pour une succursale, et la précision est inventée.
 - **Échec honnête.** Une recherche bloquée ou jamais lancée est signalée comme telle, jamais comme
   « aucun résultat ». Les images non confirmées ne sont jamais dites « différentes ».
 - **Barrière de couverture.** Treize méthodes principales doivent chacune se terminer par results,
+
+**En tant que plugin.** Le dossier de la skill est aussi un plugin Claude. Dans Claude Code, exécutez `claude plugin marketplace add Ezharjan/indoor-geolocator`, puis `claude plugin install indoor-geolocator@ezharjan-plugins`. L'avis de confidentialité, qui liste tous les services que la skill peut contacter, se trouve à l'adresse https://ezharjan.github.io/indoor-geolocator/privacy.html. Comme la skill, le plugin a besoin de Pillow : `pip install pillow` (et `tzdata` sous Windows). Installez l'un ou l'autre, pas les deux : en tant que plugin, la skill s'appelle `/indoor-geolocator:indoor-geolocator` au lieu de `/indoor-geolocator`.
   no_results ou not_applicable avant que `check` passe ; `check` signale aussi un site sans comparaison
   avec des références ou sans rival, un rival qui a concordé lui aussi, et des recherches inversées
   qui n'ont jamais tourné.
@@ -274,6 +276,14 @@ python build_skill_zip.py          # reconstruit indoor-geolocator.zip si le dos
 ```
 
 ## Journal des modifications
+
+### 2.0.1
+
+Empaquetage uniquement : la skill se comporte comme en 2.0.0.
+
+- **Plugin.** Le dossier de la skill est désormais aussi un plugin Claude (`.claude-plugin/plugin.json`, une icône et un README qui liste tout ce que la skill exécute, envoie et télécharge), et le dépôt est une place de marché de plugins.
+- **Données.** `countries.json` est écrit avec un pays par ligne : les mêmes données dans un fichier plus petit.
+- **Avis de confidentialité.** Une page qui liste tous les services que la skill peut contacter et ce qui leur est envoyé.
 
 ### 2.0.0
 

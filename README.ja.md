@@ -70,6 +70,8 @@ python3 ~/.claude/skills/indoor-geolocator/scripts/igl.py doctor                
 - Windows では、スキルのフォルダーは `%USERPROFILE%\.claude\skills\` です。`Expand-Archive` で展開し、`python3` の代わりに `python` を使います。
 - 任意の追加パッケージを黙ってインストールしないでください。`doctor` が不足と報告したものをユーザーに示し、`requirements-optional.txt` を提案します。これらのパッケージは大きいためです。
 - `~/.claude/skills/indoor-geolocator/SKILL.md` があることを確認し、新しいセッションで `/indoor-geolocator` として使えることをユーザーに伝えます。
+
+**プラグインとして。** スキルのフォルダーは Claude プラグインでもあります。Claude Code で `claude plugin marketplace add Ezharjan/indoor-geolocator` を実行し、続けて `claude plugin install indoor-geolocator@ezharjan-plugins` を実行します。スキルが接続しうるすべてのサービスを列挙したプライバシー通知は https://ezharjan.github.io/indoor-geolocator/privacy.html にあります。プラグインもスキルと同じく Pillow が必要です：`pip install pillow`（Windows では `tzdata` も）。スキルとプラグインはどちらか一方だけをインストールしてください。プラグインとして入れた場合の呼び出し名は `/indoor-geolocator` ではなく `/indoor-geolocator:indoor-geolocator` です。
 - claude.ai や Claude Desktop のチャットでは、エージェントが自分でスキルを追加することはできません。上の zip のリンクと下の 3 つのアップロード手順をユーザーに渡してください。
 
 **claude.ai、Claude Desktop、Cowork。**
@@ -182,6 +184,14 @@ python build_skill_zip.py          # フォルダーに変更があれば indoor
 ```
 
 ## 変更履歴
+
+### 2.0.1
+
+パッケージングのみの変更です。スキルの動作は 2.0.0 と同じです。
+
+- **プラグイン。** スキルのフォルダーが Claude プラグインにもなりました（`.claude-plugin/plugin.json`、アイコン、スキルが実行・送信・取得するものをすべて列挙した README）。リポジトリはプラグインのマーケットプレイスでもあります。
+- **データ。** `countries.json` を 1 か国 1 行で書き出すようにしました。データは同じで、ファイルが小さくなります。
+- **プライバシー通知。** スキルが接続しうるすべてのサービスと、そこに送られる内容を列挙したページを追加しました。
 
 ### 2.0.0
 

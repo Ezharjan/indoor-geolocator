@@ -17,7 +17,8 @@ WHAT THE ZIP CONTAINS
     One root folder indoor-geolocator/ with every file of indoor-geolocator/ (SKILL.md at indoor-geolocator/SKILL.md),
     sorted, deflate-compressed. Never included: __pycache__/, .pytest_cache/, .mypy_cache/, .ruff_cache/, .git/,
     .ipynb_checkpoints/, .work/, case folders (*-geolocation*), *.pyc, *.pyo, *.tmp, Thumbs.db, .DS_Store,
-    desktop.ini. Entry times are the files' modification times; permissions are normalised to rw-r--r--.
+    desktop.ini, and the plugin packaging at the top of the folder (.claude-plugin/, README.md, icon.svg: the folder
+    is also a Claude plugin). Entry times are the files' modification times; permissions are normalised to rw-r--r--.
 
 WHAT IS VERIFIED (both modes)
     * SKILL.md starts with YAML front matter holding `name` (1-64 lower-case letters, digits, hyphens; equal to the
@@ -46,7 +47,7 @@ import time
 import zipfile
 from pathlib import Path, PurePosixPath
 
-__version__ = "2.0.0"
+__version__ = "2.0.1"
 
 HERE = Path(__file__).resolve().parent
 ROOT = "indoor-geolocator"                   # root folder inside the zip = the skill name
@@ -55,6 +56,7 @@ ZIP = HERE / f"{ROOT}.zip"                   # the installable copy
 EXCLUDE_DIRS = {"__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache", ".ipynb_checkpoints", ".git", ".work"}
 EXCLUDE_SUFFIXES = {".pyc", ".pyo", ".tmp"}
 EXCLUDE_NAMES = {"Thumbs.db", ".DS_Store", "desktop.ini"}
+PLUGIN_ONLY = {".claude-plugin", "README.md", "icon.svg"}   # top-level plugin packaging: not part of the skill zip
 NAME_RE = re.compile(r"^[a-z0-9-]{1,64}$")
 LINK_RE = re.compile(r"\]\(([^)#\s]+)(?:#[^)]*)?\)")
 
@@ -63,9 +65,11 @@ def published_files(src: Path) -> list[str]:
     """Relative POSIX paths of the files of ``src`` that belong in the zip (sorted, deterministic)."""
     out = []
     for dp, dns, fns in os.walk(src):
-        dns[:] = sorted(d for d in dns if d not in EXCLUDE_DIRS and "-geolocation" not in d)
+        top = Path(dp) == src
+        dns[:] = sorted(d for d in dns if d not in EXCLUDE_DIRS and "-geolocation" not in d
+                        and not (top and d in PLUGIN_ONLY))
         for f in sorted(fns):
-            if f in EXCLUDE_NAMES or Path(f).suffix.lower() in EXCLUDE_SUFFIXES:
+            if f in EXCLUDE_NAMES or Path(f).suffix.lower() in EXCLUDE_SUFFIXES or (top and f in PLUGIN_ONLY):
                 continue
             out.append(Path(dp, f).relative_to(src).as_posix())
     return sorted(out)

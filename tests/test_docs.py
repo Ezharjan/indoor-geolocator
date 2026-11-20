@@ -126,6 +126,14 @@ def test_versions_agree_and_skill_files_are_linked():
         assert all(f"]({r.name})" in text or r == readme for r in READMES), f"{readme.name}: language links"
         assert _shape(readme) == english, f"{readme.name} has drifted from README.md (headings, lists or commands)"
     assert _zip_builder().__version__ == __version__
+    plugin = json.loads((SKILL / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))   # the folder is a plugin too
+    market = json.loads((REPO / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8"))
+    assert plugin["version"] == __version__ and plugin["name"] == SKILL.name and (SKILL / plugin["icon"]).is_file()
+    icon = (SKILL / plugin["icon"]).read_text(encoding="utf-8")
+    assert "<metadata" not in icon and len(icon) < 2048, "icon.svg carries an embedded metadata block: restore the plain icon"
+    assert market["plugins"] == [{**market["plugins"][0], "name": SKILL.name, "source": f"./{SKILL.name}"}]
+    assert all(f.stat().st_size < 256 * 1024 for f in SKILL.rglob("*") if f.is_file() and "__pycache__" not in f.parts)
+    assert len(re.sub(r"```.*?```", "", (SKILL / "README.md").read_text(encoding="utf-8"), flags=re.S).split()) >= 40
     # what search engines read: one canonical address, used by the sharing tags, the sitemap and the READMEs
     page = PAGE.read_text(encoding="utf-8")
     site = re.search(r'<link rel="canonical" href="([^"]+)">', page).group(1)
@@ -138,6 +146,9 @@ def test_versions_agree_and_skill_files_are_linked():
     assert all(site in r.read_text(encoding="utf-8") for r in READMES)
     llms = (PAGE.parent / "llms.txt").read_text(encoding="utf-8")       # the summary for AI assistants
     assert f"version {__version__}" in llms and site in llms and 'href="llms.txt"' in page
+    privacy = (PAGE.parent / "privacy.html").read_text(encoding="utf-8")
+    assert plugin["privacyPolicyUrl"] == site + "privacy.html" and f"version {__version__}" in privacy
+    assert plugin["homepage"] == site and f"install {SKILL.name}@{market['name']}" in READMES[0].read_text(encoding="utf-8")
     install = re.search(r"```bash\n(.*?)```", llms, flags=re.S).group(1).strip().split("\n")
     assert install == _shape(READMES[0])[3][0], "llms.txt and the README give different install commands"
     skill = (SKILL / "SKILL.md").read_text(encoding="utf-8")

@@ -140,6 +140,14 @@ def norm(s: str) -> str:
     return s
 
 
+def countries_json(meta: dict, countries: dict) -> str:
+    """countries.json with one country per line: readable, diff-friendly and under the 256 KiB that plugin
+    directories allow for a single file."""
+    rows = ",\n".join(f' {json.dumps(k)}: {json.dumps(v, ensure_ascii=False, separators=(", ", ": "))}'
+                      for k, v in countries.items())
+    return ('{\n"_meta": ' + json.dumps(meta, ensure_ascii=False, indent=1) + ',\n"countries": {\n' + rows + "\n}\n}\n")
+
+
 def fetch(name: str, url: str, offline: bool, retries: int = 6, min_bytes: int = 2000) -> Path | None:
     SRC.mkdir(exist_ok=True)
     path = SRC / name
@@ -454,8 +462,7 @@ def main() -> int:
         "unmatched_source_rows": sorted({f"{k}: {v}" for k, v in unmatched})[:200],
     }
     OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / "countries.json").write_text(json.dumps({"_meta": meta, "countries": countries}, ensure_ascii=False,
-                                                   indent=1, sort_keys=False) + "\n", encoding="utf-8")
+    (OUT / "countries.json").write_text(countries_json(meta, countries), encoding="utf-8")
     if gs1:
         gmeta = {"description": "GS1 company-prefix ranges (first 3 digits of EAN-13/GTIN-13) -> issuing GS1 member "
                                 "organisation. It tells where the barcode was REGISTERED, not where the product "
