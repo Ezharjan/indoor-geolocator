@@ -46,7 +46,7 @@ import time
 import zipfile
 from pathlib import Path, PurePosixPath
 
-__version__ = "1.0.0"
+__version__ = "2.0.0"
 
 HERE = Path(__file__).resolve().parent
 ROOT = "indoor-geolocator"                   # root folder inside the zip = the skill name

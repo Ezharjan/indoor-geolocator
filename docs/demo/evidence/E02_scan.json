@@ -22,6 +22,14 @@
     "scripts": {
      "LATIN": 11
     },
+    "quality": {
+     "strong": false,
+     "words": 2,
+     "longest": 8,
+     "script": "LATIN",
+     "script_run": 8,
+     "coverage": 1.0
+    },
     "id": "T1"
    },
    {
@@ -41,6 +49,14 @@
     "agree": 3,
     "scripts": {
      "LATIN": 9
+    },
+    "quality": {
+     "strong": false,
+     "words": 1,
+     "longest": 5,
+     "script": "LATIN",
+     "script_run": 5,
+     "coverage": 0.56
     },
     "id": "T2"
    },
@@ -62,6 +78,14 @@
     "scripts": {
      "LATIN": 17
     },
+    "quality": {
+     "strong": false,
+     "words": 3,
+     "longest": 7,
+     "script": "LATIN",
+     "script_run": 7,
+     "coverage": 0.88
+    },
     "id": "T3"
    },
    {
@@ -81,6 +105,14 @@
     "agree": 3,
     "scripts": {
      "LATIN": 9
+    },
+    "quality": {
+     "strong": true,
+     "words": 1,
+     "longest": 9,
+     "script": "LATIN",
+     "script_run": 9,
+     "coverage": 1.0
     },
     "id": "T4"
    },
@@ -102,6 +134,14 @@
     "scripts": {
      "LATIN": 16
     },
+    "quality": {
+     "strong": true,
+     "words": 4,
+     "longest": 6,
+     "script": "LATIN",
+     "script_run": 6,
+     "coverage": 1.0
+    },
     "id": "T5"
    },
    {
@@ -121,6 +161,14 @@
     "agree": 3,
     "scripts": {
      "LATIN": 9
+    },
+    "quality": {
+     "strong": true,
+     "words": 1,
+     "longest": 9,
+     "script": "LATIN",
+     "script_run": 9,
+     "coverage": 1.0
     },
     "id": "T6"
    },
@@ -142,6 +190,14 @@
     "scripts": {
      "LATIN": 15
     },
+    "quality": {
+     "strong": false,
+     "words": 2,
+     "longest": 8,
+     "script": "LATIN",
+     "script_run": 8,
+     "coverage": 1.0
+    },
     "id": "T7"
    },
    {
@@ -162,15 +218,308 @@
     "scripts": {
      "LATIN": 13
     },
+    "quality": {
+     "strong": false,
+     "words": 2,
+     "longest": 8,
+     "script": "LATIN",
+     "script_run": 8,
+     "coverage": 1.0
+    },
     "id": "T8"
    }
   ],
   "scripts": {
    "LATIN": 99
   },
-  "elapsed_s": 5.7,
+  "weak_count": 20,
+  "weak": [
+   {
+    "text": "40",
+    "conf": 0.687,
+    "box": [
+     1313,
+     706,
+     1365,
+     742
+    ],
+    "passes": [
+     "tile"
+    ],
+    "agree": 1
+   },
+   {
+    "text": "iH",
+    "conf": 0.572,
+    "box": [
+     1313,
+     824,
+     1360,
+     851
+    ],
+    "passes": [
+     "full"
+    ],
+    "agree": 1
+   },
+   {
+    "text": "oi",
+    "conf": 0.556,
+    "box": [
+     1323,
+     814,
+     1349,
+     830
+    ],
+    "passes": [
+     "tile"
+    ],
+    "agree": 1
+   },
+   {
+    "text": "Ea",
+    "conf": 0.512,
+    "box": [
+     1299,
+     512,
+     1371,
+     523
+    ],
+    "passes": [
+     "tile"
+    ],
+    "agree": 1
+   },
+   {
+    "text": "OF:",
+    "conf": 0.469,
+    "box": [
+     1215,
+     706,
+     1272,
+     742
+    ],
+    "passes": [
+     "tile"
+    ],
+    "agree": 1
+   },
+   {
+    "text": "Il",
+    "conf": 0.449,
+    "box": [
+     1328,
+     440,
+     1341,
+     474
+    ],
+    "passes": [
+     "enhanced"
+    ],
+    "agree": 1
+   },
+   {
+    "text": "Ea",
+    "conf": 0.432,
+    "box": [
+     1149,
+     512,
+     1221,
+     523
+    ],
+    "passes": [
+     "tile"
+    ],
+    "agree": 1
+   },
+   {
+    "text": "ac",
+    "conf": 0.376,
+    "box": [
+     1313,
+     706,
+     1364,
+     742
+    ],
+    "passes": [
+     "enhanced"
+    ],
+    "agree": 1
+   },
+   {
+    "text": "THE LABEAELE =",
+    "conf": 0.372,
+    "box": [
+     537,
+     608,
+     1093,
+     685
+    ],
+    "passes": [
+     "tile"
+    ],
+    "agree": 1
+   },
+   {
+    "text": "ef",
+    "conf": 0.34,
+    "box": [
+     1323,
+     773,
+     1349,
+     829
+    ],
+    "passes": [
+     "enhanced"
+    ],
+    "agree": 1
+   },
+   {
+    "text": "RRA BSABABAUE WEA",
+    "conf": 0.324,
+    "box": [
+     544,
+     629,
+     943,
+     644
+    ],
+    "passes": [
+     "tile"
+    ],
+    "agree": 1
+   },
+   {
+    "text": "et",
+    "conf": 0.296,
+    "box": [
+     1323,
+     773,
+     1349,
+     829
+    ],
+    "passes": [
+     "full"
+    ],
+    "agree": 1
+   },
+   {
+    "text": "mm",
+    "conf": 0.276,
+    "box": [
+     1148,
+     512,
+     1221,
+     523
+    ],
+    "passes": [
+     "enhanced"
+    ],
+    "agree": 1
+   },
+   {
+    "text": "Em",
+    "conf": 0.237,
+    "box": [
+     1299,
+     512,
+     1371,
+     523
+    ],
+    "passes": [
+     "enhanced",
+     "full"
+    ],
+    "agree": 2
+   },
+   {
+    "text": "as",
+    "conf": 0.233,
+    "box": [
+     1241,
+     778,
+     1328,
+     820
+    ],
+    "passes": [
+     "enhanced",
+     "full"
+    ],
+    "agree": 2
+   },
+   {
+    "text": "Ly",
+    "conf": 0.176,
+    "box": [
+     1313,
+     835,
+     1339,
+     851
+    ],
+    "passes": [
+     "enhanced"
+    ],
+    "agree": 1
+   },
+   {
+    "text": "‘Te",
+    "conf": 0.156,
+    "box": [
+     1313,
+     706,
+     1364,
+     742
+    ],
+    "passes": [
+     "full"
+    ],
+    "agree": 1
+   },
+   {
+    "text": "—— ne",
+    "conf": 0.153,
+    "box": [
+     0,
+     602,
+     592,
+     685
+    ],
+    "passes": [
+     "tile"
+    ],
+    "agree": 1
+   },
+   {
+    "text": "am",
+    "conf": 0.073,
+    "box": [
+     1148,
+     512,
+     1221,
+     523
+    ],
+    "passes": [
+     "full"
+    ],
+    "agree": 1
+   },
+   {
+    "text": "nae",
+    "conf": 0.041,
+    "box": [
+     1241,
+     777,
+     1295,
+     821
+    ],
+    "passes": [
+     "tile"
+    ],
+    "agree": 1
+   }
+  ],
+  "elapsed_s": 4.8,
   "notes": [
-   "20 low-quality fragment(s) dropped (single-pass, short or symbol-heavy: typical texture noise)"
+   "20 fragment(s) did not look like language and were set aside (texture noise is the norm in room photos): they are not text signals. Read the tiles yourself for stylised logos and tiny print the engine cannot read"
   ]
  },
  "codes": {
@@ -227,7 +576,6 @@
     "token": "£",
     "sample": "£14.50",
     "countries": [
-     "AC",
      "FK",
      "GB",
      "GG",
@@ -237,10 +585,9 @@
      "JE",
      "SH",
      "SS",
-     "SY",
-     "TA"
+     "SY"
     ],
-    "n_countries": 12,
+    "n_countries": 10,
     "former_currency_of": [
      "IE until 1922-01-01",
      "SD until 1958-01-01",

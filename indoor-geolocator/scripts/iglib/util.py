@@ -131,3 +131,21 @@ def haversine_m(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
 def short(text: str, n: int = 90) -> str:
     text = re.sub(r"\s+", " ", str(text or "")).strip()
     return text if len(text) <= n else text[: n - 1] + "…"
+
+
+_SECRETS = [
+    (re.compile(r"(?i)(WIFI:[^\n]*?(?:^|;)P:)((?:\\;|[^;\n])*)"), r"\1<redacted>"),      # Wi-Fi QR password
+    (re.compile(r"(?i)((?:^|;)P:)((?:\\;|[^;\n])*)(?=[^\n]*;S:|;;)"), r"\1<redacted>"),    # P: before S:
+    (re.compile(r"(?i)\b(password|passwort|mot de passe|contraseña|senha|пароль|密码|密碼|パスワード|비밀번호)"
+                r"(\s*[:：=]\s*)(\S+)"), r"\1\2<redacted>"),
+    (re.compile(r"\b([A-Z]{2}\d{2})(?:[ ]?[A-Z0-9]{4}){2,7}(?:[ ]?[A-Z0-9]{1,4})?\b"), r"\1****"),  # IBAN
+]
+
+
+def redact(text: str) -> str:
+    """Remove secrets that engines and pages echo back (Wi-Fi passwords decoded from a QR code, written
+    passwords, IBANs) before anything is printed or stored as evidence."""
+    out = str(text or "")
+    for pat, rep in _SECRETS:
+        out = pat.sub(rep, out)
+    return out

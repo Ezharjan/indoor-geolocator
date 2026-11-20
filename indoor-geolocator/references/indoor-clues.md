@@ -1,6 +1,6 @@
 # Indoor clue catalogue
 
-Used in workflow steps 4–6. Ordered roughly by **exclusion power**: one item near the top outweighs a
+Used in workflow steps 3–5. Ordered roughly by **exclusion power**: one item near the top outweighs a
 dozen near the bottom. For every clue: crop it (`igl.py crop`), describe the shape before naming it,
 record it (`igl.py note`) with an honest status, then link it. Strength column: **S** strong (a fixed
 standard or readable fact), **M** medium (regional habit), **W** weak (taste, trend, portable object).
@@ -9,8 +9,9 @@ Contents: 0 sweep method · 1 photo & provenance · 2 text & language · 3 numbe
 4 codes & digital traces · 5 electrical · 6 plumbing & bathroom · 7 heating, cooling, ventilation ·
 8 windows, doors, floors, walls, ceilings · 9 safety & public-information signage · 10 lifts, stairs,
 floor numbering · 11 products, brands, retail, payment · 12 appliances, devices, media · 13 furniture,
-decor, style, patterns, textiles · 14 religion, customs, seasonal decor · 15 people & personal items ·
-16 light, time, season · 17 negative clues · 18 portable-object traps
+decor, style, patterns, textiles · 13a local references (pictures and objects that point at the town) ·
+14 religion, customs, seasonal decor · 15 people & personal items · 16 light, time, season ·
+17 negative clues · 18 portable-object traps
 
 ---
 
@@ -19,6 +20,12 @@ decor, style, patterns, textiles · 14 religion, customs, seasonal decor · 15 p
 - Look at the whole frame, then every tile from `igl.py scan` (`.work/tiles/`), then the four corners
   and edges. The eye goes to the biggest object first, but the decisive clue is usually small: a
   sticker on a door frame, a socket behind a lamp, a leaflet on a table, a reflection in a TV or window.
+- Sort what you find into three piles. **Identity carriers** name the venue or exist only there (text,
+  logos, a unique artwork or sculpture, custom carpet, the view): they generate and verify candidates.
+  **Region evidence** is fixed to the building (sections 5-10): it narrows the country. **Local
+  references** point at the town (section 13a). Everything else is context.
+- Read text yourself. `scan` reports only OCR lines that look like language, and an empty list is
+  normal for a room; stylised logos, tiny labels, screens and reflections need your eyes on a crop.
 - For each zone ask: *what is fixed to the building* (standards: sockets, switches, radiators, windows,
   signs - strong) vs *what is movable* (furniture, decor, products - weaker, can be imported).
 - Check orientation and mirroring first. Reversed text, a steering wheel on the "wrong" side in a window
@@ -53,7 +60,7 @@ verbatim and search the original, not a translation.
 | Clue | Implies | Strength |
 |---|---|---|
 | Venue name, address, phone, URL, e-mail domain on fixed signage | the place itself, after a map check | S |
-| The same on portable items (pen, notepad, bag, cup) | the item's origin, which is often but not always this place | M (see §18) |
+| The same on portable items (pen, notepad, bag, cup) | the item's origin, which is often but not always this place | M (see section 18) |
 | Writing system: Han (Simplified vs Traditional), kana, Hangul, Thai, Lao, Khmer, Myanmar, Arabic, Hebrew, Devanagari, Bengali, Tamil, Sinhala, Georgian, Armenian, Ethiopic, Cyrillic, Greek | language family → country set (`countries --script`) | S |
 | Simplified Chinese | mainland China, Singapore, Malaysia | S |
 | Traditional Chinese | Taiwan, Hong Kong, Macau (also older diaspora) | S |
@@ -280,7 +287,27 @@ Use as M/W evidence. Taste travels, so always seek a fixed or textual clue to co
 | Tartan, Hawaiian/Polynesian prints, kente, Maasai shuka | regional (often souvenir) |
 | Scandinavian minimalism, IKEA products | weak: global |
 | Hotel brand design packages (carpet, headboard, art, lamps) | the brand. Then enumerate its properties (scene-playbooks.md) |
-| Unique artwork, murals, custom carpet patterns | often property-specific: reverse-search a tight crop |
+| Unique artwork, sculpture, murals, custom carpet patterns | often property-specific: reverse-search a tight crop, and describe it in a picture search (`igl.py refs`) |
+
+## 13a. Local references: pictures and objects that point at the town
+
+What a venue hangs on its walls and leaves on its tables is often local. These rarely name the venue,
+but they give the town or the coast, which turns "a hotel somewhere in the country" into a short list.
+
+| Seen | Implies | Strength |
+|---|---|---|
+| A painting, print or photograph of a recognisable landmark, coastline, skyline or mountain | the venue is usually within sight or a short drive of it; identify the landmark (reverse-search a tight crop) | M–S for the area |
+| A framed local map, nautical chart, old town plan, railway poster | the town or region shown | M–S |
+| Historic photos of "this building" or "this street" (lobbies, pubs, restaurants love them) | the venue's own history: read the captions | S |
+| Local newspaper, listings magazine, tourist leaflets, a "what's on" board | the town (and the date) | S |
+| Calendar, pen or business card from a named local business; a taxi firm's card with a dialling code | the neighbourhood | M–S |
+| Local club pennants, team scarves, regatta or race memorabilia, school crests | the town or district (fans travel: M) | M |
+| Regional food and drink on display: local brewery taps, regional wines, named farm produce | the region | M |
+| A named local artist's work throughout a hotel | commissioned for the property: search the artist | M |
+
+A landmark picture is the same trap as any souvenir when it is famous (the Eiffel Tower hangs
+everywhere); it is good evidence when it is local and unglamorous (a chalk headland, a town pier, a
+particular bridge). Record it as `observed`, link it to the area, and let it choose where to enumerate.
 
 ## 14. Religion, customs, seasonal decor
 
@@ -298,7 +325,7 @@ Use as M/W evidence. Taste travels, so always seek a fixed or textual clue to co
 | Seasonal: Christmas (Dec), Lunar New Year (Jan–Feb), Ramadan lanterns (moving), Diwali (Oct–Nov), Halloween (Oct), Día de Muertos (1–2 Nov), Hinamatsuri (3 Mar), Koinobori (May), Tanabata (7 Jul), Mid-Autumn (Sep–Oct), Songkran (Apr), Hanukkah, Easter | season and date, plus culture | M |
 | Shoes off at the door, slippers rack | JP, KR, Nordics, Eastern Europe, Turkey, Middle East, much of Asia | W–M |
 
-## 15. People and personal items (privacy rules apply: hard rule 11)
+## 15. People and personal items (the privacy rules of SKILL.md apply)
 
 Use items only for what they say about the PLACE. Never identify a person.
 

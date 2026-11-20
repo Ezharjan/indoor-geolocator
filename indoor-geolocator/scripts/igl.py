@@ -4,14 +4,18 @@
     python3 igl.py <command> [options]          python3 igl.py <command> -h   for details
 
 Case lifecycle
-  init IMAGE [--out DIR]           new case folder: copy, metadata, overview grid
+  init IMAGE [--out DIR]           new case folder: copy, metadata, overview grid, network check
   scan CASE                        OCR (multi-pass), QR/barcodes, text signals, tiles for the visual sweep
   crop CASE --cell C3:E5|--box ..  zoomed / enhanced crop saved as evidence
   tiles CASE --grid 4x4            regenerate sweep tiles
-  revsearch CASE [--cell ..]       reverse image search (headless Yandex/TinEye; manual Lens/Bing guidance)
+  revsearch CASE [--cell ..]       reverse image search (headless Yandex, TinEye, Baidu); every hit is compared
+                                   with the photo: COPY / SAME SCENE / PARTIAL / unconfirmed (most similar first)
+  share CASE [--cell ..]           temporary public copy (metadata stripped) + ready Lens/Bing/Yandex/TinEye links
+  refs CASE "TEXT".. [--url PAGE]  pictures of a candidate or of a whole area (image search + gallery pages),
+                                   compared with the photo and sorted by likeness: finds and verifies venues
+  compare CASE --refs E## --pick N photo vs chosen references: sheet, match tests, inlier views
   social search|links QUERY        social media: keyless open APIs + ready search links (place-focused)
   snapshot CASE URL                preserve a web page (screenshot + text) as evidence
-  compare CASE --ref URL|E## ..    side-by-side sheet: photo vs reference images
 Knowledge (offline)
   countries [--plug G --currency £ --drive left ...] [--case CASE --clue N3]   intersect fixed standards
   lookup phone|barcode|country|plug|plugs|currency|tld|text VALUE
@@ -19,13 +23,16 @@ Geodata (online, keyless) and geometry (offline)
   geo search|reverse|poi|photos|wikidata|sparql|timezone|weather|wigle ...
   sun --at LAT,LON --time ISO      bearing --from LAT,LON --to LAT,LON|qibla [--facing DEG]
 Ledger
-  note CASE "TEXT" --kind K --status S --source L [--file E##]   record a clue
+  note CASE "TEXT" --kind K --status S --source L [--file E##] [--for C#:LR --why ..]   record (and link) a clue
+                                   (--status matched needs --features "a; b; c" and a compare/refs file;
+                                    --status traced needs --url of the page that carries the same photograph)
   cand CASE "NAME" --level L [--parent C#] [--at LAT,LON]        add/update a candidate
   link CASE N# --for C#:LR [--against C#:LR] --why ".."           evidence -> candidates (LR capped by status)
   exclude CASE C# --by N# --why ".." --file E##                   decisive exclusions only
   log CASE METHOD --status S --detail ".."                        record a method attempt
   rank | check | status CASE                                      ranking, pre-report audit, overview
-  answer CASE C# [--confidence ..] --summary ".."                 final answer (confidence capped by the rules)
+  answer CASE C# [--lead C#] --summary ".."                       final answer at the finest verified level
+                                                                   (confidence capped by the rules)
   report CASE | finalize CASE                                     REPORT.md + result.json; prune scratch
 Environment
   doctor [--offline]
@@ -61,6 +68,8 @@ def build_parser() -> argparse.ArgumentParser:
     p = add("init", "create a case folder for one photo (never overwrites)")
     p.add_argument("image")
     p.add_argument("--out", help="case folder to create (default: <outputs or cwd>/<image>-geolocation)")
+    p.add_argument("--no-probe", action="store_true", help="skip the 5-second check of which online services the "
+                                                           "CLI can reach from here")
 
     p = add("scan", "automatic perception pass: OCR, QR/barcodes, text signals, sweep tiles")
     p.add_argument("case")
@@ -72,6 +81,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--no-codes", action="store_true")
     p.add_argument("--grid-cols", type=int, default=3)
     p.add_argument("--grid-rows", type=int, default=3)
+    p.add_argument("--all", action="store_true", help="also list the fragments the precision filter set aside "
+                                                      "(mostly texture noise: never text signals)")
 
     p = add("crop", "save a zoomed (optionally enhanced) crop as evidence")
     p.add_argument("case")
@@ -81,6 +92,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--rotate", type=float, default=0, help="degrees clockwise (straighten tilted text)")
     p.add_argument("--flip", action="store_true", help="mirror (read reversed text, check mirrored reposts)")
     p.add_argument("--pad", type=float, default=0.0, help="extra margin as a fraction of the box")
+    p.add_argument("--of", help="crop another evidence image instead of the photo (a reference, a sheet): E## with "
+                                "--rel or --box")
     p.add_argument("--label", help="short file label, e.g. socket, menu, fire-plan")
     p.add_argument("--what", help="one line: what this crop shows")
 
@@ -188,6 +201,9 @@ def build_parser() -> argparse.ArgumentParser:
     g.add_argument("--date", help="YYYY-MM-DD (default: EXIF capture date of --case)")
     g.add_argument("--time", help="local ISO time: also report the weather at that hour")
     g.add_argument("--case")
+    for g in gsub.choices.values():
+        g.add_argument("--print-url", action="store_true", help="send nothing: print the request URL(s) to open with "
+                                                               "your own web-fetch or browser tool (CLI offline)")
 
     p = add("sun", "solar azimuth/elevation (offline NOAA algorithm)")
     p.add_argument("--at", required=True, help="lat,lon")
@@ -204,8 +220,22 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--image", action="append", help="evidence id or file to search (repeatable)")
     p.add_argument("--full", action="store_true", help="also search the full frame when --image/--cell is given")
     p.add_argument("--flip", action="store_true", help="also search a mirrored copy")
-    p.add_argument("--engines", default="yandex,tineye", help="comma list of yandex,tineye,bing,lens or 'all'")
-    p.add_argument("--top", type=int, default=8)
+    p.add_argument("--engines", default="yandex,tineye,baidu",
+                   help="comma list of yandex,tineye,baidu,bing,lens or 'all' (Lens and Bing usually refuse headless "
+                        "uploads: use `share` and a browser tool for them)")
+    p.add_argument("--top", type=int, default=8, help="hits listed per engine and class (default 8)")
+    p.add_argument("--triage", type=int, default=30, help="hits per engine compared with the photo (near-duplicate + "
+                                                          "geometric tests; default 30, 0 = off)")
+    p.add_argument("--no-share", action="store_true",
+                   help="never make a temporary public copy: without it, an engine whose upload form does not start a "
+                        "search is retried by URL (use this for photos the user marked private)")
+
+    p = add("share", "temporary public copy of the photo or a crop, for reverse search by URL (Lens, Bing ...)")
+    p.add_argument("case")
+    region(p)
+    p.add_argument("--image", help="evidence id or file to share instead of the photo (e.g. a crop E07)")
+    p.add_argument("--flip", action="store_true", help="share a mirrored copy")
+    p.add_argument("--host", default="auto", help="auto | uguu | litterbox | tmpfiles (default: auto, first that works)")
 
     p = add("social", "social media and community photos, searched for the place (never for people)")
     ssub = p.add_subparsers(dest="social_cmd", required=True)
@@ -235,7 +265,29 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("case")
     region(p)
     p.add_argument("--query", help="evidence id of a crop to use as the query")
-    p.add_argument("--ref", action="append", required=True, help="reference image URL, file or evidence id (repeatable)")
+    p.add_argument("--ref", action="append", help="reference image URL, file or evidence id (repeatable)")
+    p.add_argument("--refs", help="evidence id of a `refs` or `revsearch` result: compare its numbered items (--pick)")
+    p.add_argument("--pick", help="with --refs: item numbers, e.g. 3,7")
+    p.add_argument("--for", dest="for_", help="candidate these references show (C#): recorded on the candidate")
+    p.add_argument("--label")
+    p.add_argument("--no-match", action="store_true", help="only the sheet: skip the near-duplicate and geometric tests")
+
+    p = add("refs", "reference photos of a candidate or an area, ranked against the photo (verification)")
+    p.add_argument("case")
+    p.add_argument("terms", nargs="*", help='image-search text(s), e.g. "Hotel Sacher Wien room" "Hotel Sacher suite"; '
+                                            'or a whole area: "hotel lounge Sandbanks Poole"')
+    region(p)
+    p.add_argument("--query", help="evidence id of a crop to use as the query instead of the whole photo")
+    p.add_argument("--url", action="append", help="page whose pictures to collect: the venue's gallery, a listing, a "
+                                                  "review page (repeatable)")
+    p.add_argument("--image", action="append", help="image URL, file or evidence id to include (repeatable)")
+    p.add_argument("--for", dest="for_", help="candidate these references show (C#): recorded on the candidate")
+    p.add_argument("--providers", default="brave,startpage", help="image-search engines for the text(s) (default "
+                                                                  "brave,startpage)")
+    p.add_argument("--per", type=int, default=40, help="images per search or page (default 40)")
+    p.add_argument("--max", type=int, default=160, help="images compared in total (default 160)")
+    p.add_argument("--sheets", type=int, default=2, help="ranked contact sheets of 15 to write (default 2)")
+    p.add_argument("--top", type=int, default=12, help="references listed (default 12)")
     p.add_argument("--label")
 
     p = add("note", "record a clue")
@@ -244,13 +296,19 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--kind", required=True, help="hypothesis, scene, metadata, text, code, standard, architecture, "
                                                  "style, product, culture, personal-item, language, window-view, "
                                                  "light-time, provenance, match, negative, contradiction, context, other")
-    p.add_argument("--status", required=True, help="inferred | observed | reported | metadata | read | computed | matched")
+    p.add_argument("--status", required=True, help="inferred | observed | reported | metadata | traced | read | computed | matched")
     p.add_argument("--source", required=True, help="image | text | metadata | table | web | engine | map | reference | "
                                                    "geometry | user")
     p.add_argument("--file", action="append", help="evidence id(s) or file path(s)")
     p.add_argument("--box", help="where in the photo: x0,y0,x1,y1")
-    p.add_argument("--url")
+    p.add_argument("--url", help="page behind the clue (required for --status traced; the reference page for a match "
+                                 "made in a browser tool)")
     p.add_argument("--resolves", action="append", help="clue id(s) this result settles (e.g. a contradiction)")
+    p.add_argument("--features", help="for --status matched: the >=3 specific invariant features that agree, separated "
+                                      "by ';' (window pair with transoms; coffered ceiling 3x4; green marble fireplace)")
+    p.add_argument("--for", dest="for_", action="append", help="link at once: C#:LR (repeatable; LR capped by status)")
+    p.add_argument("--against", action="append", help="link at once: C#:LR against (repeatable)")
+    p.add_argument("--why", help="with --for/--against: why the observation favours or disfavours them")
 
     p = add("cand", "add a candidate (or update one: pass its id instead of a name)")
     p.add_argument("case")
@@ -285,9 +343,10 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = add("log", "record a method attempt (coverage ledger)")
     p.add_argument("case")
-    p.add_argument("method", help="metadata visual_sweep text_ocr codes standards culture_style reverse_search "
-                                  "text_search social_search candidate_enum reference_match window_view consistency | "
-                                  "provenance_hunt listing_search map_photos sun_light wifi_ssid ai_estimate other")
+    p.add_argument("method", help="one method or a comma list: metadata visual_sweep text_ocr codes standards "
+                                  "culture_style reverse_search text_search social_search candidate_enum reference_match "
+                                  "window_view consistency | provenance_hunt listing_search map_photos sun_light "
+                                  "wifi_ssid ai_estimate other")
     p.add_argument("--status", required=True, help="results | no_results | blocked | unavailable | not_applicable | skipped")
     p.add_argument("--detail")
     p.add_argument("--engine")
@@ -313,8 +372,10 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--radius", type=int, help="error radius in metres")
     p.add_argument("--summary", help="2-6 sentences: the decisive reasoning chain")
     p.add_argument("--open-questions")
+    p.add_argument("--lead", help="best unverified lead at a finer level (e.g. the site C12 when the answer is its "
+                                  "city): reported separately, never as the answer")
     p.add_argument("--file", action="append")
-    p.add_argument("--no-network", action="store_true", help="do not reverse-geocode a missing address")
+    p.add_argument("--no-network", action="store_true", help="do not geocode / reverse-geocode missing coordinates")
 
     p = add("report", "write REPORT.md and result.json")
     p.add_argument("case")

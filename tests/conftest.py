@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import io
+import os
 import sys
 from contextlib import redirect_stdout
 from pathlib import Path
@@ -10,6 +11,7 @@ import pytest
 
 SCRIPTS = Path(__file__).resolve().parent.parent / "indoor-geolocator" / "scripts"
 sys.path.insert(0, str(SCRIPTS))
+os.environ["IGL_NO_EMBED"] = "1"          # the similarity model is never loaded or downloaded by the tests
 
 import igl  # noqa: E402
 
@@ -52,6 +54,6 @@ def photo(tmp_path: Path) -> Path:
 @pytest.fixture
 def case_dir(tmp_path: Path, photo: Path) -> Path:
     out = tmp_path / "case"
-    code, _ = run("init", photo, "--out", out)
+    code, _ = run("init", photo, "--out", out, "--no-probe")
     assert code == 0
     return out

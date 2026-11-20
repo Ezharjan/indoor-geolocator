@@ -23,20 +23,24 @@ LEVEL_HELP = {
     "room": "a room, floor or unit inside the site",
 }
 # How a clue was obtained -> maximum likelihood ratio it may carry (rules as code: inferences can only rank)
-STATUS_CAP = {"inferred": 3.0, "observed": 6.0, "reported": 10.0, "metadata": 20.0,
+STATUS_CAP = {"inferred": 3.0, "observed": 6.0, "reported": 10.0, "metadata": 20.0, "traced": 20.0,
               "read": 50.0, "computed": 50.0, "matched": 100.0}
 STATUS_HELP = {
     "inferred": "reasoning or style judgement (\"looks Scandinavian\")",
     "observed": "a feature you can point at in the image (\"Type G socket\")",
     "reported": "a third party says so (web caption, listing, engine label, unverified OCR)",
     "metadata": "embedded in the file (EXIF GPS/time, XMP/IPTC location) - editable, so corroborate",
+    "traced": "the SAME photograph found on a page that says where it was taken (a COPY's caption, listing, tag)",
     "read": "text in the image that you verified on a zoomed crop",
     "computed": "deterministic result of a tool or table (QR decode, phone prefix, sun angle)",
     "matched": "same physical place confirmed against independent reference imagery (>=3 invariant features)",
 }
-GRADE = {"matched": "A", "read": "A", "computed": "A", "metadata": "B", "observed": "B", "reported": "C",
-         "inferred": "D"}
-DECISIVE = {"read", "computed", "matched", "metadata"}      # may carry LR >= 10
+GRADE = {"matched": "A", "read": "A", "computed": "A", "metadata": "B", "traced": "B", "observed": "B",
+         "reported": "C", "inferred": "D"}
+# A reverse-image engine's label, or the title of a "similar" image, is a lead whatever it sounds like: engines
+# list look-alikes beside real matches. Its weight stays small until the place is verified another way.
+SOURCE_CAP = {"engine": 3.0}
+DECISIVE = {"read", "computed", "matched", "metadata", "traced"}     # identify a place when LR >= 10
 EXCLUDERS = {"read", "computed", "matched"}                 # may exclude a candidate outright
 SOURCES = {
     "image": "visual content of the photo", "text": "text visible in the photo", "metadata": "file metadata",
@@ -55,11 +59,13 @@ CORE_METHODS = {
     "codes": "QR codes and barcodes",
     "standards": "fixed standards (sockets, switches, plumbing, safety signs, units) -> country set",
     "culture_style": "language/script, brands/products, decor/style/patterns, customs, personal items",
-    "reverse_search": "reverse image search: >=2 engines on the full image and key crops",
+    "reverse_search": "reverse image search: >=2 engines (`revsearch`: Yandex, TinEye, Baidu; Google Lens and Bing "
+                      "through a browser tool and the by-URL links) on the full image and on tight crops",
     "text_search": "web search of distinctive strings / descriptions in the local language(s)",
     "social_search": "social media and community photos: open APIs, site: queries, platform search (place only)",
     "candidate_enum": "enumerate every candidate of the identified category (all branches, all hotels...)",
-    "reference_match": "compare top candidates against independent reference imagery",
+    "reference_match": "compare the top candidates AND a rival against independent reference imagery (`refs`, "
+                       "`compare`)",
     "window_view": "exterior view through windows/doors/reflections (or not_applicable)",
     "consistency": "final consistency check (time zone, season, sun, language, standards) + one re-run",
 }
@@ -81,6 +87,9 @@ ATTEMPT_STATUS = {
     "skipped": "deliberately not done (say why)",
 }
 RESOLVED = {"results", "no_results", "not_applicable"}
+# Methods whose work is visible in the clues themselves need no separate `log` call.
+IMPLIED_BY_KIND = {"standards": {"standard"}, "culture_style": {"style", "culture", "language", "product"},
+                   "window_view": {"window-view"}}
 
 
 class Case:
@@ -162,11 +171,19 @@ class Case:
         p.mkdir(exist_ok=True)
         return p
 
-    def reserve_file(self, label: str, ext: str, what: str, pinned: bool = False) -> tuple[str, Path]:
-        """Allocate the next evidence id and path (E07_<label>.<ext>); the caller writes the file."""
+    def reserve_file(self, label: str, ext: str, what: str, pinned: bool = False, tool: str | None = None,
+                     meta: dict | None = None) -> tuple[str, Path]:
+        """Allocate the next evidence id and path (E07_<label>.<ext>); the caller writes the file. `tool`
+        names the command that produced it (compare, refs, revsearch): a `matched` clue must cite such a
+        file, and `meta` keeps what the check needs (e.g. the id of the JSON behind a sheet)."""
         eid = self.next_id("E")
         name = f"{eid}_{slug(label, 40)}.{ext.lstrip('.')}"
-        self.data["files"][eid] = {"path": f"evidence/{name}", "what": what, "created": now(), "pinned": pinned}
+        rec = {"path": f"evidence/{name}", "what": what, "created": now(), "pinned": pinned}
+        if tool:
+            rec["tool"] = tool
+        if meta:
+            rec["meta"] = meta
+        self.data["files"][eid] = rec
         return eid, self.evidence_dir / name
 
     def import_file(self, src: Path, label: str, what: str) -> str:
@@ -258,6 +275,40 @@ class Case:
             return True
         return any(a.get("status") == "excluded" for a in self.ancestors(cid))
 
+    def sites_examined(self) -> set[str]:
+        """Venues whose reference imagery was looked at: `refs` / `compare` ran for them (--for) and fetched
+        pictures, or a clue of the `reference` lineage speaks for or against them (a comparison made in a
+        browser tool is recorded that way)."""
+        cands, clues = self.data["candidates"], self.data["clues"]
+        out = {cid for cid, c in cands.items()
+               if c["level"] == "site" and any(r.get("compared") for r in c.get("refs") or [])}
+        links = [(e["candidate"], e["clue"]) for e in self.data["evidence"]] + \
+                [(x["candidate"], x["clue"]) for x in self.data["exclusions"]]
+        for cid, clue in links:
+            if cands.get(cid, {}).get("level") == "site" and clues.get(clue, {}).get("source") == "reference":
+                out.add(cid)
+        return out
+
+    def rivals_compared(self, cid: str) -> list[dict]:
+        """The negative control of a venue match: OTHER venues whose reference imagery was examined. A rival
+        that was compared and then excluded still counts."""
+        c = self.data["candidates"].get(cid)
+        if not c:
+            return []
+        site = c if c["level"] == "site" else next((x for x in self.ancestors(cid) if x["level"] == "site"), c)
+        return [self.data["candidates"][x] for x in sorted(self.sites_examined() - {site["id"]})]
+
+    def match_controlled(self, cid: str) -> bool:
+        """Whether a reference match recorded for this candidate has its control. For a venue or a room: a
+        rival venue went through the same comparison. For an area or a group (a design match): the
+        reference photos of at least two venues were examined."""
+        c = self.data["candidates"].get(cid)
+        if not c:
+            return False
+        if c["level"] in ("site", "room"):
+            return bool(self.rivals_compared(cid))
+        return len(self.sites_examined()) >= 2
+
     def method_state(self) -> dict[str, dict]:
         """Per method: best status over its attempts (results > no_results > not_applicable > blocked > ...)."""
         order = ["results", "no_results", "not_applicable", "blocked", "unavailable", "skipped"]
@@ -268,6 +319,13 @@ class Case:
             if cur is None or order.index(a["status"]) < order.index(cur["status"]):
                 state[m] = {"status": a["status"], "detail": a.get("detail", ""), "n": 0}
             state[m]["n"] = state[m].get("n", 0) + 1
+        for m, kinds in IMPLIED_BY_KIND.items():        # recorded clues already show that the method was done
+            if state.get(m, {}).get("status") in RESOLVED:
+                continue
+            ids = [cid for cid, c in self.data["clues"].items() if c.get("kind") in kinds]
+            if ids:
+                state[m] = {"status": "results", "detail": f"shown by clue(s) {', '.join(ids[:8])}",
+                            "n": state.get(m, {}).get("n", 0), "implied": True}
         return state
 
     def referenced_files(self) -> set[str]:

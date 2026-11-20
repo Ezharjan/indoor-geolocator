@@ -115,7 +115,7 @@ ALIASES = {
     "slovakia": "SK", "slovenia": "SI", "zimbabwe": "ZW", "zambia": "ZM", "mayotte": "YT",
     "martinique": "MQ", "guadeloupe": "GP", "akrotiri and dhekelia": "CY",
     "congo democratic republic of the": "CD", "democratic republic of congo": "CD",
-    "congo republic of the": "CG", "congo republic": "CG", "turks and caicos": "TC",
+    "congo republic of the": "CG", "turks and caicos": "TC",
     "korea republic of": "KR", "korea democratic peoples republic of": "KP", "micronesia federated states of": "FM",
     "bahamas the": "BS", "gambia the": "GM", "united kingdom and overseas territories": "GB",
 }
@@ -427,7 +427,7 @@ def main() -> int:
         if iso in emerg:
             rec["emergency"] = emerg[iso]
         countries[iso] = rec
-    for key, (code, label) in SPECIAL.items():
+    for _key, (code, label) in SPECIAL.items():
         if code.startswith("X-") and (code in mains or code in traffic):
             rec = {"name": label, "non_iso": True}
             rec.update(mains.get(code, {}))

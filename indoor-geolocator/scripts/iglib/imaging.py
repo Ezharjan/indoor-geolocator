@@ -50,17 +50,21 @@ def open_image(path: Path) -> tuple["Image.Image", dict]:
     except Exception:  # noqa: BLE001
         orient = 1
     info["orientation"] = orient
-    im.seek(0) if info["frames"] > 1 else None
-    up = ImageOps.exif_transpose(im)
-    if up.mode in ("RGBA", "LA", "P"):
-        bg = Image.new("RGB", up.size, (255, 255, 255))
-        rgba = up.convert("RGBA")
-        bg.paste(rgba, mask=rgba.split()[-1])
-        up = bg
-    elif up.mode != "RGB":
-        up = up.convert("RGB")
+    if info["frames"] > 1:
+        im.seek(0)
+    up = flatten(ImageOps.exif_transpose(im))
     info["size"] = list(up.size)
     return up, info
+
+
+def flatten(im: "Image.Image") -> "Image.Image":
+    """Any Pillow mode -> RGB (transparency over white), so every later step sees the same pixels."""
+    if im.mode in ("RGBA", "LA", "P"):
+        bg = Image.new("RGB", im.size, (255, 255, 255))
+        rgba = im.convert("RGBA")
+        bg.paste(rgba, mask=rgba.split()[-1])
+        return bg
+    return im if im.mode == "RGB" else im.convert("RGB")
 
 
 def fit(im: "Image.Image", max_side: int = VIEW_MAX, min_side: int = 0) -> "Image.Image":
@@ -175,7 +179,7 @@ def enhance(im: "Image.Image", ops: list[str]) -> "Image.Image":
         elif op == "binarize":
             g = ImageOps.grayscale(im)
             thr = _otsu(g)
-            im = g.point(lambda v: 255 if v > thr else 0).convert("RGB")
+            im = g.point(lambda v, t=thr: 255 if v > t else 0).convert("RGB")
     return im
 
 

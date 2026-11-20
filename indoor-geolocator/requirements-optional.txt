@@ -1,9 +1,17 @@
 # Optional extras: each one enables a method; the skill works without them (igl.py doctor shows what is active).
-numpy                    # QR/barcode detection and CLAHE enhancement (with OpenCV)
-opencv-python-headless   # QR codes and barcodes
+# The first four decide how much the tools can find and verify, so install them when you can:
+#     pip install -r requirements-optional.txt && playwright install chromium
+numpy                    # perceptual hashes; with OpenCV: QR codes, barcodes, CLAHE
+opencv-python-headless   # QR codes and barcodes; COPY / SAME SCENE tests in `revsearch`, `refs` and `compare`
+playwright               # headless reverse image search (Yandex, TinEye, Baidu), reference photos (`refs`:
+                         # Brave and Startpage image search, gallery pages) and page snapshots
+onnxruntime              # reference photos and search hits sorted by visual similarity to the photo (DINOv2;
+                         # the 24 MB model is downloaded once from huggingface.co, see sources-and-tools.md)
 phonenumbers             # offline phone-number geolocation (country, area, city)
-playwright               # automated reverse image search and page snapshots; then: playwright install chromium
 pillow-heif              # HEIC/HEIF photos (iPhone)
-rapidocr-onnxruntime     # OCR fallback when tesseract is not installed
+rapidocr-onnxruntime     # OCR when tesseract is not installed (scene text; Chinese and English models)
 # Not pip packages: tesseract OCR with language packs (apt install tesseract-ocr-all | brew install tesseract
 # tesseract-lang | winget install UB-Mannheim.TesseractOCR); exiftool (richer metadata, optional).
+# Optional keys (the user's own, from the environment): SERPAPI_KEY (Google Lens inside `revsearch`),
+# WIGLE_API_NAME + WIGLE_API_TOKEN (Wi-Fi names with `geo wigle`).
+# Switches: IGL_MODEL_DIR (where the similarity model is kept), IGL_NO_EMBED=1 (never load or download it).

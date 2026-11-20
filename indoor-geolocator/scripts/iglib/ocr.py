@@ -1,12 +1,16 @@
 """Second reader for text in the photo: multi-pass OCR (full frame, enhanced frame, overlapping upscaled
-tiles), script probing for non-Latin writing, merge with pass agreement.
+tiles), script probing for non-Latin writing, merge with pass agreement, then a PRECISION FILTER.
 
 Backends, best available first: tesseract (CLI, any language pack installed), RapidOCR
 (`pip install rapidocr-onnxruntime`, Chinese/English models). Without either, the agent reads the
 text itself from zoomed crops - OCR output is only ever a hint (status `reported`) until verified.
 
-An OCR confidence is a glyph-shape score, not proof that text exists: stains and textures can score
-0.99. Lines read in only one pass, or only after upscaling, are the most likely misreads.
+Why the filter: OCR engines are built for documents. On a photograph of a room they "read" carpets,
+curtains, tiles and ornaments as text, often with high confidence and often in an exotic script (a
+patterned ceiling becomes "Thai"). One such line can send an investigation to the wrong country, so a
+line is only reported when it looks like language: word-shaped tokens (or contiguous runs in scripts
+written without spaces), a known pattern (URL, phone, price, date) or agreement between passes. Everything
+else is counted, kept out of the text signals, and never used to pick a script or a language pack.
 """
 from __future__ import annotations
 
@@ -206,6 +210,101 @@ def _alnum(t: str) -> int:
     return sum(ch.isalnum() for ch in t)
 
 
+NO_SPACE_SCRIPTS = {"THAI", "LAO", "KHMER", "MYANMAR", "CJK", "HIRAGANA", "KATAKANA", "HANGUL", "TIBETAN"}
+SHORT_RUN_SCRIPTS = {"CJK", "HIRAGANA", "KATAKANA", "HANGUL"}          # two characters already make a word
+_VOWELS = set("aeiouyàáâãäåæèéêëìíîïòóôõöøùúûüýÿāăąēĕėęěīĭįıōŏőœūŭůűųǎǐǒǔ")
+_STRONG = re.compile(
+    r"(?i)(https?://|www\.[a-z0-9-]+\.[a-z]{2,}|[a-z0-9._%+-]+@[a-z0-9-]+\.[a-z]{2,}|\b[a-z0-9-]{3,}\.(?:com|net|org|"
+    r"co\.[a-z]{2}|de|fr|it|es|nl|ch|at|uk|jp|cn|ru|br|pl|se|no|dk|fi|pt|gr|tr|in|kr|tw|hk|sg|au|nz|ca|mx)\b|"
+    r"\+\d[\d ()./-]{7,}\d|\(\d{2,5}\)\s?\d[\d -]{4,}|\b\d{2,4}[-./]\d{1,2}[-./]\d{2,4}\b|\b\d{1,2}:\d{2}\b|"
+    r"[€£$¥₩₹₽₺฿₫₴₪]\s?\d|\d[\d.,]*\s?(?:€|£|eur|usd|gbp|chf|kr|zł|kč|ft|лв|руб|元|円|원)(?![a-z]))")
+
+
+def char_script(ch: str) -> str | None:
+    """Script name of a letter or combining mark (LATIN, CYRILLIC, THAI, CJK ...); None for anything else."""
+    if unicodedata.category(ch)[0] not in "LM":
+        return None
+    name = unicodedata.name(ch, "")
+    return name.split(" ")[0] if name else None
+
+
+def _runs(text: str) -> list[tuple[str, str]]:
+    """Contiguous runs of letters of one script: [(script, run), ...] (digits, spaces and symbols split)."""
+    out: list[tuple[str, str]] = []
+    cur_s, cur = None, ""
+    for ch in text:
+        sc = char_script(ch)
+        if sc is not None and (cur_s is None or sc == cur_s or unicodedata.category(ch)[0] == "M"):
+            cur += ch
+            cur_s = cur_s or sc
+            continue
+        if cur:
+            out.append((cur_s, cur))
+        cur_s, cur = (sc, ch) if sc is not None else (None, "")
+    if cur:
+        out.append((cur_s, cur))
+    return out
+
+
+def _wordlike_latin(tok: str) -> bool:
+    """A Latin token shaped like a word: 3+ letters, vowels and consonants, sane casing, no triple letters."""
+    if len(tok) < 3:
+        return False
+    low = tok.lower()
+    base = "".join(c for c in unicodedata.normalize("NFKD", low) if not unicodedata.combining(c))
+    nv = sum(c in _VOWELS for c in low) or sum(c in "aeiouy" for c in base)
+    if nv == 0 or nv == len(low) or nv / len(low) > 0.8:
+        return False
+    if any(low[i] == low[i + 1] == low[i + 2] for i in range(len(low) - 2)):
+        return False
+    return tok.islower() or tok.isupper() or tok[1:].islower() or (tok[:1].isupper() and sum(c.isupper() for c in tok) <= 2)
+
+
+def text_quality(text: str) -> dict:
+    """How language-like an OCR line is: {strong, words, longest, script, script_run, coverage}.
+    `words` counts word-shaped tokens (Latin) or sufficiently long same-script runs (other scripts);
+    `coverage` is the share of the line's letters that sit inside such tokens."""
+    runs = _runs(text)
+    letters = sum(len(r) for _, r in runs)
+    good, longest = [], 0
+    by_script: dict[str, int] = {}
+    for sc, run in runs:
+        n = sum(1 for c in run if unicodedata.category(c)[0] == "L")
+        if sc == "LATIN":
+            ok = _wordlike_latin(run)
+        elif sc in SHORT_RUN_SCRIPTS:
+            ok = n >= 2
+        else:
+            ok = n >= 3
+        if ok:
+            good.append((sc, run))
+            longest = max(longest, n)
+            by_script[sc] = by_script.get(sc, 0) + n
+    script = max(by_script, key=by_script.get) if by_script else None
+    return {"strong": bool(_STRONG.search(text)), "words": len(good), "longest": longest, "script": script,
+            "script_run": max((sum(1 for c in r if unicodedata.category(c)[0] == "L") for sc, r in good if sc == script),
+                              default=0),
+            "coverage": round(sum(len(r) for _, r in good) / letters, 2) if letters else 0.0}
+
+
+def plausible(text: str, conf: float, agree: int) -> bool:
+    """The precision filter: keep an OCR line only when it looks like language (see the module docstring)."""
+    q = text_quality(text)
+    if q["strong"]:
+        return conf >= 0.45
+    if not q["words"] or q["coverage"] < (0.4 if q["longest"] >= 5 else 0.6):
+        return False                                 # mostly stray letters around one accidental "word"
+    if q["script"] != "LATIN":                       # exotic scripts are what textures get misread as
+        need = 2 if q["script"] in SHORT_RUN_SCRIPTS else 3
+        return q["script_run"] >= need and ((agree >= 2 and conf >= 0.6) or
+                                            (conf >= 0.85 and q["script_run"] >= need + 1))
+    if q["longest"] >= 5 or q["words"] >= 2:
+        return (agree >= 2 and conf >= 0.5) or conf >= 0.8 or (q["words"] >= 3 and conf >= 0.6)
+    return agree >= 2 and conf >= 0.75               # one short word (EXIT, BAR, LIFT): both passes must agree
+
+
+
+
 def run(img: Image.Image, langs: list[str] | None = None, budget_s: float = 150.0, fast: bool = False) -> dict:
     """OCR the upright image. Returns {backend, langs, passes, lines[], scripts, elapsed_s, notes[]}."""
     t0 = time.time()
@@ -250,32 +349,33 @@ def run(img: Image.Image, langs: list[str] | None = None, budget_s: float = 150.
                 latin = [r for r in raw if r["conf"] >= 0.75 and _alnum(r["text"]) >= 3]
                 good = []
                 for ln in lines:
-                    sc = scripts_in(ln["text"])
-                    n_script = sum(v for k, v in sc.items() if k in script_names)
-                    n_alpha = sum(sc.values())
-                    if ln["conf"] < 0.75 or n_script < 2 or n_script < 0.6 * max(1, n_alpha):
+                    q = text_quality(ln["text"])
+                    if q["script"] not in script_names or ln["conf"] < 0.75 or q["coverage"] < 0.6:
+                        continue
+                    need = 2 if q["script"] in SHORT_RUN_SCRIPTS else 3
+                    if q["script_run"] < need:
                         continue
                     b = ln["box"]
                     ob = [int(b[0] / ps), int(b[1] / ps), int(b[2] / ps), int(b[3] / ps)]
                     # a foreign-script model "reading" text the Latin pass already read well is a misread
                     if any(_iou(ob, r["box"]) > 0.3 or _center_in(ob, r["box"]) for r in latin):
                         continue
-                    good.append((ln, n_script))
-                total = sum(n for _, n in good)
-                strong = any(ln["conf"] >= 0.88 and n >= 4 for ln, n in good)
-                # textures (curtains, carpets, tiles) make tesseract "read" exotic scripts: demand real volume
-                if total >= 6 and (len(good) >= 2 or strong):
-                    good = [ln for ln, _ in good]
+                    good.append((ln, q["script_run"], need))
+                strong = any(ln["conf"] >= 0.9 and run >= need + 2 for ln, run, need in good)
+                # textures (curtains, carpets, tiles, ornament) make tesseract "read" exotic scripts: demand two
+                # word-shaped lines, or one long and confident one, before trusting the script at all
+                if len(good) >= 2 or strong:
+                    good = [ln for ln, _, _ in good]
                     used_langs += [l for l in have if l not in used_langs]
                     add(good, "probe", ps, lang="+".join(have))
-                    notes.append(f"{label} script detected - added {'+'.join(have)}")
+                    notes.append(f"{label} script candidate - added {'+'.join(have)} (verify on a crop)")
         if langs:
             add(_tess(exe, full, used_langs, 11, 120), "full", full_scale, lang="+".join(used_langs))
         if left() > 25:
             enh = ImageOps.autocontrast(ImageOps.grayscale(full), cutoff=2)
             add(_tess(exe, enh, used_langs, 11, 90), "enhanced", full_scale, lang="+".join(used_langs))
         grid = (2, 2) if fast else (3, 3)
-        for label, box in imaging.tiles((W, H), *grid, overlap=0.15):
+        for _label, box in imaging.tiles((W, H), *grid, overlap=0.15):
             if left() < 8:
                 notes.append("time budget reached: remaining tiles skipped (re-run with --budget to extend)")
                 break
@@ -289,7 +389,7 @@ def run(img: Image.Image, langs: list[str] | None = None, budget_s: float = 150.
             backend = "rapidocr"
             used_langs = ["ch+en (RapidOCR default models)"]
             add(_rapid(eng, full), "full", full_scale)
-            for label, box in imaging.tiles((W, H), 3, 3, overlap=0.15):
+            for _label, box in imaging.tiles((W, H), 3, 3, overlap=0.15):
                 if left() < 8:
                     notes.append("time budget reached: remaining tiles skipped")
                     break
@@ -302,48 +402,84 @@ def run(img: Image.Image, langs: list[str] | None = None, budget_s: float = 150.
                 "notes": ["no OCR backend: install tesseract (apt/brew/winget) or `pip install rapidocr-onnxruntime`; "
                           "until then read text yourself from zoomed crops (igl.py crop)"]}
 
-    merged: list[dict] = []
-    for r in sorted(raw, key=lambda x: -x["conf"]):
-        if _alnum(r["text"]) < 2:
-            continue
-        nt = _norm(r["text"])
-        hit = None
-        for m in merged:
-            if (_norm(m["text"]) == nt or (len(nt) > 3 and (nt in _norm(m["text"]) or _norm(m["text"]) in nt))) \
-                    and (_iou(m["box"], r["box"]) > 0.15 or _center_in(r["box"], m["box"])):
-                hit = m
-                break
-        if hit:
-            hit["passes"].add(r["pass"])
-            hit["conf"] = max(hit["conf"], r["conf"])
-        else:
-            merged.append({"text": r["text"], "conf": r["conf"], "box": r["box"], "passes": {r["pass"]},
-                           "lang": r["lang"]})
-    lines, rejected = [], 0
+    merged = merge(raw)
+    lines, weak = [], []
     for m in merged:
         agree = len(m["passes"])
-        an = _alnum(m["text"])
-        dense = an / max(1, len(m["text"].replace(" ", "")))
-        if agree >= 2:
-            keep = m["conf"] >= 0.45 and an >= 2
-        else:   # single pass: the usual source of texture "text"
-            keep = m["conf"] >= 0.6 and an >= 3 and dense >= 0.6 and (an >= 4 or m["conf"] >= 0.8)
-        if not keep:
-            rejected += 1
-            continue
-        lines.append({"text": m["text"], "conf": m["conf"], "box": m["box"], "passes": sorted(m["passes"]),
-                      "agree": agree, "scripts": scripts_in(m["text"])})
-    if rejected:
-        notes.append(f"{rejected} low-quality fragment(s) dropped (single-pass, short or symbol-heavy: typical texture noise)")
+        row = {"text": m["text"], "conf": m["conf"], "box": m["box"], "passes": sorted(m["passes"]), "agree": agree}
+        if plausible(m["text"], m["conf"], agree):
+            row["scripts"] = scripts_in(m["text"])
+            row["quality"] = text_quality(m["text"])
+            lines.append(row)
+        else:
+            weak.append(row)
+    if weak:
+        notes.append(f"{len(weak)} fragment(s) did not look like language and were set aside (texture noise is the "
+                     "norm in room photos): they are not text signals. Read the tiles yourself for stylised logos "
+                     "and tiny print the engine cannot read")
     lines.sort(key=lambda l: (l["box"][1] // 40, l["box"][0]))
     for i, ln in enumerate(lines, 1):
         ln["id"] = f"T{i}"
     total_scripts: dict[str, int] = {}
     for ln in lines:
-        for k, v in ln["scripts"].items():
-            total_scripts[k] = total_scripts.get(k, 0) + v
+        sc = ln["quality"]["script"]
+        if sc:
+            total_scripts[sc] = total_scripts.get(sc, 0) + sum(v for k, v in ln["scripts"].items() if k == sc)
+    weak.sort(key=lambda w: -w["conf"])
     return {"backend": backend, "langs": used_langs, "lines": lines, "scripts": total_scripts,
+            "weak_count": len(weak), "weak": weak[:40],
             "elapsed_s": round(time.time() - t0, 1), "notes": notes}
+
+
+def _same_line(a: str, b: str) -> bool:
+    """Two normalised readings of one printed line: equal, one inside the other, or a long shared start or
+    end (a tile border cuts a line and the engine guesses the characters at the cut)."""
+    if a == b:
+        return True
+    short_, long_ = sorted((a, b), key=len)
+    if len(short_) > 3 and short_ in long_:
+        return True
+    if len(short_) < 6:
+        return False
+    head = tail = 0
+    while head < len(short_) and short_[head] == long_[head]:
+        head += 1
+    while tail < len(short_) and short_[-1 - tail] == long_[-1 - tail]:
+        tail += 1
+    return max(head, tail) >= 0.7 * len(short_)
+
+
+def merge(raw: list[dict]) -> list[dict]:
+    """One entry per printed line from the readings of all passes ({text, conf, box, pass, lang}): readings
+    of the same line at the same place are merged, `passes` records which passes agreed, and the fullest
+    reading wins unless it is clearly less certain."""
+    merged: list[dict] = []
+    for r in sorted(raw, key=lambda x: -x["conf"]):
+        if _alnum(r["text"]) < 2:
+            continue
+        nt = _norm(r["text"])
+        hit = next((m for m in merged if _same_line(_norm(m["text"]), nt)
+                    and (_iou(m["box"], r["box"]) > 0.15 or _center_in(r["box"], m["box"])
+                         or _center_in(m["box"], r["box"]))), None)
+        if hit is None:
+            merged.append({"text": r["text"], "conf": r["conf"], "box": r["box"], "passes": {r["pass"]},
+                           "lang": r.get("lang", "")})
+            continue
+        hit["passes"].add(r["pass"])
+        if len(nt) > len(_norm(hit["text"])) and r["conf"] >= hit["conf"] - 0.1:
+            hit["text"], hit["box"] = r["text"], r["box"]
+        hit["conf"] = max(hit["conf"], r["conf"])
+    out: list[dict] = []                    # a fuller reading may have arrived after its fragments: fold those in
+    for m in sorted(merged, key=lambda x: -len(_norm(x["text"]))):
+        nt = _norm(m["text"])
+        hit = next((o for o in out if _same_line(_norm(o["text"]), nt)
+                    and (_iou(o["box"], m["box"]) > 0.15 or _center_in(m["box"], o["box"]))), None)
+        if hit is None:
+            out.append(m)
+        else:
+            hit["passes"] |= m["passes"]
+            hit["conf"] = max(hit["conf"], m["conf"])
+    return out
 
 
 def _center_in(a, b) -> bool:

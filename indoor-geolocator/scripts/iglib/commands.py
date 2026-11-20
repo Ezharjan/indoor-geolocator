@@ -8,58 +8,12 @@ import re
 import shutil
 from pathlib import Path
 
-from . import codes, geo, imaging, knowledge, metadata, ocr, report, revsearch, scoring, social, textmine
-from .case import (ATTEMPT_STATUS, CORE_METHODS, EXCLUDERS, GRADE, KINDS, LEVEL_HELP, LEVELS, OPTIONAL_METHODS,
-                   RESOLVED, SOURCES, STATUS_CAP, Case)
-from .net import Http
-from .util import IglError, haversine_m, parse_box, parse_latlon, sha256_file, short, table, write_json
-
-
-# ----------------------------------------------------------------------------- helpers
-def _http(case: Case | None, service: str | None = None, timeout: float = 25.0, retries: int = 3) -> Http:
-    if case is not None and service:
-        svc = case.data["auto"].setdefault("services", [])
-        if service not in svc:
-            svc.append(service)
-    return Http(cache_dir=(case.work / "cache") if case else None, timeout=timeout, retries=retries)
-
-
-def _box_from(a, img_size, case: Case | None = None) -> tuple | None:
-    if getattr(a, "box", None):
-        return parse_box(a.box)
-    if getattr(a, "cell", None):
-        if case is None or "grid" not in case.data["image"]:
-            raise IglError("--cell needs a case created by `igl.py init` (it defines the grid)")
-        return imaging.cell_box(case.data["image"]["grid"], a.cell)
-    if getattr(a, "rel", None):
-        x0, y0, x1, y1 = (float(v) for v in a.rel.split(","))
-        w, h = img_size
-        return int(x0 * w), int(y0 * h), int(x1 * w), int(y1 * h)
-    return None
-
-
-def _attempt(case: Case, method: str, status: str, detail: str, engine: str | None = None, query: str | None = None,
-             url: str | None = None, files: list[str] | None = None, save: bool = True) -> str:
-    aid = case.next_id("A")
-    case.data["attempts"].append({"id": aid, "method": method, "status": status, "detail": detail, "engine": engine,
-                                  "query": query, "url": url, "files": files or [], "time": dt.datetime.now()
-                                  .astimezone().isoformat(timespec="seconds")})
-    case.event("log", f"{aid} {method}{('/' + engine) if engine else ''}: {status} - {short(detail, 140)}", save=save)
-    return aid
-
-
-def _new_clue(case: Case, text: str, kind: str, status: str, source: str, files=None, box=None, url=None,
-              resolves=None) -> str:
-    cid = case.next_id("N")
-    case.data["clues"][cid] = {"id": cid, "text": text, "kind": kind, "status": status, "source": source,
-                               "files": files or [], "box": list(box) if box else None, "url": url,
-                               "resolves": resolves or [], "time": dt.datetime.now().astimezone().isoformat(timespec="seconds")}
-    case.event("note", f"{cid} [{status}/{source}] {short(text, 160)}")
-    return cid
-
-
-def _print_json(obj) -> None:
-    print(json.dumps(obj, ensure_ascii=False, indent=1))
+from . import codes, embed, geo, imaging, knowledge, metadata, ocr, report, revsearch, scoring, social, textmine
+from .case import (ATTEMPT_STATUS, CORE_METHODS, DECISIVE, EXCLUDERS, GRADE, KINDS, LEVEL_HELP, LEVELS, OPTIONAL_METHODS,
+                   RESOLVED, SOURCE_CAP, SOURCES, STATUS_CAP, Case)
+from .common import _DRY, _attempt, _box_from, _http, _new_clue, _print_json, _save_json  # noqa: F401
+from .util import IglError, haversine_m, parse_box, parse_latlon, redact, sha256_file, short, table, write_json
+from .visual import cmd_compare, cmd_refs, cmd_revsearch, cmd_share, cmd_snapshot  # noqa: F401
 
 
 # ----------------------------------------------------------------------------- init / scan / views
@@ -110,7 +64,12 @@ def cmd_init(a) -> int:
     strong = bool(auto_clues)
     _attempt(case, "metadata", "results" if (strong or flags) else "no_results",
              "; ".join(flags)[:600] or "no metadata of note", files=[], save=False)
-    case.event("init", f"metadata read: {len(flags)} notable fields; overview grid {spec['cols']}x{spec['rows']}")
+    net_state = None
+    if not getattr(a, "no_probe", False):
+        net_state = _probe_network()
+        case.data["auto"]["network"] = net_state
+    case.event("init", f"metadata read: {len(flags)} notable fields; overview grid {spec['cols']}x{spec['rows']}"
+               + (f"; CLI network: {', '.join(net_state['reachable']) or 'none'} reachable" if net_state else ""))
     print(f"CASE   {case.root}")
     print(f"IMAGE  {case.data['image']['file']}  {info['size'][0]}x{info['size'][1]} {info['format']}"
           f"{' (EXIF-rotated)' if info['orientation'] not in (1, None) else ''}")
@@ -122,10 +81,75 @@ def cmd_init(a) -> int:
         print(f"  - {f}")
     if auto_clues:
         print("\nAUTO-RECORDED CLUES (link them once candidates exist): " + ", ".join(auto_clues))
-    print("\nNEXT  1) look at the photo and the grid view; record your first impression BEFORE reading tool output:\n"
-          f"         igl.py note {case.root} \"First impression: ...\" --kind hypothesis --status inferred --source image\n"
+    if net_state:
+        print("\nNETWORK (what the CLI itself can reach from here, right now)")
+        print(f"  reachable:    {', '.join(net_state['reachable']) or 'none'}")
+        if net_state.get("limited"):
+            print(f"  rate-limited: {', '.join(net_state['limited'])}  (shared address: these refuse requests at the "
+                  "moment; the commands fall back or say so)")
+        if net_state["unreachable"]:
+            print(f"  unreachable:  {', '.join(net_state['unreachable'])}")
+        print(f"  headless browser (revsearch, refs, snapshot): {net_state['browser']}")
+        print(f"  similarity ordering of reference photos: {embed.state()['note']}")
+        if not net_state["reachable"]:
+            print("  => the CLI is OFFLINE here. Do every online step with YOUR OWN tools (web search, web fetch, browser),\n"
+                  "     record what they return with note / cand / log, and use `geo ... --print-url` for API URLs.")
+        else:
+            print("  => use the CLI's online commands where they are reachable, and your own web search / fetch / browser "
+                  "tools for everything else (Google Lens, maps photos, listings, social platforms).")
+    missing = _missing_extras()
+    if missing:
+        print("\nMISSING EXTRAS that matter for accuracy (install once in this environment, then carry on):")
+        for what, fix in missing:
+            print(f"  - {what}: {fix}")
+    print("\nNEXT  1) LOOK at the photo and the grid view, then record what you think BEFORE any tool output:\n"
+          f"         igl.py note {case.root} \"Hypotheses: scene=...; 1) <place> because ...; 2) ...; 3) ...; would "
+          "discriminate: ...\" --kind hypothesis --status inferred --source image\n"
           f"      2) igl.py scan {case.root}")
     return 0
+
+
+def _missing_extras() -> list[tuple[str, str]]:
+    """Optional packages without which the comparison tools or the online commands are blind."""
+    import importlib.util
+    out = []
+    if importlib.util.find_spec("cv2") is None or importlib.util.find_spec("numpy") is None:
+        out.append(("OpenCV + numpy (QR codes and barcodes; COPY / SAME SCENE tests in revsearch, refs, compare)",
+                    "pip install opencv-python-headless numpy"))
+    if importlib.util.find_spec("playwright") is None:
+        out.append(("Playwright + Chromium (reverse image search, reference photos with `refs`, snapshots)",
+                    "pip install playwright && playwright install chromium"))
+    if importlib.util.find_spec("onnxruntime") is None or importlib.util.find_spec("numpy") is None:
+        out.append(("onnxruntime + numpy (reference photos and search hits shown most-similar-first instead of in the "
+                    "search engine's order)", "pip install onnxruntime numpy"))
+    return out
+
+
+NET_PROBES = {
+    "nominatim": "https://nominatim.openstreetmap.org/status?format=json",
+    "photon": "https://photon.komoot.io/api/?q=Berlin&limit=1",
+    "overpass": "https://overpass-api.de/api/status",
+    "commons": "https://commons.wikimedia.org/w/api.php?action=query&meta=siteinfo&format=json",
+    "wikidata": "https://www.wikidata.org/w/api.php?action=wbsearchentities&search=Louvre&language=en&format=json&limit=1",
+    "yandex": "https://yandex.com/images/",
+    "tineye": "https://tineye.com/",
+    "baidu": "https://graph.baidu.com/pcpage/index?tpl_from=pc",
+    "brave images (refs)": "https://search.brave.com/",
+    "startpage images (refs)": "https://www.startpage.com/",
+    "uguu (share)": "https://uguu.se/",
+}
+
+
+def _probe_network(timeout: float = 5.0) -> dict:
+    from .net import probe
+    res = probe(NET_PROBES, timeout=timeout)
+    ok, why = revsearch.available()
+    return {"checked": dt.datetime.now().astimezone().isoformat(timespec="seconds"),
+            "reachable": [k for k, v in res.items() if v["ok"]],
+            "limited": [k for k, v in res.items() if v.get("state") == "rate_limited"],
+            "unreachable": [f"{k} ({v['note']})" for k, v in res.items()
+                            if not v["ok"] and v.get("state") != "rate_limited"],
+            "browser": "available" if ok else f"unavailable - {why}"}
 
 
 def cmd_scan(a) -> int:
@@ -150,6 +174,19 @@ def cmd_scan(a) -> int:
     write_json(jp, out)
     aid, ap = case.reserve_file("scan-annotated", "jpg", "photo with OCR line boxes (T#) and code boxes (Q#)")
     imaging.annotate(img, items).save(ap, quality=88)
+    text_sheet = None
+    if out["ocr"]["lines"]:                           # the lines, cut out and enlarged: one look confirms or refutes them
+        crops = []
+        for l in sorted(out["ocr"]["lines"], key=lambda l: (-l["agree"], -l["conf"]))[:24]:
+            try:
+                crops.append((f"{l['id']} {short(l['text'], 34)}", imaging.view_of(imaging.crop(img, tuple(l["box"]), pad=0.35),
+                                                                                  min_side=420)))
+            except IglError:
+                continue
+        if crops:
+            tid, tp_ = case.reserve_file("text-crops", "jpg", "enlarged crops of the OCR lines (T#): read them yourself")
+            imaging.contact_sheet(crops, cols=4, cell=384).save(tp_, quality=88)
+            text_sheet = (tid, tp_)
     tdir = case.work / "tiles"
     if tdir.exists():
         shutil.rmtree(tdir)
@@ -162,9 +199,10 @@ def cmd_scan(a) -> int:
         tile_paths.append(tp)
     o = out["ocr"]
     st = "results" if o.get("lines") else ("no_results" if o.get("backend") else "unavailable")
-    _attempt(case, "text_ocr", st, f"{o.get('backend') or 'no backend'}: {len(o.get('lines', []))} lines "
-                                   f"[{', '.join(short(l['text'], 30) for l in o.get('lines', [])[:8])}]",
-             engine=o.get("backend"), files=[jid, aid], save=False)
+    _attempt(case, "text_ocr", st, f"{o.get('backend') or 'no backend'}: {len(o.get('lines', []))} language-like "
+                                   f"line(s) [{', '.join(short(l['text'], 30) for l in o.get('lines', [])[:8])}]"
+                                   + (f"; {o.get('weak_count', 0)} noise fragment(s) set aside" if o.get("weak_count") else ""),
+             engine=o.get("backend"), files=[jid, aid] + ([text_sheet[0]] if text_sheet else []), save=False)
     cd = out["codes"]
     st = "results" if cd["codes"] else ("unavailable" if cd.get("notes") and "OpenCV missing" in " ".join(cd["notes"])
                                         else "no_results")
@@ -173,8 +211,9 @@ def cmd_scan(a) -> int:
     case.data["auto"]["scan"] = {"ocr_backend": o.get("backend"), "ocr_lines": len(o.get("lines", [])),
                                  "codes": len(cd["codes"]), "scan_file": jid, "annotated": aid}
     case.event("scan", f"scan: {len(o.get('lines', []))} OCR lines, {len(cd['codes'])} codes, tiles {a.grid_cols}x{a.grid_rows}")
-    print(f"\nOCR ({o.get('backend') or 'none'}; langs {'+'.join(o.get('langs', [])) or '-'}; {o.get('elapsed_s', 0)} s) "
-          "- HINTS ONLY: verify each line on a zoomed crop before using it")
+    print(f"\nTEXT the OCR engine is fairly sure of ({o.get('backend') or 'none'}; langs "
+          f"{'+'.join(o.get('langs', [])) or '-'}; {o.get('elapsed_s', 0)} s) - still HINTS: confirm each on its crop "
+          "before using it")
     lines = sorted(o.get("lines", []), key=lambda l: (-l["agree"], -l["conf"]))
     if lines:
         print(table([[l["id"], f"{l['conf']:.2f}", l["agree"], ",".join(l["passes"]), short(l["text"], 70),
@@ -182,6 +221,16 @@ def cmd_scan(a) -> int:
                     ["id", "conf", "agree", "passes", "text", "box"]))
         if len(lines) > 45:
             print(f"  ... {len(lines) - 45} more in {jp.name}")
+        if text_sheet:
+            print(f"  zoomed crops of these lines, one look to confirm them: {text_sheet[0]}  {text_sheet[1]}")
+    else:
+        print("  none" + (" (no OCR engine)" if not o.get("backend") else
+                          ": the engine read no language-like text. That is common for rooms and proves nothing: read "
+                          "the tiles yourself (small print, stylised logos, screens, labels, spines, plaques)"))
+    if getattr(a, "all", False) and o.get("weak"):
+        print("\n  fragments set aside by the precision filter (texture noise is the norm; NOT text signals):")
+        print(table([[f"{w['conf']:.2f}", w["agree"], short(w["text"], 50), ",".join(map(str, w["box"]))]
+                     for w in o["weak"][:30]], ["conf", "agree", "fragment", "box"]))
     for n in o.get("notes", []):
         print(f"  note: {n}")
     print("\nCODES")
@@ -193,12 +242,15 @@ def cmd_scan(a) -> int:
     else:
         print("  none decoded" + ("".join(f" ({n})" for n in cd.get("notes", []))))
     ts = out["text_signals"]
-    print("\nTEXT SIGNALS (from OCR + codes; machine hints)")
+    print("\nTEXT SIGNALS (patterns in the lines above and in decoded codes; machine hints)")
     if ts:
         for k, v in ts.items():
             print(f"  {k}: {short(json.dumps(v, ensure_ascii=False), 300)}")
     else:
         print("  none")
+    if any(k != "LATIN" for k in (o.get("scripts") or {})):
+        print("  a non-Latin script here comes from OCR alone: an ornament, a carpet or a tiled wall can produce it. "
+              "Treat it as real only after you have read actual words on a crop.")
     if o.get("backend") == "tesseract" and ts:
         hinted, better = ocr.suggest_langs(ts, o.get("langs", []), ocr.backends()["tesseract_langs"])
         if better:
@@ -206,8 +258,9 @@ def cmd_scan(a) -> int:
                   f"(accents and letters like ß, ç, ł are lost otherwise):\n"
                   f"            igl.py scan {case.root} --langs {'+'.join(better + ['eng'])}")
     print(f"\nFILES  {jp}\n       {ap}")
-    print("\nVISUAL SWEEP - open every tile below (overlapping, upscaled) and log what you see with `igl.py note`;\n"
-          "crop anything worth keeping with `igl.py crop` (tiles are scratch and get deleted at finalize):")
+    print("\nVISUAL SWEEP - open EVERY tile below (overlapping, upscaled): your own eyes are the primary reader here.\n"
+          "Read all text yourself, name fixed fittings, note what could identify the venue (logos, unique art, the view).\n"
+          "Crop what matters with `igl.py crop` (tiles are scratch and get deleted at finalize):")
     for tp in tile_paths:
         print(f"  {tp}")
     return 0
@@ -215,7 +268,14 @@ def cmd_scan(a) -> int:
 
 def cmd_crop(a) -> int:
     case = Case(Path(a.case))
-    img, _ = imaging.open_image(case.image_path)
+    if getattr(a, "of", None):                      # zoom into another evidence image (a reference photo, a sheet)
+        if a.cell:
+            raise IglError("--cell refers to the grid of the case photo: with --of use --rel x0,y0,x1,y1 (0-1) or --box")
+        src = case.resolve_files([a.of])[0]
+        img, _ = imaging.open_image(case.file_path(src))
+    else:
+        src = None
+        img, _ = imaging.open_image(case.image_path)
     box = _box_from(a, img.size, case)
     if not box:
         raise IglError("give --box x0,y0,x1,y1 (pixels), --cell C3[:E5] (grid view) or --rel x0,y0,x1,y1 (0-1)")
@@ -228,7 +288,8 @@ def cmd_crop(a) -> int:
         from PIL import ImageOps
         part = ImageOps.mirror(part)
     view = imaging.view_of(part, scale=a.scale)
-    what = a.what or f"crop {box}" + (f" enhanced {a.enhance}" if a.enhance else "") + (" mirrored" if a.flip else "")
+    what = a.what or (f"crop {box}" + (f" of {src}" if src else "") + (f" enhanced {a.enhance}" if a.enhance else "")
+                      + (" mirrored" if a.flip else ""))
     eid, p = case.reserve_file(a.label or "crop", "jpg", what)
     view.save(p, quality=92)
     case.save()
@@ -265,7 +326,7 @@ def cmd_countries(a) -> int:
     if a.case and a.clue:
         case = Case(Path(a.case))
         clue = case.clue(a.clue)
-        cap = STATUS_CAP[clue["status"]]
+        cap = _lr_cap(clue)
         lr = min(a.lr or cap, cap)
         added, linked = 0, 0
         for r in rows:
@@ -368,20 +429,49 @@ def _maybe_add(case: Case | None, places: list[dict], level: str | None, parent:
                                         "time": dt.datetime.now().astimezone().isoformat(timespec="seconds")}
         ids.append(cid)
     case.event("cand", f"{len(ids)} {level} candidates added from {note}: {', '.join(ids[:20])}")
+    if level != "country" and not par and ids:
+        print("note: added without --parent: attach them to their city or country (`cand <case> C# --parent C#`)")
     return ids
 
 
-def _save_json(case: Case | None, label: str, what: str, obj) -> str | None:
-    if not case:
-        return None
-    eid, p = case.reserve_file(label, "json", what)
-    write_json(p, obj)
-    case.save()
-    return eid
-
-
 def cmd_geo(a) -> int:
+    if getattr(a, "print_url", False):
+        return _geo_print_urls(a)
+    return _geo(a)
+
+
+def _geo_print_urls(a) -> int:
+    """Run the geo command with a recording HTTP client and print the URLs it would have requested."""
+    import contextlib
+    import io
+    _DRY.clear()
+    note = ""
+    a.case, a.add, a.save = None, None, False            # nothing is written in this mode
+    with contextlib.redirect_stdout(io.StringIO()):
+        try:
+            _geo(a)
+        except IglError as e:
+            note = str(e)
+    urls = [u for h in _DRY for u in h.printed]
+    if not urls:
+        raise IglError(f"no request to print{': ' + note if note else ''} (for `geo poi --area`, resolve the area "
+                       "first with `geo search` and pass --bbox s,w,n,e)")
+    print("Request URL(s), first choice first (open with your own web-fetch or browser tool; nothing was sent):")
+    for u in urls:
+        print(f"  {u}")
+    if note:
+        print(f"note: {note}")
+    print("Record what they return with `igl.py cand` / `igl.py note`, and log the method.")
+    return 0
+
+
+def _geo(a) -> int:
     case = Case(Path(a.case)) if getattr(a, "case", None) else None
+    dry = bool(getattr(a, "print_url", False))
+
+    def _http(case_, service=None, timeout=25.0, retries=3):        # noqa: F811 - shadows the module helper
+        return globals()["_http"](case_, service, timeout, retries, dry=dry)
+
     if a.geo_cmd == "search":
         http = _http(case, "Nominatim/Photon")
         near = parse_latlon(a.near) if a.near else None
@@ -421,14 +511,25 @@ def cmd_geo(a) -> int:
         places = geo.elements_to_places(r["elements"])
         print(f"Overpass: {len(places)} feature(s)" + (f" via {r.get('server')}" if r["ok"] else f" - UNAVAILABLE: {r.get('error')}")
               + (f"  WARNING {r['warning']}" if r.get("warning") else ""))
+        if not r["ok"] and not dry:                 # Overpass is often unreachable from cloud networks: partial fallback
+            fb = geo.photon_poi(_http(case, "Nominatim/Photon"), a.tag or [], a.name, a.brand, area, limit=a.limit)
+            if fb["ok"] and fb["places"]:
+                places = fb["places"]
+                r = {**r, "fallback": fb["service"]}
+                print(f"FALLBACK {fb['service']}: {len(places)} feature(s). This is a PARTIAL list (name and tag search "
+                      "in the box, at most 50): complete it with your web search (\"<type> in <area>\", booking and map "
+                      "listings) before treating it as the whole category" +
+                      ("; --near-tag co-location was NOT applied" if a.near_tag else ""))
+            else:
+                print(f"fallback {fb['service']}: {fb.get('error') or 'nothing found'}")
         print(table([[i, short(p["name"], 40), f"{p['lat']:.6f},{p['lon']:.6f}", short(p["address"], 50),
                       short(json.dumps(p["tags"], ensure_ascii=False), 70), p["osm"]] for i, p in enumerate(places, 1)][:a.limit],
                     ["#", "name", "lat,lon", "address", "tags", "osm"]))
-        if not r["ok"]:
+        if not r["ok"] and not r.get("fallback"):
             print("query was:\n" + ql)
-            print("fallbacks: `igl.py geo search \"<brand or name> <area>\" --limit 40` (Nominatim/Photon), "
-                  "`igl.py geo sparql` (Wikidata), the brand's own location list, or overpass-turbo.eu in a browser. "
-                  "Log candidate_enum as unavailable only if every route fails.")
+            print("other routes: your own web search (\"<type or brand> in <area>\"), `igl.py geo search \"<brand or "
+                  "name> <area>\" --limit 40`, `igl.py geo sparql` (Wikidata), the brand's own location list, or "
+                  "overpass-turbo.eu in a browser. Log candidate_enum as unavailable only if every route fails.")
         ids = _maybe_add(case, places, a.add, a.parent, "Overpass query")
         eid = _save_json(case, "overpass", "Overpass query and results", {"query": ql, **r, "places": places}) \
             if (a.save and case) else None
@@ -668,172 +769,6 @@ def cmd_social(a) -> int:
     return 0
 
 
-# ----------------------------------------------------------------------------- reverse search, snapshots, comparison
-def cmd_revsearch(a) -> int:
-    case = Case(Path(a.case))
-    img, _ = imaging.open_image(case.image_path)
-    engines = list(revsearch.ENGINES) if a.engines == "all" else [e.strip() for e in a.engines.split(",") if e.strip()]
-    bad = [e for e in engines if e not in revsearch.ENGINES]
-    if bad:
-        raise IglError(f"unknown engine(s) {bad}; choose from {', '.join(revsearch.ENGINES)} or 'all'")
-    rdir = case.work / "rev"
-    rdir.mkdir(exist_ok=True)
-    images: list[tuple[str, Path]] = []
-    if a.image:
-        for ref in a.image:
-            for eid in case.resolve_files([ref]):
-                p = case.file_path(eid)
-                images.append((eid.lower(), p))
-    box = _box_from(a, img.size, case)
-    if box:
-        p = rdir / "crop.jpg"
-        imaging.fit(imaging.crop(img, box), 1600, min_side=500).save(p, quality=92)
-        images.append(("crop", p))
-    if not images or a.full:
-        p = rdir / "full.jpg"
-        imaging.fit(img, 1600).save(p, quality=92)
-        images.insert(0, ("full", p))
-    if a.flip:
-        from PIL import Image, ImageOps
-        src = images[0][1]
-        p = rdir / f"{images[0][0]}-flip.jpg"
-        ImageOps.mirror(Image.open(src).convert("RGB")).save(p, quality=92)
-        images.append((f"{images[0][0]}-flip", p))
-    shots = {}
-
-    def shot_for(engine, label):
-        eid, path = case.reserve_file(f"rev-{engine}-{label}", "jpg", f"{engine} reverse-search result page for '{label}'")
-        shots[(engine, label)] = eid
-        return path
-
-    print(f"reverse search: {len(images)} image(s) x {', '.join(engines)} (headless browser) ...", flush=True)
-    results = revsearch.search(images, engines, shot_for)
-    jid, jp = case.reserve_file("revsearch", "json", "reverse-search results (labels and matching pages per engine)")
-    write_json(jp, results)
-    for r in results:
-        sid = shots.get((r["engine"], r["image"]))
-        if sid and not case.file_path(sid).exists():      # screenshot failed: drop the reserved entry
-            del case.data["files"][sid]
-            shots.pop((r["engine"], r["image"]))
-            sid = None
-        files = [sid, jid] if sid else [jid]
-        top = "; ".join(short(m.get("title", ""), 50) + " <" + m.get("site", "") + ">" for m in r.get("matches", [])[:5])
-        lab = ", ".join(r.get("labels", [])[:8])
-        detail = f"[{r['image']}] " + (f"labels: {lab}. " if lab else "") + (f"top: {top}" if top else "") + \
-                 (f" n={r['n_matches']}" if "n_matches" in r else "") + (f" {r.get('note', '')}" if r.get("note") else "")
-        _attempt(case, "reverse_search", r["status"], detail.strip(), engine=r["engine"], url=r.get("url"), files=files,
-                 save=False)
-    case.save()
-    for r in results:
-        print(f"\n== {r['engine']} [{r['image']}]: {r['status'].upper()}  ({r.get('seconds', '?')} s)  {r.get('note', '')}")
-        if r.get("labels"):
-            print("   labels: " + ", ".join(r["labels"][:10]))
-        if "n_matches" in r:
-            print(f"   matches: {r['n_matches']}")
-        for m in r.get("matches", [])[:a.top]:
-            print(f"   - {short(m.get('title', ''), 80)}  <{m.get('site', '')}>  {short(m.get('url', ''), 100)}")
-        sid = shots.get((r["engine"], r["image"]))
-        if sid:
-            print(f"   screenshot: {case.file_path(sid)}")
-    print(f"\nresults: {jp}\nLook at the screenshots: near-duplicates and page titles matter more than labels.")
-    print("\n" + revsearch.MANUAL)
-    return 0
-
-
-def cmd_snapshot(a) -> int:
-    case = Case(Path(a.case))
-    label = a.label or "web"
-    ok, why = revsearch.available()
-    if ok:
-        import asyncio
-
-        tmp = case.work / "snapshot.jpg"
-        tmp.parent.mkdir(parents=True, exist_ok=True)
-
-        async def go():
-            from playwright.async_api import async_playwright
-            async with async_playwright() as p:
-                b = await p.chromium.launch(headless=True)
-                try:
-                    pg = await (await b.new_context(user_agent=revsearch.UA,
-                                                    viewport={"width": 1366, "height": 1000})).new_page()
-                    await pg.goto(a.url, wait_until="domcontentloaded", timeout=45000)
-                    await pg.wait_for_timeout(2500)
-                    await pg.screenshot(path=str(tmp), full_page=True, type="jpeg", quality=75)
-                    txt = await pg.evaluate("document.body ? document.body.innerText : ''")
-                    title = await pg.title()
-                finally:
-                    await b.close()
-                return title, txt
-
-        try:
-            title, txt = asyncio.run(go())
-            from PIL import Image
-            eid, path = case.reserve_file(f"snap-{label}", "jpg", f"screenshot of {a.url}")
-            im = Image.open(tmp)
-            if im.height > 6000:                      # keep evidence files a reasonable size
-                im = im.crop((0, 0, im.width, 6000))
-            im.convert("RGB").save(path, quality=75)
-            tmp.unlink(missing_ok=True)
-        except Exception as e:  # noqa: BLE001
-            ok, why = False, f"{type(e).__name__}: {str(e).splitlines()[0][:150] if str(e) else ''}"
-    if not ok:
-        r = _http(case, "web").get(a.url, as_json=False, cache=False)
-        if not r["ok"]:
-            raise IglError(f"could not fetch {a.url}: {r.get('error')} (browser unavailable: {why})")
-        import re as _re
-        html = r["text"]
-        title = (_re.search(r"<title[^>]*>(.*?)</title>", html, _re.S | _re.I) or [None, ""])[1].strip()
-        txt = _re.sub(r"<script.*?</script>|<style.*?</style>", " ", html, flags=_re.S | _re.I)
-        txt = _re.sub(r"<[^>]+>", " ", txt)
-        eid = None
-    tid, tp = case.reserve_file(f"snap-{label}-text", "txt", f"page title and text of {a.url}")
-    tp.write_text(f"URL: {a.url}\nTITLE: {title}\nFETCHED: {dt.datetime.now().astimezone().isoformat(timespec='seconds')}"
-                  f"\n\n{' '.join(txt.split())[:20000]}", encoding="utf-8")
-    case.save()
-    print(f"{eid + '  ' + str(case.file_path(eid)) if eid else '(no screenshot: ' + why + ')'}\n{tid}  {tp}\nTITLE: {title}")
-    return 0
-
-
-def cmd_compare(a) -> int:
-    case = Case(Path(a.case))
-    from PIL import Image
-    img, _ = imaging.open_image(case.image_path)
-    if a.query:
-        q = Image.open(case.file_path(case.resolve_files([a.query])[0])).convert("RGB")
-    else:
-        box = _box_from(a, img.size, case)
-        q = imaging.crop(img, box) if box else img
-    refs = []
-    rdir = case.work / "refs"
-    rdir.mkdir(exist_ok=True)
-    http = _http(case, "reference images")
-    for i, ref in enumerate(a.ref, 1):
-        if ref.startswith(("http://", "https://")):
-            dest = rdir / f"ref{i:02d}.img"
-            if not http.download(ref, dest, headers={"Referer": ref.split("/", 3)[0] + "//" + ref.split("/")[2]}):
-                print(f"could not download {ref}")
-                continue
-            try:
-                refs.append((f"R{i} {ref.split('/')[2]}", Image.open(dest).convert("RGB")))
-            except Exception:  # noqa: BLE001
-                print(f"not an image: {ref}")
-        else:
-            eid = case.resolve_files([ref])[0]
-            refs.append((f"R{i} {eid}", Image.open(case.file_path(eid)).convert("RGB")))
-    if not refs:
-        raise IglError("no usable reference image")
-    tiles_ = [("QUERY (this photo)", q)] + refs
-    sheet = imaging.contact_sheet(tiles_, cols=min(3, len(tiles_)), cell=520)
-    eid, p = case.reserve_file(f"compare-{a.label or 'refs'}", "jpg",
-                               f"side-by-side: photo vs {len(refs)} reference image(s) ({'; '.join(a.ref)[:300]})")
-    sheet.save(p, quality=88)
-    case.save()
-    print(f"{eid}  {p}\nCompare INVARIANT features only (windows, ceiling, columns, built-ins, floor pattern, fixed fixtures);"
-          " >=3 distinct matches -> record a `matched` clue citing this file.")
-    return 0
-
-
 # ----------------------------------------------------------------------------- ledger
 def cmd_note(a) -> int:
     case = Case(Path(a.case))
@@ -843,16 +778,78 @@ def cmd_note(a) -> int:
         raise IglError("--status must be one of: " + ", ".join(f"{k} ({v})" for k, v in STATUS_CAP.items()))
     if a.source not in SOURCES:
         raise IglError(f"--source must be one of: {', '.join(SOURCES)}")
+    if (a.for_ or a.against) and not a.why:
+        raise IglError("--for / --against need --why (one line: why this observation favours or disfavours them)")
+    for spec in (a.for_ or []) + (a.against or []):          # fail before writing anything
+        case.cand(spec.partition(":")[0])
     files = case.resolve_files(a.file, label=a.kind, what=f"evidence for: {short(a.text, 80)}")
-    if a.status in ("read", "matched") and not files:
-        raise IglError(f"status '{a.status}' needs --file (the zoomed crop / comparison sheet that shows it)")
+    if a.status == "read" and not files:
+        raise IglError("status 'read' needs --file (the zoomed crop that shows the text)")
+    features = [f.strip() for f in (getattr(a, "features", None) or "").split(";") if f.strip()]
+    if a.status == "matched":
+        _require_match_basis(case, files, features, a.url)
+    copy_on_file = _require_trace_basis(case, files, a.url) if a.status == "traced" else True
     resolves = [case.clue(r)["id"] for r in (a.resolves or [])]
-    cid = _new_clue(case, a.text, a.kind, a.status, a.source, files, parse_box(a.box) if a.box else None, a.url, resolves)
+    cid = _new_clue(case, redact(a.text), a.kind, a.status, a.source, files, parse_box(a.box) if a.box else None,
+                    a.url, resolves)
+    if features:
+        case.data["clues"][cid]["features"] = [redact(f) for f in features]
     for r in resolves:
         case.data["clues"][r]["resolved"] = cid
+    msgs = _link(case, case.data["clues"][cid], a.for_, a.against, a.why, []) if (a.for_ or a.against) else []
     case.save()
-    print(f"{cid}  [{a.status}, grade {GRADE[a.status]}, LR cap {STATUS_CAP[a.status]:g}]  {short(a.text, 100)}")
+    cap = _lr_cap(case.data["clues"][cid])
+    print(f"{cid}  [{a.status}, grade {GRADE[a.status]}, LR cap {cap:g}]  {short(a.text, 100)}")
+    if a.source == "engine" and cap < STATUS_CAP[a.status]:
+        print("    source 'engine': a label or similar-image title is a lead (cap 3) until the place is verified another "
+              "way; a verified comparison is recorded as --status matched --source reference")
+    if not copy_on_file:
+        print("    no COPY on file for this trace: let the tool confirm it is the same photograph "
+              f"(`igl.py refs {case.root} --image <address of the picture on that page>`) and cite the sheet with --file")
+    for m in msgs:
+        print(f"    {m}")
     return 0
+
+
+MATCH_TOOLS = ("compare", "refs", "revsearch")
+
+
+def _require_match_basis(case: Case, files: list[str], features: list[str], url: str | None) -> None:
+    """`matched` is the strongest status, so it must be auditable: the features are named, the comparison
+    is on file (or the reference page is given), and it is not the photo compared with a copy of itself."""
+    if len(features) < 3:
+        raise IglError("status 'matched' needs --features with at least 3 SPECIFIC invariant features that agree, "
+                       "separated by ';' (e.g. \"arched window pair with transoms; coffered ceiling 3x4 panels; green "
+                       "marble fireplace left of the bed\"). Same style, same chain furniture or 'looks alike' are not "
+                       "features: if you cannot name three, record the comparison as --status observed.")
+    tooled = [f for f in files if case.data["files"][f].get("tool") in MATCH_TOOLS]
+    if not tooled and not url:
+        raise IglError("status 'matched' needs the comparison behind it: --file <sheet or JSON written by compare / "
+                       "refs / revsearch>, or --url <page of the reference photo> when you compared it in a browser "
+                       "tool and could not save it")
+    for f in tooled:
+        classes = (case.data["files"][f].get("meta") or {}).get("classes")
+        if classes and all(c == "copy" for c in classes):
+            raise IglError(f"{f} compares the photo with copies of itself (COPY / SAME PHOTOGRAPH). A copy is "
+                           "provenance: record what its page says with --status traced --source web --url <page>, and "
+                           "verify the place against an independent photo (another photographer, another date).")
+
+
+def _require_trace_basis(case: Case, files: list[str], url: str | None) -> bool:
+    """`traced` says: this very photograph is published on a page that tells where it was taken. It needs
+    that page, and when a tool artefact is cited it must hold a COPY of the photo (a similar picture is not a
+    trace). Returns whether a COPY is on file."""
+    if not (url or "").startswith(("http://", "https://")):
+        raise IglError("status 'traced' needs --url: the page that shows the same photograph and says where it was "
+                       "taken (the venue's own page or listing, the photographer's post). What a page says about a "
+                       "merely similar picture is --status reported.")
+    tooled = [f for f in files if case.data["files"][f].get("tool") in MATCH_TOOLS]
+    with_copy = [f for f in tooled if "copy" in ((case.data["files"][f].get("meta") or {}).get("classes") or [])]
+    if tooled and not with_copy:
+        raise IglError(f"{', '.join(tooled)} holds no COPY of the photo. `traced` is for the SAME photograph found "
+                       "online; a similar picture is a lead (--status reported), and after a comparison that finds "
+                       ">=3 specific fixed features it becomes --status matched.")
+    return bool(with_copy)
 
 
 def cmd_cand(a) -> int:
@@ -910,6 +907,9 @@ def cmd_cand(a) -> int:
               "(e.g. 'Germany', 'South Korea') so tables and the 'other countries' block stay consistent")
     case.event("cand", f"{cid} {a.level}: {a.name}" + (f" @ {lat:.5f},{lon:.5f}" if lat is not None else ""))
     print(f"{cid}  {a.level}: {a.name}" + (f"  parent {case.data['candidates'][cid]['parent']}" if a.parent else ""))
+    if a.level != "country" and not a.parent:
+        print(f"      no parent: attach it to its {'country' if a.level == 'region' else 'city or country'} "
+              f"(`igl.py cand {case.root} {cid} --parent C#`) so the ranking knows where it is")
     return 0
 
 
@@ -925,16 +925,28 @@ def _put_evidence(case: Case, clue_id: str, cand_id: str, lr: float, requested: 
     return vid
 
 
-def cmd_link(a) -> int:
-    case = Case(Path(a.case))
-    clue = case.clue(a.clue)
+def _lr_cap(clue: dict) -> float:
+    """Largest likelihood ratio a clue may carry: by how it was obtained, and lower for machine guesses."""
     cap = STATUS_CAP[clue["status"]]
-    files = case.resolve_files(a.file) if a.file else []
+    if clue["status"] in ("inferred", "observed", "reported", "traced"):
+        cap = min(cap, SOURCE_CAP.get(clue.get("source"), cap))
+    return cap
+
+
+def _link(case: Case, clue: dict, for_specs: list[str] | None, against_specs: list[str] | None, why: str,
+          files: list[str]) -> list[str]:
+    """Link one clue to candidates (C#:LR). The clue's status (and source) caps the LR in both directions."""
+    cap = _lr_cap(clue)
     msgs = []
-    for spec, sign in [(s, 1) for s in (a.for_ or [])] + [(s, -1) for s in (a.against or [])]:
+    for spec, sign in [(s, 1) for s in (for_specs or [])] + [(s, -1) for s in (against_specs or [])]:
         cid_s, _, lr_s = spec.partition(":")
         cand = case.cand(cid_s)
-        req = float(lr_s) if lr_s else (2.0 if sign > 0 else 0.5)
+        try:
+            req = float(lr_s) if lr_s else (2.0 if sign > 0 else 0.5)
+        except ValueError as e:
+            raise IglError(f"bad LR in {spec!r}: use C#:LR, e.g. C3:6") from e
+        if req <= 0:
+            raise IglError(f"LR must be positive (got {spec!r})")
         if sign > 0:
             if req < 1:
                 raise IglError(f"--for LR must be >= 1 (got {req}); use --against for evidence against")
@@ -945,11 +957,23 @@ def cmd_link(a) -> int:
             lr = max(req, 1 / cap)
         if case.is_excluded(cand["id"]):
             msgs.append(f"note: {cand['id']} is excluded")
-        _put_evidence(case, clue["id"], cand["id"], lr, req, a.why or "", files)
+        _put_evidence(case, clue["id"], cand["id"], lr, req, why or "", files)
         msgs.append(f"{clue['id']} -> {cand['id']} {cand['name']}: LR {lr:g}" +
-                    (f" (capped from {req:g}: status '{clue['status']}' max {cap:g})" if abs(lr - req) > 1e-9 else ""))
-    case.event("link", f"{clue['id']} linked: " + "; ".join(m for m in msgs if not m.startswith("note")))
-    print("\n".join(msgs))
+                    (f" (capped from {req:g}: status '{clue['status']}'"
+                     + (f", source '{clue['source']}'" if cap < STATUS_CAP[clue["status"]] else "")
+                     + f" max {cap:g})" if abs(lr - req) > 1e-9 else ""))
+    if msgs:
+        case.event("link", f"{clue['id']} linked: " + "; ".join(m for m in msgs if not m.startswith("note")))
+    return msgs
+
+
+def cmd_link(a) -> int:
+    case = Case(Path(a.case))
+    clue = case.clue(a.clue)
+    if not (a.for_ or a.against):
+        raise IglError("give --for C#:LR and/or --against C#:LR")
+    files = case.resolve_files(a.file) if a.file else []
+    print("\n".join(_link(case, clue, a.for_, a.against, a.why, files)))
     return 0
 
 
@@ -975,31 +999,51 @@ def cmd_exclude(a) -> int:
 
 def cmd_log(a) -> int:
     case = Case(Path(a.case))
-    if a.method not in CORE_METHODS and a.method not in OPTIONAL_METHODS:
-        raise IglError(f"method must be one of: {', '.join(list(CORE_METHODS) + list(OPTIONAL_METHODS))}")
+    methods = [m.strip() for m in a.method.split(",") if m.strip()]
+    for m in methods:
+        if m not in CORE_METHODS and m not in OPTIONAL_METHODS:
+            raise IglError(f"method must be one of: {', '.join(list(CORE_METHODS) + list(OPTIONAL_METHODS))} (got {m!r})")
+    if not methods:
+        raise IglError("give a method (or a comma list of methods)")
     if a.status not in ATTEMPT_STATUS:
         raise IglError(f"--status must be one of: {', '.join(ATTEMPT_STATUS)}")
     if a.status in ("not_applicable", "skipped", "blocked", "unavailable") and not a.detail:
         raise IglError(f"status '{a.status}' needs --detail saying why")
     files = case.resolve_files(a.file) if a.file else []
-    aid = _attempt(case, a.method, a.status, a.detail or "", engine=a.engine, query=a.query, url=a.url, files=files)
-    print(f"{aid}  {a.method}: {a.status}")
+    for m in methods:
+        aid = _attempt(case, m, a.status, a.detail or "", engine=a.engine, query=a.query, url=a.url, files=files,
+                       save=False)
+        print(f"{aid}  {m}: {a.status}")
+    case.save()
     return 0
 
 
 def cmd_rank(a) -> int:
     case = Case(Path(a.case))
-    levels = [a.level] if a.level else [lv for lv in LEVELS if any(c["level"] == lv for c in case.data["candidates"].values())]
+    allb = scoring.board(case)
+    levels = [a.level] if a.level else [lv for lv in LEVELS if lv in allb]
     if not levels:
         print("no candidates yet: add them with `igl.py cand`, `igl.py countries --case --clue`, or `igl.py geo ... --add`")
+    clues = case.data["clues"]
+
+    def ev_text(e: dict) -> str:
+        star = "*" if e["lr"] >= 10 and clues.get(e["clue"], {}).get("status") in DECISIVE else ""
+        return f"{e['clue']}x{e['lr']:g}{star}" + (f"(via {e['via']})" if e.get("via") else "")
+
+    starred = False
+    tiers = scoring.assess_all(case)
     for lv in levels:
-        rows = scoring.rank(case, lv)
-        print(f"\n[{lv}]")
-        print(table([[r["id"], short(r["name"], 40), f"{r['share']:.3f}", len(r["ev"]),
-                      "EXCLUDED" if r["excluded"] else ("-" if r.get("rest") else scoring.assess(case, r["id"])["tier"]),
-                      short("; ".join(f"{e['clue']}x{e['lr']:g}" + (f"(via {e['via']})" if e.get("via") else "")
-                                      for e in sorted(r["ev"], key=lambda e: -abs(math.log(e['lr'])))[:6]), 70)]
-                     for r in rows[:a.limit]], ["id", "candidate", "share", "n_ev", "cap", "strongest evidence"]))
+        rows = allb.get(lv, [])
+        starred = starred or any(r.get("identified") for r in rows[:a.limit])
+        print(f"\n[{lv}]  share = probability of the whole chain; within = among siblings under the same parent")
+        print(table([[r["id"], short(r["name"], 40), f"{r['share']:.3f}",
+                      "" if r.get("rest") or lv == "country" else f"{r['cond']:.2f}", len(r["ev"]),
+                      "EXCLUDED" if r["excluded"] else ("-" if r.get("rest") else tiers[r["id"]]["tier"]),
+                      short("; ".join(ev_text(e) for e in sorted(r["ev"], key=lambda e: -abs(math.log(e['lr'])))[:6]), 70)]
+                     for r in rows[:a.limit]], ["id", "candidate", "share", "within", "n_ev", "cap", "strongest evidence"]))
+    if starred:
+        print("\n* decisive clue (read / computed / matched / metadata / traced, LR >= 10): it identifies the place, so "
+              "its candidate is weighed against the whole field at that level, listed rivals and unlisted block together")
     return 0
 
 
@@ -1013,8 +1057,43 @@ def checks(case: Case) -> list[tuple[str, str]]:
             out.append(("FAIL", f"core method '{m}' not attempted ({desc}) - do it, or log not_applicable with a reason"))
         elif st["status"] not in RESOLVED:
             out.append(("WARN", f"core method '{m}' only {st['status']}: try an alternative route if one exists"))
-    if not any(c["kind"] == "hypothesis" for c in d["clues"].values()):
-        out.append(("WARN", "no first impression recorded (anchor defence): note one with --kind hypothesis"))
+    hyps = [c for c in d["clues"].values() if c["kind"] == "hypothesis"]
+    if not hyps:
+        out.append(("WARN", "no first-look hypotheses recorded (anchor defence): note the top 2-4 hypotheses with "
+                            "--kind hypothesis before reading tool output"))
+    attempts = d["attempts"]
+    rev = [a for a in attempts if a["method"] == "reverse_search"]
+    engines = {(a.get("engine") or "").lower() for a in rev if a["status"] in ("results", "no_results") and a.get("engine")}
+    rs = state.get("reverse_search", {}).get("status")
+    if rs in ("results", "no_results") and len(engines) < 2:
+        out.append(("WARN", f"reverse search ran on {len(engines)} engine(s) ({', '.join(sorted(engines)) or 'unnamed'}): "
+                            "indexes differ - use at least two (Lens via a browser tool and `share`, Yandex, Bing, "
+                            "TinEye, Baidu) on the full frame and on crops"))
+    closed = [a for a in rev if a["status"] in ("blocked", "unavailable")]
+    if closed and not engines:
+        out.append(("WARN", f"reverse image search never actually ran ({len(closed)} attempt(s), all blocked or "
+                            "unavailable): that is not 'no results'. Open the Lens / Bing links from `share` in a "
+                            "browser tool or ask the user to run Google Lens, and say in the answer that this route "
+                            "stayed closed"))
+    if rs in ("results", "no_results") and "lens" not in engines and "google" not in engines:
+        out.append(("WARN", "Google Lens was not used: it has the largest index of interiors and listings. With any "
+                            "browser tool, open the lens link from `igl.py share`; without one, say so under limits"))
+    for cid, c in d["clues"].items():
+        if c["status"] != "matched":
+            continue
+        if len(c.get("features") or []) < 3:
+            out.append(("WARN", f"{cid} is `matched` without three named features (--features): a match must say "
+                                "which specific fixed features agree"))
+        areas = [e["candidate"] for e in d["evidence"] if e["clue"] == cid and e["lr"] > 1
+                 and d["candidates"].get(e["candidate"], {}).get("level") not in ("site", "room")]
+        if areas and len(case.sites_examined()) < 2:
+            out.append(("WARN", f"{cid} records a match for an area or group ({', '.join(areas)}), not for one venue: "
+                                "that is a design match, and it needs the reference photos of at least two venues "
+                                "that share the design on file (`refs ... --for <each C#>`)"))
+    ts = [a for a in attempts if a["method"] == "text_search" and a["status"] in ("results", "no_results")]
+    if state.get("text_search", {}).get("status") in ("results", "no_results") and len(ts) < 2:
+        out.append(("WARN", "only one text search logged: search distinctive strings and descriptions in the local "
+                            "language(s) too, and log each query"))
     for x in d["exclusions"]:
         if not x.get("files"):
             out.append(("FAIL", f"exclusion of {x['candidate']} has no evidence file"))
@@ -1022,6 +1101,12 @@ def checks(case: Case) -> list[tuple[str, str]]:
         for f in c.get("files", []):
             if f not in d["files"] or not (case.root / d["files"][f]["path"]).exists():
                 out.append(("FAIL", f"{cid} cites missing file {f}"))
+    orphans = [c["id"] for c in d["candidates"].values() if c["level"] != "country" and not c.get("parent")
+               and not case.is_excluded(c["id"])]
+    if orphans:
+        out.append(("WARN", f"candidates without a parent: {', '.join(orphans[:15])} - attach each site to its city and "
+                            "each city to its country (`cand <case> C# --parent C#`), or its share ignores the "
+                            "uncertainty above it"))
     linked = {e["clue"] for e in d["evidence"]} | {x["clue"] for x in d["exclusions"]}
     unused = [cid for cid, c in d["clues"].items() if cid not in linked and c["kind"] not in
               ("hypothesis", "context", "scene", "negative") and not c.get("resolved")]
@@ -1041,15 +1126,52 @@ def checks(case: Case) -> list[tuple[str, str]]:
         else:
             rows = scoring.rank(case, cand["level"])
             if rows and rows[0]["id"] != cid:
-                out.append(("WARN", f"answer {cid} is not top-ranked at {cand['level']} level (top: {rows[0]['id']} "
-                                    f"{rows[0]['name']}) - justify it with evidence or change the answer"))
+                what = ("the unlisted alternatives outweigh it: the evidence does not favour it over places not on "
+                        "the board" if rows[0].get("rest") else f"top: {rows[0]['id']} {rows[0]['name']}")
+                out.append(("WARN", f"answer {cid} is not top-ranked at {cand['level']} level ({what}) - add "
+                                    "discriminating evidence or change the answer"))
             if case.is_excluded(cid):
                 out.append(("FAIL", f"answer {cid} is excluded"))
-            cap = scoring.assess(case, cid)["tier"]
+            chain_rows = scoring.chain(case, cid)
+            a_now = chain_rows[-1]
+            cap = a_now["tier"]
             if scoring.TIERS.index(ans.get("confidence", "low")) > scoring.TIERS.index(cap):
                 out.append(("FAIL", f"claimed confidence {ans.get('confidence')} exceeds the rules cap {cap}"))
-            if cand["level"] in ("site", "room") and not cand.get("falsify"):
-                out.append(("WARN", "site-level answer without a falsification test (`igl.py cand <case> C# --falsify ...`)"))
+            if cap == "low" and any(scoring.TIERS.index(r["tier"]) >= 2 for r in chain_rows[:-1]):
+                out.append(("FAIL", f"answer {cid} is LOW while a coarser level is verified: answer at that level and "
+                                    "pass this candidate as --lead"))
+            listed = [c for c in d["candidates"].values() if c["level"] == cand["level"] and not case.is_excluded(c["id"])]
+            if cand["level"] != "country" and len(listed) == 1 and not a_now.get("decisive"):
+                out.append(("WARN", f"only one {cand['level']} on the board and no decisive clue: list the category "
+                                    "(other branches of the chain, same-name venues, neighbouring cities) before "
+                                    "choosing"))
+            if cand["level"] in ("site", "room"):
+                if not cand.get("falsify"):
+                    out.append(("WARN", "site-level answer without a falsification test "
+                                        "(`igl.py cand <case> C# --falsify ...`)"))
+                if state.get("reference_match", {}).get("status") != "results" and not a_now.get("matched"):
+                    out.append(("WARN", "site-level answer without a reference comparison: collect independent "
+                                        "photos of the site (`refs \"<venue> <city> <room type>\" --for C#`) and "
+                                        "compare them"))
+                site_c = d["candidates"][cid] if cand["level"] == "site" else next(
+                    (x for x in case.ancestors(cid) if x["level"] == "site"), cand)
+                rivals = case.rivals_compared(cid)
+                if (a_now.get("matched") or site_c.get("refs")) and not rivals:
+                    out.append(("WARN", "no rival was put through the same comparison (negative control): run `refs` "
+                                        "for the closest alternative venue (same brand, same street, same style) with "
+                                        "--for <its C#>. If its photos 'match' as well, the features you counted are "
+                                        "generic and the site is not established"))
+                twins = [r for r in rivals if not case.is_excluded(r["id"])
+                         and any((run.get("counts") or {}).get("same") for run in r.get("refs") or [])]
+                if a_now.get("matched") and twins:
+                    out.append(("WARN", "reference photos of " + ", ".join(f"{r['id']} {r['name']}" for r in twins[:4])
+                                        + " were classed SAME SCENE too. Either these candidates are one place (keep "
+                                        "one, exclude the duplicate) or the agreement is on a shared design: then record "
+                                        "the match for the area or group that holds every venue with this design and "
+                                        "keep the venues as leads"))
+            lead = ans.get("lead")
+            if lead and lead["candidate"] in d["candidates"] and case.is_excluded(lead["candidate"]):
+                out.append(("FAIL", f"lead {lead['candidate']} has been excluded since the answer was recorded"))
             if ans.get("lat") is None:
                 out.append(("WARN", "answer has no coordinates"))
             for anc in case.ancestors(cid):
@@ -1072,44 +1194,115 @@ def cmd_check(a) -> int:
     return 1 if any(l == "FAIL" for l, _ in res) else 0
 
 
-def cmd_answer(a) -> int:
-    case = Case(Path(a.case))
-    cand = case.cand(a.candidate)
-    lat, lon = (parse_latlon(a.at) if a.at else (cand.get("lat"), cand.get("lon")))
-    address = a.address or cand.get("address")
-    auto_radius, notes = None, []
-    if lat is None and not a.no_network:        # coarse answers (country/region/city): geocode the name
+def _coords_for(case: Case, cand: dict, no_network: bool, notes: list[str]) -> tuple:
+    """(lat, lon, address, auto_radius) of a candidate: its own coordinates, else geocoded from its name and
+    ancestors (coarse levels get a radius from the area's bounding box); a site without an address is
+    reverse-geocoded."""
+    lat, lon, address, auto_radius = cand.get("lat"), cand.get("lon"), cand.get("address"), None
+    if lat is None and not no_network:
         q = ", ".join([cand["name"]] + [x["name"] for x in case.ancestors(cand["id"])])
         g = geo.geocode(_http(case, "Nominatim/Photon"), q, limit=1)
         if g.get("ok") and g["results"]:
             top = g["results"][0]
             lat, lon = top["lat"], top["lon"]
             address = address or top["display"]
-            notes.append(f"coordinates from geocoding '{q}' ({g['service']}): {top['display']}")
+            notes.append(f"coordinates of {cand['id']} from geocoding '{q}' ({g['service']}): {top['display']}")
             bb = top.get("bbox")
             if bb and cand["level"] in ("district", "city", "region", "country"):
                 auto_radius = int(round(haversine_m(bb[0], bb[2], bb[1], bb[3]) / 2))
-    if lat is not None and not address and not a.no_network and cand["level"] in ("site", "room"):
+        else:
+            notes.append(f"could not geocode '{q}': give --at lat,lon (and --radius)")
+    if lat is not None and not address and not no_network and cand["level"] in ("site", "room"):
         r = geo.reverse(_http(case, "Nominatim/Photon"), lat, lon)
         if r.get("ok"):
             address = r.get("display")
-    assessment = scoring.assess(case, cand["id"])
-    cap = assessment["tier"]
+    return lat, lon, address, auto_radius
+
+
+def cmd_answer(a) -> int:
+    case = Case(Path(a.case))
+    cand = case.cand(a.candidate)
+    if case.is_excluded(cand["id"]):
+        raise IglError(f"{cand['id']} {cand['name']} is excluded: it cannot be the answer")
+    rows = scoring.chain(case, cand["id"])
+    here = rows[-1]
+    cap = here["tier"]
+    verified = [r for r in rows[:-1] if scoring.TIERS.index(r["tier"]) >= scoring.TIERS.index("medium")]
+    if cap == "low" and verified:
+        best = verified[-1]
+        raise IglError(
+            f"{cand['id']} {cand['name']} ({cand['level']}) is only LOW: it is a lead, not an answer.\n"
+            f"  {'; '.join(here['reasons'])}\n"
+            f"Answer at the finest level the evidence supports and keep this candidate as the lead:\n"
+            f"  igl.py answer {case.root} {best['id']} --lead {cand['id']} --summary \"...\"   "
+            f"({best['name']}, {best['level']}, {best['tier'].upper()})\n"
+            f"or verify it first (reference photos + `compare`, decisive text, a second lineage).")
     want = a.confidence or cap
     if scoring.TIERS.index(want) > scoring.TIERS.index(cap):
         raise IglError(f"confidence '{want}' exceeds what the evidence supports (cap '{cap}'):\n  " +
-                       "\n  ".join(assessment["reasons"]) + "\nAdd independent evidence (reference match, decisive text, "
+                       "\n  ".join(here["reasons"]) + "\nAdd independent evidence (reference match, decisive text, "
                        "metadata) or report a lower confidence.")
+    lead = None
+    if a.lead:
+        lc = case.cand(a.lead)
+        if lc["id"] == cand["id"]:
+            raise IglError("--lead must be a different candidate from the answer")
+        if case.is_excluded(lc["id"]):
+            raise IglError(f"lead {lc['id']} is excluded")
+        if LEVELS.index(lc["level"]) <= LEVELS.index(cand["level"]):
+            raise IglError(f"--lead must be finer than the answer's {cand['level']} level (got a {lc['level']})")
+    notes: list[str] = []
+    lat, lon, address, auto_radius = _coords_for(case, cand, a.no_network, notes)
+    if a.at:
+        lat, lon = parse_latlon(a.at)
+    address = a.address or address
+    if a.lead:
+        la = scoring.assess(case, lc["id"])
+        llat, llon, laddr, _ = _coords_for(case, lc, a.no_network, notes)
+        lead = {"candidate": lc["id"], "name": lc["name"], "level": lc["level"], "lat": llat, "lon": llon,
+                "address": laddr, "radius_m": report.DEFAULT_RADIUS.get(lc["level"], 100), "tier": la["tier"],
+                "share": round(la["share"], 3), "reasons": la["reasons"], "falsify": lc.get("falsify") or "",
+                "descendant": any(x["id"] == cand["id"] for x in case.ancestors(lc["id"]))}
+        if not lead["descendant"]:
+            notes.append(f"lead {lc['id']} does not lie under {cand['id']} on the board: check the hierarchy")
     radius = a.radius or auto_radius or report.DEFAULT_RADIUS.get(cand["level"], 100)
+    # The pin: the single most likely point. A lead that has coordinates is a better point estimate than the
+    # centroid of the area it lies in; what is VERIFIED stays the answer level with its radius.
+    if lead and lead.get("lat") is not None:
+        pin = {"basis": "lead", "candidate": lead["candidate"], "name": lead["name"], "address": lead.get("address"),
+               "lat": lead["lat"], "lon": lead["lon"], "level": lead["level"], "tier": lead["tier"]}
+    else:
+        pin = {"basis": "answer", "candidate": cand["id"], "name": a.name or cand["name"], "address": address,
+               "lat": lat, "lon": lon, "level": cand["level"], "tier": want}
     case.data["answer"] = {"candidate": cand["id"], "name": a.name or cand["name"], "address": address, "lat": lat,
                            "lon": lon, "radius_m": radius, "level": cand["level"], "confidence": want, "cap": cap,
-                           "summary": a.summary or "", "open_questions": a.open_questions or "",
+                           "share": round(here["share"], 3), "summary": a.summary or "",
+                           "open_questions": a.open_questions or "", "lead": lead, "best_estimate": pin,
                            "files": case.resolve_files(a.file) if a.file else [],
                            "time": dt.datetime.now().astimezone().isoformat(timespec="seconds")}
-    case.event("answer", f"answer {cand['id']} {cand['name']} ({cand['level']}, confidence {want}, cap {cap})")
+    case.event("answer", f"answer {cand['id']} {cand['name']} ({cand['level']}, confidence {want}, cap {cap})"
+               + (f"; lead {lead['candidate']} {lead['name']} ({lead['tier']})" if lead else ""))
     print(f"ANSWER  {a.name or cand['name']}" + (f" — {address}" if address else ""))
-    print(f"        {lat}, {lon} ± {radius} m · level {cand['level']} · confidence {want} (cap {cap})")
-    print("        " + "; ".join(assessment["reasons"]))
+    print("        " + (f"{lat}, {lon} ± {radius} m" if lat is not None else "no coordinates (give --at lat,lon)")
+          + f" · level {cand['level']} · confidence {want} (cap {cap})")
+    print("        " + "; ".join(here["reasons"]))
+    if lead:
+        print(f"LEAD    {lead['name']} ({lead['level']}, {lead['tier'].upper()}, share {lead['share']:.2f}) - "
+              + (f"{lead['lat']}, {lead['lon']}" if lead["lat"] is not None else "no coordinates on file")
+              + ": report it as the best unverified lead, never as the verified answer")
+    if pin["lat"] is not None:
+        print(f"PIN     {pin['lat']}, {pin['lon']}  = {pin['name']} "
+              + ("(the unverified lead: the single most likely point; the verified statement is the ANSWER line)"
+                 if pin["basis"] == "lead" else "(the answer itself)"))
+    if cap == "low":
+        print("        LOW everywhere: present this as a best guess, say what is missing, and keep searching if any "
+              "route is still open")
+    finer = [c for c in case.descendants(cand["id"]) if not case.is_excluded(c["id"])]
+    if finer and not lead:
+        done = scoring.assess_all(case)
+        top = max(finer, key=lambda c: done[c["id"]]["share"])
+        print(f"        note: finer candidates exist under {cand['id']} (e.g. {top['id']} {top['name']}): pass the best "
+              "one as --lead so the report shows it")
     for n in notes:
         print(f"        note: {n}")
     if auto_radius and not a.radius:

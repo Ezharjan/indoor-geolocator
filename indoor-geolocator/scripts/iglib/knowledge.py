@@ -248,7 +248,9 @@ def calling_code_countries(cc: str) -> list[str]:
 
 
 def currency_countries(symbol_or_code: str) -> list[str]:
-    return [iso for iso, rec in countries().items() if _cur_match(rec, symbol_or_code)]
+    """Countries of the board's universe that use the currency: the same set `countries --currency` links
+    (minor territories outside that universe, such as Ascension or the Canary Islands, are not counted)."""
+    return [iso for iso, rec in countries().items() if in_universe(iso) and _cur_match(rec, symbol_or_code)]
 
 
 def former_currency(symbol_or_code: str) -> list[tuple[str, dict]]:

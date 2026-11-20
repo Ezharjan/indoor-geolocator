@@ -305,8 +305,8 @@ def _compare_thumb(main: Image.Image, thumb_bytes: bytes) -> dict:
         th = ImageOps.exif_transpose(th).convert("L")
         mi = ImageOps.exif_transpose(main).convert("L")
         ar_m, ar_t = mi.width / mi.height, th.width / th.height
-        a = list(mi.resize((24, 24)).getdata())
-        b = list(th.resize((24, 24)).getdata())
+        a = list(mi.resize((24, 24)).tobytes())
+        b = list(th.resize((24, 24)).tobytes())
         mad = sum(abs(x - y) for x, y in zip(a, b)) / len(a)
         return {"size": [th.width, th.height], "aspect_main": round(ar_m, 4), "aspect_thumb": round(ar_t, 4),
                 "mean_abs_diff": round(mad, 1),
@@ -381,6 +381,27 @@ def _zone_countries() -> dict[str, list[str]]:
         return {}
 
 
+C2PA_SIGNERS = ["Adobe", "OpenAI", "Google", "Microsoft", "Anthropic", "Meta", "TikTok", "LinkedIn", "Truepic",
+                "Leica", "Sony", "Nikon", "Canon", "Fujifilm", "Samsung", "Qualcomm", "BBC", "Midjourney", "Stability",
+                "Shutterstock", "Getty", "Amazon", "Nvidia", "Runway", "Pixel"]
+
+
+def _c2pa_info(blob: bytes) -> dict:
+    """A light reading of a C2PA manifest (no signature check): who produced it, which actions it records,
+    and whether it declares AI generation (IPTC digitalSourceType trainedAlgorithmicMedia)."""
+    txt = " ".join(t.decode("latin-1") for t in re.findall(rb"[\x20-\x7e]{4,}", blob[:400000]))
+    signers = sorted({s for s in C2PA_SIGNERS if re.search(rf"\b{s}", txt)})
+    actions = sorted(set(re.findall(r"c2pa\.(created|opened|edited|converted|placed|cropped|resized|"
+                                    r"color_adjustments|filtered|drawing|published|transcoded|repackaged)", txt)))
+    out = {"signers": signers, "actions": actions,
+           "ai_generated": "trainedAlgorithmicMedia" in txt and "compositeWithTrainedAlgorithmicMedia" not in txt,
+           "ai_composite": "compositeWithTrainedAlgorithmicMedia" in txt}
+    m = re.search(r"description\S{0,3}?([A-Z][\w'’-]*(?: [\w,'’()-]+){3,60}\.?)", txt)
+    if m:
+        out["statement"] = m.group(1).strip()[:240]
+    return out
+
+
 def _exiftool(path: Path) -> dict | None:
     exe = shutil.which("exiftool")
     if not exe:
@@ -433,6 +454,8 @@ def extract(path: Path) -> dict:
         except Exception:  # noqa: BLE001
             pass
         container["c2pa"] = any(m.startswith("APP11") for m in markers) and (b"c2pa" in data or b"jumb" in data)
+        if container["c2pa"]:
+            container["c2pa_info"] = _c2pa_info(b"".join(pl for mk, pl in segs if mk == 0xEB))
         th = _thumbnail(data, segs)
         if th:
             meta["thumbnail"] = _compare_thumb(im, th)
@@ -444,6 +467,8 @@ def extract(path: Path) -> dict:
         container["c2pa"] = b"caBX" in data or b"c2pa" in data
     else:
         container["c2pa"] = b"c2pa" in data
+    if container.get("c2pa") and "c2pa_info" not in container:
+        container["c2pa_info"] = _c2pa_info(data)
     meta["container"] = container
     meta["filename"] = _filename(path.name)
     when = exif.get("DateTimeOriginal") or exif.get("DateTimeDigitized") or exif.get("DateTime")
@@ -507,7 +532,20 @@ def flags(meta: dict) -> list[str]:
         out.append(f"editing software traces: {', '.join(meta['edit_markers'])}")
     c = meta.get("container") or {}
     if c.get("c2pa"):
-        out.append("C2PA / JUMBF content-credential block present - inspect with a C2PA verifier")
+        ci = c.get("c2pa_info") or {}
+        bits = []
+        if ci.get("signers"):
+            bits.append("issued by " + "/".join(ci["signers"]))
+        if ci.get("actions"):
+            bits.append("actions " + ", ".join(ci["actions"]))
+        if ci.get("statement"):
+            bits.append(f"'{ci['statement'][:140]}'")
+        if ci.get("ai_generated"):
+            bits.append("DECLARES AI GENERATION (trainedAlgorithmicMedia): the scene may not exist")
+        elif ci.get("ai_composite"):
+            bits.append("declares AI-assisted compositing: parts of the scene may be synthetic")
+        out.append("C2PA content credentials present" + (f" ({'; '.join(bits)})" if bits else "") +
+                   " - a re-saved or relayed file can carry the relayer's credentials; verify with a C2PA verifier")
     if c.get("quality_estimate"):
         out.append(f"JPEG quality ~{c['quality_estimate']}" + (", progressive" if c.get("progressive") else ""))
     th = meta.get("thumbnail") or {}

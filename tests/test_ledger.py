@@ -33,7 +33,7 @@ def test_init_creates_tidy_case(case_dir: Path):
     assert names == ["case.json", "evidence", "input"]
     assert (case_dir / "input" / "room.jpg").exists() and (case_dir / "input" / "metadata.json").exists()
     assert len(list((case_dir / "evidence").iterdir())) == 1                  # the grid view E01
-    data = json.loads((case_dir / "case.json").read_text())
+    data = json.loads((case_dir / "case.json").read_text(encoding="utf-8"))
     assert data["schema"] == "igl.case/1"
 
 
@@ -52,7 +52,7 @@ def test_status_caps_and_against(case_dir: Path):
     assert len(ev) == 1 and abs(ev[0]["lr"] - 1 / 6) < 1e-9                  # same clue+candidate: updated
 
 
-def test_read_and_matched_need_a_file(case_dir: Path):
+def test_read_needs_a_file(case_dir: Path):
     code, _ = run("note", case_dir, "Hotel name on notepad", "--kind", "text", "--status", "read", "--source", "text")
     assert code == 2
     e = crop(case_dir)
@@ -108,9 +108,24 @@ def test_support_flows_up_and_site_rule(case_dir: Path):
     a = scoring.assess(case, s1)
     # decisive text but only one lineage at site level and no reference match: not HIGH
     assert a["tier"] in ("medium", "low") and a["tier"] != "high"
-    # add an independent reference match -> HIGH becomes possible
+    # add an independent reference match -> HIGH becomes possible. `matched` must be auditable: a crop is not a
+    # comparison, the features have to be named, and the comparison has to be on file
     e2 = crop(case_dir, "C3")
-    m = note(case_dir, "3 invariant features match a traveller photo", "match", "matched", "reference", "--file", e2)
+    code, _ = run("note", case_dir, "matches a traveller photo", "--kind", "match", "--status", "matched",
+                  "--source", "reference", "--file", e2)
+    assert code == 2
+    code, _ = run("note", case_dir, "matches a traveller photo", "--kind", "match", "--status", "matched",
+                  "--source", "reference", "--file", e2, "--features", "arched windows; coffered ceiling; marble fireplace")
+    assert code == 2                                                   # E## is a crop, not a compare/refs artefact
+    from PIL import Image, ImageDraw
+    ref = Image.new("RGB", (640, 480), (40, 60, 90))
+    ImageDraw.Draw(ref).rectangle([80, 60, 400, 300], fill=(220, 200, 120), outline=(0, 0, 0))
+    ref.save(case_dir.parent / "traveller.jpg")
+    code, out = run("compare", case_dir, "--ref", case_dir.parent / "traveller.jpg", "--for", s1)
+    assert code == 0, out
+    sheet = out.split()[0]
+    m = note(case_dir, "matches a traveller photo", "match", "matched", "reference", "--file", sheet,
+             "--features", "arched window pair with transoms; coffered ceiling 3x4; green marble fireplace left of the bed")
     run("link", case_dir, m, "--for", f"{s1}:80", "--why", "match")
     case = Case(case_dir)
     assert scoring.assess(case, s1)["tier"] == "high"
@@ -158,25 +173,48 @@ def test_finalize_is_tidy(case_dir: Path):
     names = sorted(p.name for p in case_dir.iterdir())
     assert names == ["REPORT.md", "case.json", "evidence", "input", "result.json"]
     ev = sorted(p.name for p in (case_dir / "evidence").iterdir())
-    data = json.loads((case_dir / "case.json").read_text())
+    data = json.loads((case_dir / "case.json").read_text(encoding="utf-8"))
     assert drop not in data["files"] and keep in data["files"]
     assert not any(n.startswith(drop) for n in ev) and "stray.tmp" not in ev
-    res = json.loads((case_dir / "result.json").read_text())
+    res = json.loads((case_dir / "result.json").read_text(encoding="utf-8"))
     assert res["schema"] == "igl.result/1" and res["answer"]["candidate"] == c
-    report = (case_dir / "REPORT.md").read_text()
+    report = (case_dir / "REPORT.md").read_text(encoding="utf-8")
     for section in ("## Confidence by level", "## Evidence", "## Candidates considered", "## Methods attempted",
                     "## Data handling", "## Files"):
         assert section in report
+    assert f"| {c} | Austria |" in report and "| C* | other countries (249 not on the board) |" in report
+    assert {x["id"]: x["status"] for x in res["candidates"]["country"]} == {c: "answer", "C*": "not on the board"}
+
+
+def test_report_lists_the_answer_and_the_lead_wherever_they_rank(case_dir: Path):
+    from iglib import report
+    town = cand(case_dir, "Town", "city", "--at", "50.0,8.0")
+    look = note(case_dir, "decor resembles the listing photos", "style", "inferred", "image")
+    rivals = [cand(case_dir, f"Hotel {i:02d}", "site", "--parent", town) for i in range(15)]
+    for r in rivals:
+        run("link", case_dir, look, "--for", f"{r}:3", "--why", "style")
+    lead = cand(case_dir, "Hotel Last", "site", "--parent", town)             # no evidence: bottom of the board
+    code, out = run("answer", case_dir, town, "--lead", lead, "--no-network", "--summary", "x")
+    assert code == 0 and "no coordinates on file" in out and "None" not in out, out
+    case = Case(case_dir)
+    ranked = [r["id"] for r in scoring.rank(case, "site") if not r.get("rest")]
+    assert ranked.index(lead) >= 15                                           # below the twelve rows shown by weight
+    md, res = report.build(case)
+    table = md[md.index("**site**"):md.index("## Reasoning timeline")]
+    assert f"| {lead} | Hotel Last | " in table and "| lead (unverified) |" in table
+    assert table.count("| open |") == 12 and "| … | 3 more candidate(s), each with share ≤ " in table
+    assert f"| {town} | Town | " in md and "| answer |" in md
+    assert len(res["candidates"]["site"]) == 17                               # result.json keeps every row
 
 
 def test_gps_metadata_auto_clue_and_signs(tmp_path: Path):
     p = make_jpeg(tmp_path / "rio.jpg", lat=-22.9068, lon=-43.1729, when="2024:07:10 16:00:00", offset="-03:00")
     out_dir = tmp_path / "c"
-    code, out = run("init", p, "--out", out_dir)
+    code, out = run("init", p, "--out", out_dir, "--no-probe")
     assert code == 0
-    meta = json.loads((out_dir / "input" / "metadata.json").read_text())
+    meta = json.loads((out_dir / "input" / "metadata.json").read_text(encoding="utf-8"))
     assert abs(meta["gps"]["lat"] + 22.9068) < 1e-4 and abs(meta["gps"]["lon"] + 43.1729) < 1e-4
     assert meta["time"]["offset"] == "-03:00"
     assert any(z.startswith("America/Sao_Paulo") for z in meta["time"]["zones_with_offset"])
-    clues = json.loads((out_dir / "case.json").read_text())["clues"]
+    clues = json.loads((out_dir / "case.json").read_text(encoding="utf-8"))["clues"]
     assert any(c["status"] == "metadata" and "EXIF GPS -22.906" in c["text"] for c in clues.values())

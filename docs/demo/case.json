@@ -1,13 +1,13 @@
 {
  "schema": "igl.case/1",
- "tool_version": "1.0.0",
- "created": "2026-11-19T22:28:18-05:00",
- "updated": "2026-11-19T22:28:31-05:00",
+ "tool_version": "2.0.0",
+ "created": "2026-11-20T12:13:43-05:00",
+ "updated": "2026-11-20T12:13:49-05:00",
  "image": {
   "original_path": "/demo/larkspur-room.jpg",
   "file": "input/larkspur-room.jpg",
-  "sha256": "c7935f2cb6334f23fdf109f31d53f7d8dfc704aa9229d7391103d3662fbfabd6",
-  "bytes": 141675,
+  "sha256": "907d63b789f4c4944939d68836d8708d2e488ccfb6eccb1f37b273387edabe08",
+  "bytes": 147446,
   "format": "JPEG",
   "size": [
    1600,
@@ -27,7 +27,7 @@
   }
  },
  "counters": {
-  "E": 5,
+  "E": 6,
   "N": 6,
   "C": 135,
   "V": 185,
@@ -37,38 +37,44 @@
   "E01": {
    "path": "evidence/E01_overview-grid.jpg",
    "what": "the photo with a labelled grid (use --cell C3 or C3:E5 to crop)",
-   "created": "2026-11-19T22:28:18-05:00",
+   "created": "2026-11-20T12:13:43-05:00",
    "pinned": true
   },
   "E02": {
    "path": "evidence/E02_scan.json",
    "what": "machine scan: OCR lines (T#), decoded codes (Q#), text signals",
-   "created": "2026-11-19T22:28:26-05:00",
+   "created": "2026-11-20T12:13:49-05:00",
    "pinned": false
   },
   "E03": {
    "path": "evidence/E03_scan-annotated.jpg",
    "what": "photo with OCR line boxes (T#) and code boxes (Q#)",
-   "created": "2026-11-19T22:28:26-05:00",
+   "created": "2026-11-20T12:13:49-05:00",
    "pinned": false
   },
   "E04": {
-   "path": "evidence/E04_socket.jpg",
-   "what": "double switched socket on the wall",
-   "created": "2026-11-19T22:28:26-05:00",
+   "path": "evidence/E04_text-crops.jpg",
+   "what": "enlarged crops of the OCR lines (T#): read them yourself",
+   "created": "2026-11-20T12:13:49-05:00",
    "pinned": false
   },
   "E05": {
-   "path": "evidence/E05_tent-card.jpg",
-   "what": "tent card: name, price, phone",
-   "created": "2026-11-19T22:28:26-05:00",
+   "path": "evidence/E05_socket.jpg",
+   "what": "double switched socket on the wall beside the desk",
+   "created": "2026-11-20T12:13:49-05:00",
+   "pinned": false
+  },
+  "E06": {
+   "path": "evidence/E06_tent-card.jpg",
+   "what": "tent card on the desk: venue name, breakfast price, reception number",
+   "created": "2026-11-20T12:13:49-05:00",
    "pinned": false
   }
  },
  "clues": {
   "N1": {
    "id": "N1",
-   "text": "First impression: hotel room desk; UK-style switched socket and £ prices point to the British Isles",
+   "text": "Hypotheses: scene=hotel room desk. 1) United Kingdom: switched three-pin socket and £ prices; 2) another British Isles or Commonwealth territory sharing the socket and the £ (Isle of Man, Channel Islands, Gibraltar); 3) a British-themed venue abroad (unlikely: fixed wall socket). Would discriminate: the phone prefix and area code on the card",
    "kind": "hypothesis",
    "status": "inferred",
    "source": "image",
@@ -76,7 +82,7 @@
    "box": null,
    "url": null,
    "resolves": [],
-   "time": "2026-11-19T22:28:18-05:00"
+   "time": "2026-11-20T12:13:43-05:00"
   },
   "N2": {
    "id": "N2",
@@ -85,12 +91,12 @@
    "status": "observed",
    "source": "image",
    "files": [
-    "E04"
+    "E05"
    ],
    "box": null,
    "url": null,
    "resolves": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   "N3": {
    "id": "N3",
@@ -99,12 +105,12 @@
    "status": "read",
    "source": "text",
    "files": [
-    "E05"
+    "E06"
    ],
    "box": null,
    "url": null,
    "resolves": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   "N4": {
    "id": "N4",
@@ -113,12 +119,12 @@
    "status": "computed",
    "source": "text",
    "files": [
-    "E05"
+    "E06"
    ],
    "box": null,
    "url": null,
    "resolves": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   "N5": {
    "id": "N5",
@@ -127,26 +133,26 @@
    "status": "observed",
    "source": "text",
    "files": [
-    "E05"
+    "E06"
    ],
    "box": null,
    "url": null,
    "resolves": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   "N6": {
    "id": "N6",
-   "text": "Venue name 'THE LARKSPUR' and Wi-Fi SSID 'Larkspur-Guest' (password redacted by the decoder); demo venue is fictional, so not searched",
+   "text": "Venue name 'THE LARKSPUR' and Wi-Fi SSID 'Larkspur-Guest' (password redacted by the decoder); the demo venue is fictional, so it is not searched",
    "kind": "context",
    "status": "computed",
    "source": "text",
    "files": [
-    "E05"
+    "E06"
    ],
    "box": null,
    "url": null,
    "resolves": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   }
  },
  "candidates": {
@@ -160,7 +166,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C2": {
@@ -173,7 +179,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C3": {
@@ -186,7 +192,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C4": {
@@ -199,7 +205,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C5": {
@@ -212,7 +218,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C6": {
@@ -225,7 +231,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C7": {
@@ -238,7 +244,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C8": {
@@ -251,7 +257,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C9": {
@@ -264,7 +270,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C10": {
@@ -277,7 +283,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C11": {
@@ -290,7 +296,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C12": {
@@ -303,7 +309,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C13": {
@@ -316,7 +322,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C14": {
@@ -329,7 +335,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C15": {
@@ -342,7 +348,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C16": {
@@ -355,7 +361,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C17": {
@@ -368,7 +374,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C18": {
@@ -381,7 +387,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C19": {
@@ -394,7 +400,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C20": {
@@ -407,7 +413,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C21": {
@@ -420,7 +426,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C22": {
@@ -433,7 +439,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C23": {
@@ -446,7 +452,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C24": {
@@ -459,7 +465,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C25": {
@@ -472,7 +478,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C26": {
@@ -485,7 +491,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C27": {
@@ -498,7 +504,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C28": {
@@ -511,7 +517,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C29": {
@@ -524,7 +530,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C30": {
@@ -537,7 +543,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C31": {
@@ -550,7 +556,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C32": {
@@ -563,7 +569,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C33": {
@@ -576,7 +582,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C34": {
@@ -589,7 +595,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C35": {
@@ -602,7 +608,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C36": {
@@ -615,7 +621,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C37": {
@@ -628,7 +634,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C38": {
@@ -641,7 +647,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C39": {
@@ -654,7 +660,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C40": {
@@ -667,7 +673,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C41": {
@@ -680,7 +686,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C42": {
@@ -693,7 +699,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C43": {
@@ -706,7 +712,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C44": {
@@ -719,7 +725,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C45": {
@@ -732,7 +738,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C46": {
@@ -745,7 +751,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C47": {
@@ -758,7 +764,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C48": {
@@ -771,7 +777,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C49": {
@@ -784,7 +790,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C50": {
@@ -797,7 +803,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C51": {
@@ -810,7 +816,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C52": {
@@ -823,7 +829,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C53": {
@@ -836,7 +842,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C54": {
@@ -849,7 +855,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C55": {
@@ -862,7 +868,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C56": {
@@ -875,7 +881,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C57": {
@@ -888,7 +894,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C58": {
@@ -901,7 +907,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C59": {
@@ -914,7 +920,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C60": {
@@ -927,7 +933,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C61": {
@@ -940,7 +946,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C62": {
@@ -953,7 +959,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C63": {
@@ -966,7 +972,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C64": {
@@ -979,7 +985,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C65": {
@@ -992,7 +998,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C66": {
@@ -1005,7 +1011,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C67": {
@@ -1018,7 +1024,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C68": {
@@ -1031,7 +1037,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C69": {
@@ -1044,7 +1050,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C70": {
@@ -1057,7 +1063,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C71": {
@@ -1070,7 +1076,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C72": {
@@ -1083,7 +1089,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C73": {
@@ -1096,7 +1102,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C74": {
@@ -1109,7 +1115,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C75": {
@@ -1122,7 +1128,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C76": {
@@ -1135,7 +1141,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C77": {
@@ -1148,7 +1154,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C78": {
@@ -1161,7 +1167,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C79": {
@@ -1174,7 +1180,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C80": {
@@ -1187,7 +1193,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C81": {
@@ -1200,7 +1206,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C82": {
@@ -1213,7 +1219,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C83": {
@@ -1226,7 +1232,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C84": {
@@ -1239,7 +1245,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C85": {
@@ -1252,7 +1258,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C86": {
@@ -1265,7 +1271,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C87": {
@@ -1278,7 +1284,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C88": {
@@ -1291,7 +1297,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C89": {
@@ -1304,7 +1310,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C90": {
@@ -1317,7 +1323,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C91": {
@@ -1330,7 +1336,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C92": {
@@ -1343,7 +1349,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C93": {
@@ -1356,7 +1362,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C94": {
@@ -1369,7 +1375,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C95": {
@@ -1382,7 +1388,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C96": {
@@ -1395,7 +1401,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C97": {
@@ -1408,7 +1414,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C98": {
@@ -1421,7 +1427,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C99": {
@@ -1434,7 +1440,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C100": {
@@ -1447,7 +1453,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C101": {
@@ -1460,7 +1466,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C102": {
@@ -1473,7 +1479,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C103": {
@@ -1486,7 +1492,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C104": {
@@ -1499,7 +1505,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C105": {
@@ -1512,7 +1518,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C106": {
@@ -1525,7 +1531,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C107": {
@@ -1538,7 +1544,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C108": {
@@ -1551,7 +1557,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C109": {
@@ -1564,7 +1570,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C110": {
@@ -1577,7 +1583,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C111": {
@@ -1590,7 +1596,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C112": {
@@ -1603,7 +1609,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C113": {
@@ -1616,7 +1622,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C114": {
@@ -1629,7 +1635,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C115": {
@@ -1642,7 +1648,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C116": {
@@ -1655,7 +1661,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C117": {
@@ -1668,7 +1674,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C118": {
@@ -1681,7 +1687,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C119": {
@@ -1694,7 +1700,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C120": {
@@ -1707,7 +1713,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C121": {
@@ -1720,7 +1726,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C122": {
@@ -1733,7 +1739,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C123": {
@@ -1746,7 +1752,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C124": {
@@ -1759,7 +1765,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C125": {
@@ -1772,7 +1778,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C126": {
@@ -1785,7 +1791,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C127": {
@@ -1798,7 +1804,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C128": {
@@ -1811,7 +1817,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C129": {
@@ -1824,7 +1830,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C130": {
@@ -1837,7 +1843,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C131": {
@@ -1850,7 +1856,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C132": {
@@ -1863,7 +1869,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C133": {
@@ -1876,7 +1882,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C134": {
@@ -1889,7 +1895,7 @@
    "lon": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00",
+   "time": "2026-11-20T12:13:49-05:00",
    "note": "added by countries filter"
   },
   "C135": {
@@ -1907,7 +1913,7 @@
    "note": null,
    "status": "open",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   }
  },
  "evidence": [
@@ -1919,7 +1925,7 @@
    "requested": 6.0,
    "why": "matches plugs G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V2",
@@ -1929,7 +1935,7 @@
    "requested": 6.0,
    "why": "matches plugs A,C,D,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V3",
@@ -1939,7 +1945,7 @@
    "requested": 6.0,
    "why": "matches plugs A,B,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V4",
@@ -1949,7 +1955,7 @@
    "requested": 6.0,
    "why": "matches plugs C,D,F,G,M",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V5",
@@ -1959,7 +1965,7 @@
    "requested": 6.0,
    "why": "matches plugs D,G,M",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V6",
@@ -1969,7 +1975,7 @@
    "requested": 6.0,
    "why": "matches plugs G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V7",
@@ -1979,7 +1985,7 @@
    "requested": 6.0,
    "why": "matches plugs A,C,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V8",
@@ -1989,7 +1995,7 @@
    "requested": 6.0,
    "why": "matches plugs G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V9",
@@ -1999,7 +2005,7 @@
    "requested": 6.0,
    "why": "matches plugs D,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V10",
@@ -2009,7 +2015,7 @@
    "requested": 6.0,
    "why": "matches plugs G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V11",
@@ -2019,7 +2025,7 @@
    "requested": 6.0,
    "why": "matches plugs G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V12",
@@ -2029,7 +2035,7 @@
    "requested": 6.0,
    "why": "matches plugs D,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V13",
@@ -2039,7 +2045,7 @@
    "requested": 6.0,
    "why": "matches plugs C,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V14",
@@ -2049,7 +2055,7 @@
    "requested": 6.0,
    "why": "matches plugs G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V15",
@@ -2059,7 +2065,7 @@
    "requested": 6.0,
    "why": "matches plugs G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V16",
@@ -2069,7 +2075,7 @@
    "requested": 6.0,
    "why": "matches plugs A,B,D,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V17",
@@ -2079,7 +2085,7 @@
    "requested": 6.0,
    "why": "matches plugs D,G,M",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V18",
@@ -2089,7 +2095,7 @@
    "requested": 6.0,
    "why": "matches plugs C,D,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V19",
@@ -2099,7 +2105,7 @@
    "requested": 6.0,
    "why": "matches plugs G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V20",
@@ -2109,7 +2115,7 @@
    "requested": 6.0,
    "why": "matches plugs G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V21",
@@ -2119,7 +2125,7 @@
    "requested": 6.0,
    "why": "matches plugs G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V22",
@@ -2129,7 +2135,7 @@
    "requested": 6.0,
    "why": "matches plugs B,C,D,F,G,J",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V23",
@@ -2139,7 +2145,7 @@
    "requested": 6.0,
    "why": "matches plugs G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V24",
@@ -2149,7 +2155,7 @@
    "requested": 6.0,
    "why": "matches plugs C,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V25",
@@ -2159,7 +2165,7 @@
    "requested": 6.0,
    "why": "matches plugs A,B,C,D,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V26",
@@ -2169,7 +2175,7 @@
    "requested": 6.0,
    "why": "matches plugs D,G,M",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V27",
@@ -2179,7 +2185,7 @@
    "requested": 6.0,
    "why": "matches plugs G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V28",
@@ -2189,7 +2195,7 @@
    "requested": 6.0,
    "why": "matches plugs C,G,M",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V29",
@@ -2199,7 +2205,7 @@
    "requested": 6.0,
    "why": "matches plugs D,G,J,K,L",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V30",
@@ -2209,7 +2215,7 @@
    "requested": 6.0,
    "why": "matches plugs G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V31",
@@ -2219,7 +2225,7 @@
    "requested": 6.0,
    "why": "matches plugs C,E,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V32",
@@ -2229,7 +2235,7 @@
    "requested": 6.0,
    "why": "matches plugs A,C,D,F,G,I",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V33",
@@ -2239,7 +2245,7 @@
    "requested": 6.0,
    "why": "matches plugs D,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V34",
@@ -2249,7 +2255,7 @@
    "requested": 6.0,
    "why": "matches plugs G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V35",
@@ -2259,7 +2265,7 @@
    "requested": 6.0,
    "why": "matches plugs C,D,G,M",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V36",
@@ -2269,7 +2275,7 @@
    "requested": 6.0,
    "why": "matches plugs D,F,G,L",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V37",
@@ -2279,7 +2285,7 @@
    "requested": 6.0,
    "why": "matches plugs C,E,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V38",
@@ -2289,7 +2295,7 @@
    "requested": 6.0,
    "why": "matches plugs G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V39",
@@ -2299,7 +2305,7 @@
    "requested": 6.0,
    "why": "matches plugs G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V40",
@@ -2309,7 +2315,7 @@
    "requested": 6.0,
    "why": "matches plugs D,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V41",
@@ -2319,7 +2325,7 @@
    "requested": 6.0,
    "why": "matches plugs C,G,M",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V42",
@@ -2329,7 +2335,7 @@
    "requested": 6.0,
    "why": "matches plugs C,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V43",
@@ -2339,7 +2345,7 @@
    "requested": 6.0,
    "why": "matches plugs D,G,M",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V44",
@@ -2349,7 +2355,7 @@
    "requested": 6.0,
    "why": "matches plugs G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V45",
@@ -2359,7 +2365,7 @@
    "requested": 6.0,
    "why": "matches plugs A,B,D,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V46",
@@ -2369,7 +2375,7 @@
    "requested": 6.0,
    "why": "matches plugs A,B,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V47",
@@ -2379,7 +2385,7 @@
    "requested": 6.0,
    "why": "matches plugs A,B,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V48",
@@ -2389,7 +2395,7 @@
    "requested": 6.0,
    "why": "matches plugs C,D,F,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V49",
@@ -2399,7 +2405,7 @@
    "requested": 6.0,
    "why": "matches plugs D,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V50",
@@ -2409,7 +2415,7 @@
    "requested": 6.0,
    "why": "matches plugs G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V51",
@@ -2419,7 +2425,7 @@
    "requested": 6.0,
    "why": "matches plugs G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V52",
@@ -2429,7 +2435,7 @@
    "requested": 6.0,
    "why": "matches plugs D,G,M",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V53",
@@ -2439,7 +2445,7 @@
    "requested": 6.0,
    "why": "matches plugs A,D,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V54",
@@ -2449,7 +2455,7 @@
    "requested": 6.0,
    "why": "matches plugs C,D,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V55",
@@ -2459,7 +2465,7 @@
    "requested": 6.0,
    "why": "matches plugs D,G",
    "files": [],
-   "time": "2026-11-19T22:28:27-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V56",
@@ -2469,7 +2475,7 @@
    "requested": 20.0,
    "why": "matches currency FKP",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V57",
@@ -2479,7 +2485,7 @@
    "requested": 20.0,
    "why": "matches currency GIP",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V58",
@@ -2489,7 +2495,7 @@
    "requested": 20.0,
    "why": "matches currency GBP",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V59",
@@ -2499,7 +2505,7 @@
    "requested": 20.0,
    "why": "matches currency GBP",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V60",
@@ -2509,7 +2515,7 @@
    "requested": 20.0,
    "why": "matches currency GBP",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V61",
@@ -2519,7 +2525,7 @@
    "requested": 20.0,
    "why": "matches currency GBP",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V62",
@@ -2529,7 +2535,7 @@
    "requested": 20.0,
    "why": "matches currency SSP",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V63",
@@ -2539,7 +2545,7 @@
    "requested": 20.0,
    "why": "matches currency SHP",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V64",
@@ -2549,7 +2555,7 @@
    "requested": 20.0,
    "why": "matches currency SYP",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V65",
@@ -2559,7 +2565,7 @@
    "requested": 20.0,
    "why": "matches currency GBP",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V66",
@@ -2569,7 +2575,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V67",
@@ -2579,7 +2585,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V68",
@@ -2589,7 +2595,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V69",
@@ -2599,7 +2605,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V70",
@@ -2609,7 +2615,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V71",
@@ -2619,7 +2625,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V72",
@@ -2629,7 +2635,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V73",
@@ -2639,7 +2645,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V74",
@@ -2649,7 +2655,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V75",
@@ -2659,7 +2665,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V76",
@@ -2669,7 +2675,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V77",
@@ -2679,7 +2685,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V78",
@@ -2689,7 +2695,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V79",
@@ -2699,7 +2705,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V80",
@@ -2709,7 +2715,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V81",
@@ -2719,7 +2725,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V82",
@@ -2729,7 +2735,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V83",
@@ -2739,7 +2745,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V84",
@@ -2749,7 +2755,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V85",
@@ -2759,7 +2765,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V86",
@@ -2769,7 +2775,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V87",
@@ -2779,7 +2785,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V88",
@@ -2789,7 +2795,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V89",
@@ -2799,7 +2805,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V90",
@@ -2809,7 +2815,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V91",
@@ -2819,7 +2825,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V92",
@@ -2829,7 +2835,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V93",
@@ -2839,7 +2845,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V94",
@@ -2849,7 +2855,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V95",
@@ -2859,7 +2865,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V96",
@@ -2869,7 +2875,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V97",
@@ -2879,7 +2885,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V98",
@@ -2889,7 +2895,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V99",
@@ -2899,7 +2905,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V100",
@@ -2909,7 +2915,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V101",
@@ -2919,7 +2925,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V102",
@@ -2929,7 +2935,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V103",
@@ -2939,7 +2945,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V104",
@@ -2949,7 +2955,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V105",
@@ -2959,7 +2965,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V106",
@@ -2969,7 +2975,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V107",
@@ -2979,7 +2985,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V108",
@@ -2989,7 +2995,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V109",
@@ -2999,7 +3005,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V110",
@@ -3009,7 +3015,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V111",
@@ -3019,7 +3025,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V112",
@@ -3029,7 +3035,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V113",
@@ -3039,7 +3045,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V114",
@@ -3049,7 +3055,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V115",
@@ -3059,7 +3065,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V116",
@@ -3069,7 +3075,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V117",
@@ -3079,7 +3085,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V118",
@@ -3089,7 +3095,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V119",
@@ -3099,7 +3105,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V120",
@@ -3109,7 +3115,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V121",
@@ -3119,7 +3125,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V122",
@@ -3129,7 +3135,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V123",
@@ -3139,7 +3145,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V124",
@@ -3149,7 +3155,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V125",
@@ -3159,7 +3165,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V126",
@@ -3169,7 +3175,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V127",
@@ -3179,7 +3185,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V128",
@@ -3189,7 +3195,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V129",
@@ -3199,7 +3205,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V130",
@@ -3209,7 +3215,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V131",
@@ -3219,7 +3225,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V132",
@@ -3229,7 +3235,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V133",
@@ -3239,7 +3245,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V134",
@@ -3249,7 +3255,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V135",
@@ -3259,7 +3265,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V136",
@@ -3269,7 +3275,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V137",
@@ -3279,7 +3285,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V138",
@@ -3289,7 +3295,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V139",
@@ -3299,7 +3305,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V140",
@@ -3309,7 +3315,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V141",
@@ -3319,7 +3325,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V142",
@@ -3329,7 +3335,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V143",
@@ -3339,7 +3345,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V144",
@@ -3349,7 +3355,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V145",
@@ -3359,7 +3365,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V146",
@@ -3369,7 +3375,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V147",
@@ -3379,7 +3385,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V148",
@@ -3389,7 +3395,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V149",
@@ -3399,7 +3405,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V150",
@@ -3409,7 +3415,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V151",
@@ -3419,7 +3425,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V152",
@@ -3429,7 +3435,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V153",
@@ -3439,7 +3445,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V154",
@@ -3449,7 +3455,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V155",
@@ -3459,7 +3465,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V156",
@@ -3469,7 +3475,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V157",
@@ -3479,7 +3485,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V158",
@@ -3489,7 +3495,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V159",
@@ -3499,7 +3505,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V160",
@@ -3509,7 +3515,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V161",
@@ -3519,7 +3525,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V162",
@@ -3529,7 +3535,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V163",
@@ -3539,7 +3545,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V164",
@@ -3549,7 +3555,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V165",
@@ -3559,7 +3565,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V166",
@@ -3569,7 +3575,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V167",
@@ -3579,7 +3585,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V168",
@@ -3589,7 +3595,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V169",
@@ -3599,7 +3605,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V170",
@@ -3609,7 +3615,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V171",
@@ -3619,7 +3625,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V172",
@@ -3629,7 +3635,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V173",
@@ -3639,7 +3645,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V174",
@@ -3649,7 +3655,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V175",
@@ -3659,7 +3665,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V176",
@@ -3669,7 +3675,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V177",
@@ -3679,7 +3685,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V178",
@@ -3689,7 +3695,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V179",
@@ -3699,7 +3705,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V180",
@@ -3709,7 +3715,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V181",
@@ -3719,7 +3725,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V182",
@@ -3729,7 +3735,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V183",
@@ -3739,7 +3745,7 @@
    "requested": 1.5,
    "why": "matches lang en",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V184",
@@ -3749,7 +3755,7 @@
    "requested": 30.0,
    "why": "+44 20 is a UK (London) number",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "V185",
@@ -3759,7 +3765,7 @@
    "requested": 30.0,
    "why": "area code 20 = London",
    "files": [],
-   "time": "2026-11-19T22:28:28-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   }
  ],
  "exclusions": [],
@@ -3768,26 +3774,27 @@
    "id": "A1",
    "method": "metadata",
    "status": "results",
-   "detail": "no EXIF - stripped (messaging/social upload, screenshot, export) or synthetic; absence proves nothing; JPEG quality ~90; 1600x1000 without EXIF fits social-media recompression sizes (weak)",
+   "detail": "no EXIF - stripped (messaging/social upload, screenshot, export) or synthetic; absence proves nothing; C2PA content credentials present (issued by Anthropic; actions opened; 'Claude provided this file at the request of a user and may have created or modified the file contents.') - a re-saved or relayed file can carry the relayer's credentials; verify with a C2PA verifier; JPEG quality ~90; 1600x1000 without EXIF fits social-media recompression sizes (weak)",
    "engine": null,
    "query": null,
    "url": null,
    "files": [],
-   "time": "2026-11-19T22:28:18-05:00"
+   "time": "2026-11-20T12:13:43-05:00"
   },
   {
    "id": "A2",
    "method": "text_ocr",
    "status": "results",
-   "detail": "tesseract: 8 lines [THE LARKSPUR, Guest Wi-Fi, Welcome to your room, Breakfast 7:00 - 10:30, £14.50 per person incl. VAT, Reception +44 20 7946 0321, larkspur.example, Larkspur-Guest]",
+   "detail": "tesseract: 8 language-like line(s) [THE LARKSPUR, Guest Wi-Fi, Welcome to your room, Breakfast 7:00 - 10:30, £14.50 per person incl. VAT, Reception +44 20 7946 0321, larkspur.example, Larkspur-Guest]; 20 noise fragment(s) set aside",
    "engine": "tesseract",
    "query": null,
    "url": null,
    "files": [
     "E02",
-    "E03"
+    "E03",
+    "E04"
    ],
-   "time": "2026-11-19T22:28:26-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "A3",
@@ -3801,7 +3808,7 @@
     "E02",
     "E03"
    ],
-   "time": "2026-11-19T22:28:26-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "A4",
@@ -3812,7 +3819,7 @@
    "query": null,
    "url": null,
    "files": [],
-   "time": "2026-11-19T22:28:29-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "A5",
@@ -3823,7 +3830,7 @@
    "query": null,
    "url": null,
    "files": [],
-   "time": "2026-11-19T22:28:29-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "A6",
@@ -3834,7 +3841,7 @@
    "query": null,
    "url": null,
    "files": [],
-   "time": "2026-11-19T22:28:29-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "A7",
@@ -3845,7 +3852,7 @@
    "query": null,
    "url": null,
    "files": [],
-   "time": "2026-11-19T22:28:29-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "A8",
@@ -3856,7 +3863,7 @@
    "query": null,
    "url": null,
    "files": [],
-   "time": "2026-11-19T22:28:29-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "A9",
@@ -3867,7 +3874,7 @@
    "query": null,
    "url": null,
    "files": [],
-   "time": "2026-11-19T22:28:29-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "A10",
@@ -3878,7 +3885,7 @@
    "query": null,
    "url": null,
    "files": [],
-   "time": "2026-11-19T22:28:30-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "A11",
@@ -3889,7 +3896,7 @@
    "query": null,
    "url": null,
    "files": [],
-   "time": "2026-11-19T22:28:30-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "A12",
@@ -3900,7 +3907,7 @@
    "query": null,
    "url": null,
    "files": [],
-   "time": "2026-11-19T22:28:30-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   },
   {
    "id": "A13",
@@ -3911,7 +3918,7 @@
    "query": null,
    "url": null,
    "files": [],
-   "time": "2026-11-19T22:28:30-05:00"
+   "time": "2026-11-20T12:13:49-05:00"
   }
  ],
  "answer": {
@@ -3924,159 +3931,171 @@
   "level": "city",
   "confidence": "medium",
   "cap": "medium",
-  "summary": "A '+44 20' phone number read on the tent card places the room in London (libphonenumber, decisive). Independent fixed standards agree on the UK: a BS 1363 Type G switched socket and £ prices with VAT. The venue named on the card is fictional, so the site level stays open.",
+  "share": 0.796,
+  "summary": "A '+44 20' phone number read on the tent card places the room in London (libphonenumber, decisive). Independent fixed standards agree on the UK: a BS 1363 Type G switched socket and £ prices with VAT. The venue named on the card is fictional, so no site candidate exists and the site level stays open.",
   "open_questions": "Site level: the venue named on the card is fictional, so no reference imagery exists.",
+  "lead": null,
+  "best_estimate": {
+   "basis": "answer",
+   "candidate": "C135",
+   "name": "London",
+   "address": null,
+   "lat": 51.5072,
+   "lon": -0.1276,
+   "level": "city",
+   "tier": "medium"
+  },
   "files": [],
-  "time": "2026-11-19T22:28:30-05:00"
+  "time": "2026-11-20T12:13:49-05:00"
  },
  "timeline": [
   {
-   "t": "2026-11-19T22:28:18-05:00",
+   "t": "2026-11-20T12:13:43-05:00",
    "event": "init",
    "text": "case created for larkspur-room.jpg"
   },
   {
-   "t": "2026-11-19T22:28:18-05:00",
+   "t": "2026-11-20T12:13:43-05:00",
    "event": "log",
-   "text": "A1 metadata: results - no EXIF - stripped (messaging/social upload, screenshot, export) or synthetic; absence proves nothing; JPEG quality ~90; 1600x1000 without …"
+   "text": "A1 metadata: results - no EXIF - stripped (messaging/social upload, screenshot, export) or synthetic; absence proves nothing; C2PA content credentials present (is…"
   },
   {
-   "t": "2026-11-19T22:28:18-05:00",
+   "t": "2026-11-20T12:13:43-05:00",
    "event": "init",
-   "text": "metadata read: 3 notable fields; overview grid 8x5"
+   "text": "metadata read: 4 notable fields; overview grid 8x5"
   },
   {
-   "t": "2026-11-19T22:28:18-05:00",
+   "t": "2026-11-20T12:13:43-05:00",
    "event": "note",
-   "text": "N1 [inferred/image] First impression: hotel room desk; UK-style switched socket and £ prices point to the British Isles"
+   "text": "N1 [inferred/image] Hypotheses: scene=hotel room desk. 1) United Kingdom: switched three-pin socket and £ prices; 2) another British Isles or Commonwealth territory sharing the so…"
   },
   {
-   "t": "2026-11-19T22:28:26-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "log",
-   "text": "A2 text_ocr/tesseract: results - tesseract: 8 lines [THE LARKSPUR, Guest Wi-Fi, Welcome to your room, Breakfast 7:00 - 10:30, £14.50 per person incl. VAT, Reception +44 20 …"
+   "text": "A2 text_ocr/tesseract: results - tesseract: 8 language-like line(s) [THE LARKSPUR, Guest Wi-Fi, Welcome to your room, Breakfast 7:00 - 10:30, £14.50 per person incl. VAT, R…"
   },
   {
-   "t": "2026-11-19T22:28:26-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "log",
    "text": "A3 codes: results - 1 code(s): WIFI:T:WPA;S:Larkspur-Guest;P:<redacted>;;"
   },
   {
-   "t": "2026-11-19T22:28:26-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "scan",
    "text": "scan: 8 OCR lines, 1 codes, tiles 3x3"
   },
   {
-   "t": "2026-11-19T22:28:27-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "note",
    "text": "N2 [observed/image] Double switched socket: per outlet one vertical earth slot above two horizontal slots, rocker switch with red indicator = BS 1363 (Type G)"
   },
   {
-   "t": "2026-11-19T22:28:27-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "note",
    "text": "N3 [read/text] '£14.50 per person incl. VAT' read on the tent card"
   },
   {
-   "t": "2026-11-19T22:28:27-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "note",
    "text": "N4 [computed/text] '+44 20 7946 0321' read on the tent card; libphonenumber: GB, London (area code 20)"
   },
   {
-   "t": "2026-11-19T22:28:27-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "note",
    "text": "N5 [observed/text] English on every item, no other script"
   },
   {
-   "t": "2026-11-19T22:28:27-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "note",
-   "text": "N6 [computed/text] Venue name 'THE LARKSPUR' and Wi-Fi SSID 'Larkspur-Guest' (password redacted by the decoder); demo venue is fictional, so not searched"
+   "text": "N6 [computed/text] Venue name 'THE LARKSPUR' and Wi-Fi SSID 'Larkspur-Guest' (password redacted by the decoder); the demo venue is fictional, so it is not searched"
   },
   {
-   "t": "2026-11-19T22:28:27-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "link",
    "text": "countries filter via N2: 55 countries linked x6 (55 new candidates)"
   },
   {
-   "t": "2026-11-19T22:28:28-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "link",
    "text": "countries filter via N3: 10 countries linked x20 (3 new candidates)"
   },
   {
-   "t": "2026-11-19T22:28:28-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "link",
    "text": "countries filter via N5: 118 countries linked x1.5 (76 new candidates)"
   },
   {
-   "t": "2026-11-19T22:28:28-05:00",
-   "event": "cand",
-   "text": "C135 city: London @ 51.50720,-0.12760"
-  },
-  {
-   "t": "2026-11-19T22:28:28-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "link",
    "text": "N4 linked: N4 -> C52 United Kingdom: LR 30"
   },
   {
-   "t": "2026-11-19T22:28:28-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
+   "event": "cand",
+   "text": "C135 city: London @ 51.50720,-0.12760"
+  },
+  {
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "link",
    "text": "N4 linked: N4 -> C135 London: LR 30"
   },
   {
-   "t": "2026-11-19T22:28:29-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "log",
    "text": "A4 visual_sweep: results - 9 tiles: tent card, Wi-Fi card, double socket, lamp, framed print; no window or reflection"
   },
   {
-   "t": "2026-11-19T22:28:29-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "log",
    "text": "A5 standards: results - BS 1363 Type G socket; £ prices with VAT"
   },
   {
-   "t": "2026-11-19T22:28:29-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "log",
    "text": "A6 culture_style: results - generic international hotel decor; English only; no cultural or religious markers"
   },
   {
-   "t": "2026-11-19T22:28:29-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "log",
    "text": "A7 consistency: results - socket, currency, language and phone agree on GB/London; no EXIF time to test sun or time zone"
   },
   {
-   "t": "2026-11-19T22:28:29-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "log",
    "text": "A8 reverse_search: not_applicable - demo photo is synthetic and the venue fictional: online routes skipped on purpose"
   },
   {
-   "t": "2026-11-19T22:28:29-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "log",
    "text": "A9 text_search: not_applicable - demo photo is synthetic and the venue fictional: online routes skipped on purpose"
   },
   {
-   "t": "2026-11-19T22:28:30-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "log",
    "text": "A10 social_search: not_applicable - demo photo is synthetic and the venue fictional: online routes skipped on purpose"
   },
   {
-   "t": "2026-11-19T22:28:30-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "log",
    "text": "A11 candidate_enum: not_applicable - demo photo is synthetic and the venue fictional: online routes skipped on purpose"
   },
   {
-   "t": "2026-11-19T22:28:30-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "log",
    "text": "A12 reference_match: not_applicable - demo photo is synthetic and the venue fictional: online routes skipped on purpose"
   },
   {
-   "t": "2026-11-19T22:28:30-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "log",
    "text": "A13 window_view: not_applicable - no window, door or reflection in the frame"
   },
   {
-   "t": "2026-11-19T22:28:30-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "answer",
    "text": "answer C135 London (city, confidence medium, cap medium)"
   },
   {
-   "t": "2026-11-19T22:28:31-05:00",
+   "t": "2026-11-20T12:13:49-05:00",
    "event": "finalize",
    "text": "finalized; pruned 0 unreferenced file(s)"
   }
@@ -4084,6 +4103,7 @@
  "auto": {
   "metadata_flags": [
    "no EXIF - stripped (messaging/social upload, screenshot, export) or synthetic; absence proves nothing",
+   "C2PA content credentials present (issued by Anthropic; actions opened; 'Claude provided this file at the request of a user and may have created or modified the file contents.') - a re-saved or relayed file can carry the relayer's credentials; verify with a C2PA verifier",
    "JPEG quality ~90",
    "1600x1000 without EXIF fits social-media recompression sizes (weak)"
   ],

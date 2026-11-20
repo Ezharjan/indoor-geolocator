@@ -6,6 +6,7 @@ reference_projects/
 *-geolocation/
 *-geolocation-*/
 .work/
+.igl_write_test
 
 # Python
 __pycache__/
@@ -18,8 +19,7 @@ venv/
 *.egg-info/
 
 # Build leftovers (the finished indoor-geolocator.zip IS tracked: it is the installable skill)
-*.zip.tmp
-*.json.tmp
+*.tmp
 
 # Secrets and local settings
 .env
@@ -32,3 +32,7 @@ venv/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Similarity model (only if IGL_MODEL_DIR points inside the repository)
+*.onnx
+*.part

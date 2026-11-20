@@ -133,7 +133,10 @@ def mine(lines: list[str], phone_regions: list[str] | None = None) -> dict:
             for k in (cc[:3], cc[:2], cc[:1]):
                 isos = knowledge.calling_code_countries(k)
                 if isos:
-                    phones.append({"raw": m.group(0).strip(), "calling_code": "+" + k, "countries": isos})
+                    # +44 is shared by GB, GG, JE, IM and +1 by the whole NANP: name a country only when unique
+                    phones.append({"raw": m.group(0).strip(), "calling_code": "+" + k, "countries": isos,
+                                   "country": isos[0] if len(isos) == 1 else None,
+                                   "note": "calling code only (install phonenumbers for area/city)"})
                     break
     out["phones"] = phones
     # domains / e-mails

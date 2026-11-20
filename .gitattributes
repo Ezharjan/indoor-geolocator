@@ -1,0 +1,11 @@
+# Text files are stored and checked out with LF line endings on every platform, so a clone on Windows is
+# byte-for-byte the same as one on Linux or macOS (the skill zip and the demo files are compared by content).
+* text=auto eol=lf
+
+# Binary files: never converted, never diffed as text
+*.zip  binary
+*.jpg  binary
+*.jpeg binary
+*.png  binary
+*.webp binary
+*.onnx binary

@@ -77,6 +77,9 @@ def reverse(http: Http, lat: float, lon: float, zoom: int = 18) -> dict:
 def overpass(http: Http, ql: str, timeout: int = 60, deadline: float = 150.0) -> dict:
     """Try each mirror once (no retries: a failing mirror is skipped, not hammered) within an overall deadline."""
     import time
+    if http.dry:                                   # --print-url: GET form of the query on each mirror
+        http.printed.extend(f"{url}?data={_q(ql)}" for url in OVERPASS)
+        return {"ok": False, "error": "not sent (--print-url)", "elements": []}
     errors, t0 = [], time.time()
     once = Http(cache_dir=http.cache_dir, timeout=timeout, retries=0)
     for url in OVERPASS:
@@ -163,6 +166,41 @@ def elements_to_places(elements: list[dict]) -> list[dict]:
                                                                "building:levels", "level", "wikidata", "wikipedia",
                                                                "opening_hours", "name:en", "branch")}})
     return out
+
+
+def photon_poi(http: Http, tags: list[str], name: str | None, brand: str | None, area: dict, limit: int = 50) -> dict:
+    """Partial stand-in for an Overpass enumeration when no Overpass mirror answers (common from cloud
+    networks): Photon text search restricted to the bounding box and to the OSM tags. It finds features
+    whose name or category matches the query word, at most 50 of them, so it is a lower bound on the
+    category, never the complete list. Returns {ok, service, places, error?}."""
+    import urllib.parse
+    if "bbox" in area:
+        s_, w, n, e = area["bbox"]
+    else:
+        lat, lon, r = area["around"]
+        dlat = r / 111_320.0
+        dlon = r / (111_320.0 * max(0.05, math.cos(math.radians(lat))))
+        s_, w, n, e = lat - dlat, lon - dlon, lat + dlat, lon + dlon
+    pairs = [t.split("=", 1) for t in tags if "=" in t and not t.endswith("=*") and ":" not in t.split("=", 1)[0]]
+    words = re.sub(r"[^\w\s-]", " ", name or brand or "").strip() or (pairs[0][1] if pairs else "")
+    if not words:
+        return {"ok": False, "service": "photon", "places": [], "error": "nothing to search for (give --tag k=v, --name "
+                                                                         "or --brand)"}
+    q = [("q", words), ("bbox", f"{w:.5f},{s_:.5f},{e:.5f},{n:.5f}"), ("limit", str(max(1, min(50, limit))))]
+    q += [("osm_tag", f"{k}:{v}") for k, v in pairs]
+    r = http.get("https://photon.komoot.io/api/?" + urllib.parse.urlencode(q))
+    if not (r["ok"] and isinstance(r.get("data"), dict)):
+        return {"ok": False, "service": "photon", "places": [], "error": r.get("error")}
+    places, seen = [], set()
+    for f in r["data"].get("features", []):
+        it = _photon_item(f)
+        if it["osm"] in seen or not (s_ <= it["lat"] <= n and w <= it["lon"] <= e):
+            continue
+        seen.add(it["osm"])
+        pr = f.get("properties", {})
+        places.append({"name": it["name"] or "(unnamed)", "lat": it["lat"], "lon": it["lon"], "osm": it["osm"],
+                       "address": it["display"], "tags": {pr.get("osm_key", "?"): pr.get("osm_value", "")}})
+    return {"ok": True, "service": "photon (Overpass unavailable)", "places": places}
 
 
 def commons_geosearch(http: Http, lat: float, lon: float, radius: int = 500, limit: int = 30) -> dict:

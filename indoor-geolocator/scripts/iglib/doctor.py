@@ -7,7 +7,7 @@ import platform
 import shutil
 import sys
 
-from . import __version__, ocr
+from . import __version__, embed, ocr
 from .net import Http
 from .util import DATA_DIR, table
 
@@ -28,7 +28,27 @@ PROBES = [
     ("Mastodon API (hashtags)", "https://mastodon.social/api/v1/timelines/tag/hotel?limit=1"),
     ("Yandex Images (reverse search)", "https://yandex.com/images/"),
     ("TinEye (reverse search)", "https://tineye.com/"),
+    ("Baidu image search (reverse search)", "https://graph.baidu.com/pcpage/index?tpl_from=pc"),
+    ("Brave image search (`refs`)", "https://search.brave.com/"),
+    ("Startpage image search (`refs`)", "https://www.startpage.com/"),
+    ("uguu.se (temporary copies for `share`)", "https://uguu.se/"),
+    ("Hugging Face (similarity model, one download)", "https://huggingface.co/api/models/Xenova/dinov2-small"),
 ]
+
+
+def _browser_check() -> str:
+    """Can Playwright start Chromium here? (a few seconds)"""
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        return "unavailable - pip install playwright && playwright install chromium"
+    try:
+        with sync_playwright() as p:
+            b = p.chromium.launch(headless=True)
+            b.close()
+        return "starts"
+    except Exception as e:  # noqa: BLE001
+        return f"does not start ({str(e).splitlines()[0][:120]}) - run `playwright install chromium`"
 
 
 def run(network: bool = True) -> int:
@@ -39,10 +59,14 @@ def run(network: bool = True) -> int:
             ["data/gs1_prefixes.json", "present" if (DATA_DIR / "gs1_prefixes.json").exists() else "missing",
              "ok" if (DATA_DIR / "gs1_prefixes.json").exists() else "barcode prefix lookup disabled"]]
     for mod, pip, need in [("PIL", "pillow", "REQUIRED (all image work)"), ("numpy", "numpy", "QR/barcode, CLAHE"),
-                           ("cv2", "opencv-python-headless", "QR codes and barcodes"),
+                           ("cv2", "opencv-python-headless", "QR codes, barcodes, COPY / SAME SCENE tests in "
+                                                             "revsearch, refs and compare"),
                            ("phonenumbers", "phonenumbers", "offline phone-number geolocation"),
-                           ("playwright", "playwright", "automated reverse image search (+ `playwright install chromium`)"),
+                           ("playwright", "playwright", "reverse image search, reference photos (`refs`), snapshots "
+                                                        "(+ `playwright install chromium`)"),
                            ("pillow_heif", "pillow-heif", "HEIC/HEIF photos"),
+                           ("onnxruntime", "onnxruntime", "reference photos and search hits ordered by visual "
+                                                          "similarity (`refs`, `revsearch`)"),
                            ("rapidocr_onnxruntime", "rapidocr-onnxruntime", "OCR fallback without tesseract")]:
         try:
             m = importlib.import_module(mod)
@@ -63,10 +87,17 @@ def run(network: bool = True) -> int:
         nz = 0
     rows.append(["time-zone database", f"{nz} zones" if nz else "MISSING",
                  "ok" if nz else "pip install tzdata  (EXIF offset -> time zones, time-zone consistency check)"])
+    em = embed.state()
+    rows.append(["similarity model", {"ready": "ready", "download": "not downloaded yet", "off": "off",
+                                      "unavailable": "unavailable"}[em["state"]], em["note"]])
     rows.append(["exiftool", "present" if shutil.which("exiftool") else "missing (optional: richer metadata)", ""])
     wig = bool(os.environ.get("WIGLE_API_NAME") and os.environ.get("WIGLE_API_TOKEN"))
     rows.append(["WiGLE API key", "set" if wig else "not set",
                  "ok" if wig else "optional: Wi-Fi SSID lookup (`geo wigle`) with the user's free key"])
+    serp = bool(os.environ.get("SERPAPI_KEY"))
+    rows.append(["SerpApi key (SERPAPI_KEY)", "set" if serp else "not set",
+                 "ok: `revsearch` adds Google Lens results" if serp else
+                 "optional: Google Lens inside `revsearch` without a browser tool (the user's own key)"])
     print(table(rows, ["component", "state", "note / fix"], maxw=90))
     if network:
         http = Http(timeout=10, retries=0)
@@ -81,6 +112,8 @@ def run(network: bool = True) -> int:
             out.append([name, st or "-", state])
         print()
         print(table(out, ["service", "http", "state"], maxw=90))
-        print("\nUnavailable services only disable the methods that need them - say so in the report and use the "
-              "alternatives (references/sources-and-tools.md).")
+        print("\nheadless Chromium (revsearch, refs, snapshot): " + _browser_check())
+        print("\nUnavailable or rate-limited services only close the methods that need them: say so in the report and "
+              "use the alternatives (references/sources-and-tools.md). A reachable front page does not prove that a "
+              "search engine will accept automated searches: `revsearch` and `refs` report blocked / unavailable per run.")
     return 0

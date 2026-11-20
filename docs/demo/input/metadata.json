@@ -1,7 +1,7 @@
 {
  "file": {
   "name": "larkspur-room.jpg",
-  "bytes": 141675,
+  "bytes": 147446,
   "format": "JPEG",
   "mode": "RGB",
   "size": [
@@ -18,6 +18,7 @@
  "container": {
   "markers": [
    "APP0:JFIF",
+   "APP11:JP\u0002\u0011",
    "DQT",
    "DQT",
    "SOF0",
@@ -30,7 +31,18 @@
   "progressive": false,
   "quality_estimate": 90,
   "subsampling": "4:2:0",
-  "c2pa": false
+  "c2pa": true,
+  "c2pa_info": {
+   "signers": [
+    "Anthropic"
+   ],
+   "actions": [
+    "opened"
+   ],
+   "ai_generated": false,
+   "ai_composite": false,
+   "statement": "Claude provided this file at the request of a user and may have created or modified the file contents."
+  }
  },
  "filename": {},
  "time": {
@@ -42,6 +54,7 @@
  "edit_markers": [],
  "flags": [
   "no EXIF - stripped (messaging/social upload, screenshot, export) or synthetic; absence proves nothing",
+  "C2PA content credentials present (issued by Anthropic; actions opened; 'Claude provided this file at the request of a user and may have created or modified the file contents.') - a re-saved or relayed file can carry the relayer's credentials; verify with a C2PA verifier",
   "JPEG quality ~90",
   "1600x1000 without EXIF fits social-media recompression sizes (weak)"
  ]

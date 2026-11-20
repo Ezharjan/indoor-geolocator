@@ -2,9 +2,15 @@
 
 Classify the scene first (`IGL note <case> "Scene: hotel room" --kind scene --status observed --source image`),
 then follow its playbook. Each playbook gives the fastest routes in order, where reference photos live
-(you need them for `matched`), how to enumerate candidates, the usual traps, and the level you can
-realistically reach. Several playbooks can apply at once, e.g. a hotel restaurant, or a station inside a
-mall. Platform lists per country are in [search-playbook.md](search-playbook.md).
+(you need them for `matched`: `IGL refs <case> "<venue> <city> <room type>" --for C#` fetches and ranks
+them), how to enumerate candidates, the usual traps, and the level you can realistically reach. Several
+playbooks can apply at once, e.g. a hotel restaurant, or a station inside a mall. Platform lists per
+country are in [search-playbook.md](search-playbook.md).
+
+One route applies to every scene and is not repeated below: as soon as you have a region, run a picture
+search for the scene type there (`IGL refs <case> "<scene type> <region>" "<scene type> <feature>
+<town>"`). The sheet comes back sorted by likeness to your photo, so the venue itself, when it has
+pictures online, tends to be among the first tiles.
 
 Contents: hotel · rental, home, real estate · restaurant, café, bar · retail, mall, supermarket ·
 transit (station, airport, vehicle on a route) · venue or landmark (museum, worship, theatre, stadium,
@@ -20,6 +26,12 @@ hanger, a safe, slippers, an evacuation plan on the back of the door, branded to
 welcome screen, a room-service folder, or numbered doors along a corridor.
 
 **Fastest routes:**
+0. **Reverse image search** of the full frame and of tight crops (headboard art, carpet, lamp, the
+   view): `IGL revsearch`, then Google Lens through `IGL share` in a browser tool. Hotel rooms are
+   photographed endlessly for Booking, Expedia, Agoda, Trip.com and Tripadvisor. Hits classed COPY or
+   SAME SCENE name the property (a COPY on the hotel's own page or listing is a `traced` clue; on the
+   pages of several branches it is the brand's stock picture); unconfirmed hits are mostly other hotels
+   that look the same, so judge them on the ranked sheet before trusting a title.
 1. **Name text**: stationery, pens, notepads, key-card sleeves, toiletries, laundry bags, coasters,
    bathrobes, the TV welcome page or the Wi-Fi card (SSID). Read it on a crop, then
    `IGL geo search "<name> <city>" --case <case> --add site`.
@@ -34,16 +46,23 @@ welcome screen, a room-service folder, or numbered doors along a corridor.
    (brand) or `P127` (owned by), and the brand's own hotel directory.
 5. **Separate the properties** with room-specific invariants: the window view (skyline, the building
    opposite, the floor height), the window type, the ceiling height, the room shape (corner or
-   standard), and local art (many chains commission local artwork for each property). Then the photos.
+   standard), and local art (many chains commission local artwork for each property; a painting of a
+   local landmark also gives the town). Then the photos: `IGL refs <case> "<property> <room type>" --for
+   C#` for every property on the board; agreement on the window, ceiling or view separates properties,
+   agreement on furniture only does not.
 6. **Reference photos**: the official website gallery, Booking.com, Expedia/Hotels.com, Agoda, Trip.com,
    Tripadvisor traveller photos (dated, unedited, often show the view), Google Maps photos and indoor
    Street View, and regional platforms (search-playbook.md). Traveller photos are independent of the
    hotel's marketing.
 
 **Traps:** rooms on opposite sides of a corridor are often **mirror images**, so compare with flipped
-crops too (`IGL crop --flip` then `compare --query E##`). Renovations replace carpets and furniture, so
-compare invariants and check photo dates. Toiletries and amenity brands (and sometimes the room design)
-are shared across unrelated hotels. "Hotel art" can be mass-produced prints.
+crops too (`IGL crop --flip` then `refs` or `compare` with `--query E##`). Independent hotels of one
+region and era look alike (panelled lounges, patterned carpets): resemblance is the category.
+Sister hotels of one owner share furniture, carpets and art: when two of them "match", the match
+belongs to the group and its area, and only a fixed feature or the view names the hotel
+(verification.md section 7). Renovations replace carpets and furniture, so compare invariants and
+check photo dates. Toiletries and amenity brands (and sometimes the room design) are shared across
+unrelated hotels. "Hotel art" can be mass-produced prints.
 
 **Reachable:** site, often HIGH (the name plus matched photos). Room level only with a room number or a
 view match plus floor geometry.
@@ -53,17 +72,18 @@ view match plus floor geometry.
 **Recognise:** lived-in clutter, personal décor, a kitchen in the shot, listing-style wide-angle framing,
 staged furniture, a "for rent" or agency watermark.
 
-**Privacy gate (hard rule 11):** a private home is a person's home. If it looks like a private residence
+**Privacy gate (SKILL.md, "People, privacy and conduct"):** a private home is a person's home. If it looks like a private residence
 and the user stated no purpose, ask once what it is for. Without a legitimate purpose, stop at city or
 neighbourhood. Listings (short-term rentals, real estate) are commercial adverts, so matching one is
 fine. Still redact host and owner names and never publish the flat number of a private home.
 
 **Fastest routes:**
 1. **Listing match**: wide-angle, bright, staged photos with a watermark suggest a listing. Reverse
-   search the full frame (TinEye "oldest", Google Lens, Yandex), then search the right platform for the
-   country: Airbnb, Vrbo or Booking.com for short stays, and the real-estate portals per country
-   (search-playbook.md).
-2. **Country and city** from the standards (indoor-clues.md §5–10), which is the main tool here. Then
+   search the full frame (`IGL revsearch`, then Google Lens via `IGL share`; TinEye "oldest" for the
+   original), then search the right platform for the country: Airbnb, Vrbo or Booking.com for short
+   stays, and the real-estate portals per country (search-playbook.md). A listing photo classed COPY is
+   the source: its page gives the street or the building.
+2. **Country and city** from the standards (indoor-clues.md sections 5–10), which is the main tool here. Then
    the window view.
 3. **Building type**: a Soviet-era panel block, a Haussmann apartment, a Japanese mansion or apāto, a
    Korean apartment complex, an HDB flat in Singapore, a Hong Kong public housing estate, a US suburban
@@ -103,7 +123,10 @@ table numbers.
    Foursquare. For bars, Untappd lists the beers on tap.
 5. **Chain → branch**: enumerate the branches
    (`IGL geo poi --brand "<chain>" --area "<city>" --add site`), then separate them with the local
-   layout, the view, murals and neighbourhood art.
+   layout, the view, murals and neighbourhood art (`IGL refs <case> "<chain> <branch or street>" --for C#`).
+6. **Describe the unusual thing**: a sculpture, a themed ceiling, a mural, an aquarium, a famous
+   chandelier. `IGL refs <case> "<kind of venue> <the thing> <region>"` and the same words in your web
+   search usually find a one-of-a-kind interior faster than anything else.
 
 **Traps:** chains clone interiors; restaurants change names and owners but keep the room. Menus,
 cups and pens travel. Check the photo date against the venue's opening (and closing) date.
@@ -116,7 +139,7 @@ cups and pens travel. Check the photo date against the venue's opening (and clos
 
 **Fastest routes:**
 1. **Retailer** from logos, shelf-edge label design, own-brand products, loyalty-scheme signs, bag
-   colours and uniforms. Prices, currency and tax wording give the country (indoor-clues.md §3 and §11).
+   colours and uniforms. Prices, currency and tax wording give the country (indoor-clues.md sections 3 and 11).
 2. **Mall directory** ("You are here", 現在地, 您在此处, 현재 위치): the mall name, the floor naming
    (LG/UG/B1/M), store neighbours and the shape of the floor plan. Neighbouring store names visible
    across the atrium form a unique **co-location set**. Query it in OSM: shops tagged with `level` in
@@ -246,6 +269,8 @@ institution only, never people. Corporate offices reuse fit-outs worldwide.
 ## Generic or unknown
 
 Run the full sweep (indoor-clues.md), then intersect country standards
-(`IGL countries … --case`), then reverse search the full frame and 3–5 crops. Search distinctive
-strings, and use any window view. If nothing goes below country or region, say so plainly and report
-the best level with an honest radius and the evidence still missing.
+(`IGL countries … --case`), then reverse search the full frame and 2–4 crops on every engine you can
+reach (Lens via `IGL share`). Search distinctive strings and describe-and-search the unusual features in
+the local language, as text and as pictures (`IGL refs`), and use any window view. If nothing goes below
+country or region, say so plainly and report the best level with an honest radius, the best lead if any,
+and the evidence still missing.
