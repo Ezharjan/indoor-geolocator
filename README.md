@@ -1,5 +1,7 @@
 # indoor-geolocator
 
+**English** · [简体中文](README.zh-CN.md)
+
 An agent skill that works out **where an indoor photo was taken**: a hotel room, a flat, a restaurant, a
 shop, a station, a museum, a classroom, a car. It returns the venue, the street address, coordinates with
 an error radius and a confidence level that the evidence actually supports. It also leaves one tidy case
@@ -7,8 +9,8 @@ folder that shows every step of the reasoning.
 
 **Project page and interactive demo:** https://ezharjan.github.io/indoor-geolocator/
 
-Attach a photo and invoke the skill. No prompt is needed. The answer has this shape (the values are
-illustrative):
+Attach a photo and invoke the skill. No prompt is needed. The answer comes in the user's language and has
+this shape (the values are illustrative):
 
 ```
 📍 <Venue> — <street address, city, country>
@@ -16,7 +18,7 @@ illustrative):
 Why: ... the 2-4 decisive evidence items, each with its source and how it was verified
 Alternatives: ... the runner-up and the test that would separate them
 Not verified / limits: ... what could not be checked and why
-Case folder: .../palliser-geolocation (REPORT.md has the full reasoning trail)
+Case folder: .../photo-geolocation (REPORT.md has the full reasoning trail)
 ```
 
 ## What it does
@@ -179,7 +181,8 @@ Geolocation results are evidence-weighted estimates, not certainties. Read the c
 ├── tests/                      offline test suite (pytest; `pytest.ini` points at it)
 ├── docs/                       project page (GitHub Pages) with the published demo case
 ├── LICENSE
-└── README.md
+├── README.md
+└── README.zh-CN.md            this README in Simplified Chinese
 ```
 
 ## Development
@@ -200,6 +203,5 @@ The code and documentation are released under the [MIT License](LICENSE). The da
 
 Details are in [indoor-geolocator/data/README.md](indoor-geolocator/data/README.md).
 
-Design ideas were adapted from the reference projects geo-sleuth, Geo-Guesser, Searching-skill and
-webcam-calibrator: rules enforced in code, a likelihood-ratio candidate board, evidence graded by lineage,
-a method-coverage gate, and the verified zip build.
+Design ideas were adapted from the open-source projects geo-sleuth, Geo-Guesser and Searching-skill: rules
+enforced in code, a likelihood-ratio candidate board, evidence graded by lineage, and a method-coverage gate.
