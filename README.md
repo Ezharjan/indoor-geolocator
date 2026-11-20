@@ -5,6 +5,8 @@ shop, a station, a museum, a classroom, a car. It returns the venue, the street 
 an error radius and a confidence level that the evidence actually supports. It also leaves one tidy case
 folder that shows every step of the reasoning.
 
+**Project page and interactive demo:** https://ezharjan.github.io/indoor-geolocator/
+
 Attach a photo and invoke the skill. No prompt is needed. The answer has this shape (the values are
 illustrative):
 
@@ -175,6 +177,7 @@ Geolocation results are evidence-weighted estimates, not certainties. Read the c
 ├── build_skill_zip.py          rebuilds and verifies the zip (run after every change to the skill)
 ├── tools/build_data.py         maintainer tool: rebuilds data/ from Unicode CLDR and Wikipedia
 ├── tests/                      offline test suite (pytest; `pytest.ini` points at it)
+├── docs/                       project page (GitHub Pages) with the published demo case
 ├── LICENSE
 └── README.md
 ```

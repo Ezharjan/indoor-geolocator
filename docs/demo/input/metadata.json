@@ -1,0 +1,48 @@
+{
+ "file": {
+  "name": "larkspur-room.jpg",
+  "bytes": 141675,
+  "format": "JPEG",
+  "mode": "RGB",
+  "size": [
+   1600,
+   1000
+  ],
+  "frames": 1
+ },
+ "exif": {},
+ "gps": null,
+ "xmp": {},
+ "iptc": {},
+ "icc_profile": null,
+ "container": {
+  "markers": [
+   "APP0:JFIF",
+   "DQT",
+   "DQT",
+   "SOF0",
+   "DHT",
+   "DHT",
+   "DHT",
+   "DHT",
+   "SOS"
+  ],
+  "progressive": false,
+  "quality_estimate": 90,
+  "subsampling": "4:2:0",
+  "c2pa": false
+ },
+ "filename": {},
+ "time": {
+  "local": null,
+  "offset": null,
+  "zones_with_offset": []
+ },
+ "ai_markers": [],
+ "edit_markers": [],
+ "flags": [
+  "no EXIF - stripped (messaging/social upload, screenshot, export) or synthetic; absence proves nothing",
+  "JPEG quality ~90",
+  "1600x1000 without EXIF fits social-media recompression sizes (weak)"
+ ]
+}

@@ -1,0 +1,1377 @@
+{
+  "schema": "igl.result/1",
+  "generated": "2026-11-19T22:28:31-05:00",
+  "tool_version": "1.0.0",
+  "image": {
+    "file": "input/larkspur-room.jpg",
+    "sha256": "c7935f2cb6334f23fdf109f31d53f7d8dfc704aa9229d7391103d3662fbfabd6",
+    "size": [
+      1600,
+      1000
+    ]
+  },
+  "answer": {
+    "candidate": "C135",
+    "name": "London",
+    "address": null,
+    "lat": 51.5072,
+    "lon": -0.1276,
+    "radius_m": 25000,
+    "level": "city",
+    "map_links": {
+      "openstreetmap": "https://www.openstreetmap.org/?mlat=51.507200&mlon=-0.127600#map=19/51.507200/-0.127600",
+      "google_maps": "https://www.google.com/maps/search/?api=1&query=51.507200,-0.127600"
+    }
+  },
+  "confidence": {
+    "overall": "medium",
+    "level": "city",
+    "cap": "medium",
+    "by_level": {
+      "country": {
+        "candidate": "United Kingdom",
+        "tier": "medium",
+        "share": 0.752,
+        "reasons": [
+          "share 0.75 at country level",
+          "2 decisive clue(s) from text",
+          "2 independent lineage(s) with LR>=2: image, text"
+        ]
+      },
+      "city": {
+        "candidate": "London",
+        "tier": "medium",
+        "share": 1.0,
+        "reasons": [
+          "share 1.00 at city level",
+          "1 decisive clue(s) from text",
+          "1 independent lineage(s) with LR>=2: text"
+        ]
+      }
+    }
+  },
+  "summary": "A '+44 20' phone number read on the tent card places the room in London (libphonenumber, decisive). Independent fixed standards agree on the UK: a BS 1363 Type G switched socket and £ prices with VAT. The venue named on the card is fictional, so the site level stays open.",
+  "evidence": [
+    {
+      "id": "N1",
+      "text": "First impression: hotel room desk; UK-style switched socket and £ prices point to the British Isles",
+      "kind": "hypothesis",
+      "status": "inferred",
+      "grade": "D",
+      "source": "image",
+      "files": [],
+      "url": null
+    },
+    {
+      "id": "N2",
+      "text": "Double switched socket: per outlet one vertical earth slot above two horizontal slots, rocker switch with red indicator = BS 1363 (Type G)",
+      "kind": "standard",
+      "status": "observed",
+      "grade": "B",
+      "source": "image",
+      "files": [
+        "E04"
+      ],
+      "url": null
+    },
+    {
+      "id": "N3",
+      "text": "'£14.50 per person incl. VAT' read on the tent card",
+      "kind": "text",
+      "status": "read",
+      "grade": "A",
+      "source": "text",
+      "files": [
+        "E05"
+      ],
+      "url": null
+    },
+    {
+      "id": "N4",
+      "text": "'+44 20 7946 0321' read on the tent card; libphonenumber: GB, London (area code 20)",
+      "kind": "text",
+      "status": "computed",
+      "grade": "A",
+      "source": "text",
+      "files": [
+        "E05"
+      ],
+      "url": null
+    },
+    {
+      "id": "N5",
+      "text": "English on every item, no other script",
+      "kind": "language",
+      "status": "observed",
+      "grade": "B",
+      "source": "text",
+      "files": [
+        "E05"
+      ],
+      "url": null
+    },
+    {
+      "id": "N6",
+      "text": "Venue name 'THE LARKSPUR' and Wi-Fi SSID 'Larkspur-Guest' (password redacted by the decoder); demo venue is fictional, so not searched",
+      "kind": "context",
+      "status": "computed",
+      "grade": "A",
+      "source": "text",
+      "files": [
+        "E05"
+      ],
+      "url": null
+    }
+  ],
+  "candidates": {
+    "country": [
+      {
+        "id": "C52",
+        "name": "United Kingdom",
+        "share": 0.7524,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C10",
+        "name": "Falkland Islands",
+        "share": 0.0251,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C13",
+        "name": "Gibraltar",
+        "share": 0.0251,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C15",
+        "name": "Guernsey",
+        "share": 0.0251,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C20",
+        "name": "Isle of Man",
+        "share": 0.0251,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C21",
+        "name": "Jersey",
+        "share": 0.0251,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C44",
+        "name": "St. Helena, Ascension & Tristan da Cunha",
+        "share": 0.0251,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C*",
+        "name": "other countries (116 not on the board)",
+        "share": 0.0162,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C56",
+        "name": "South Georgia & South Sandwich Islands",
+        "share": 0.0042,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C57",
+        "name": "South Sudan",
+        "share": 0.0042,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C58",
+        "name": "Syria",
+        "share": 0.0028,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C3",
+        "name": "Belize",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C5",
+        "name": "Botswana",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C8",
+        "name": "Cyprus",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C9",
+        "name": "Dominica",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C11",
+        "name": "Gambia",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C12",
+        "name": "Ghana",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C14",
+        "name": "Grenada",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C16",
+        "name": "Guyana",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C17",
+        "name": "Hong Kong SAR China",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C18",
+        "name": "Iraq",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C19",
+        "name": "Ireland",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C22",
+        "name": "Jordan",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C23",
+        "name": "Kenya",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C25",
+        "name": "Lebanon",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C27",
+        "name": "Malawi",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C29",
+        "name": "Maldives",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C30",
+        "name": "Malta",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C31",
+        "name": "Mauritius",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C33",
+        "name": "Nigeria",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C35",
+        "name": "Pakistan",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C37",
+        "name": "Rwanda",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C39",
+        "name": "Seychelles",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C40",
+        "name": "Sierra Leone",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C41",
+        "name": "Singapore",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C45",
+        "name": "St. Kitts & Nevis",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C46",
+        "name": "St. Lucia",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C47",
+        "name": "St. Vincent & Grenadines",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C48",
+        "name": "Sudan",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C49",
+        "name": "Tanzania",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C50",
+        "name": "Uganda",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C51",
+        "name": "United Arab Emirates",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C54",
+        "name": "Zambia",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C55",
+        "name": "Zimbabwe",
+        "share": 0.0013,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C1",
+        "name": "Bahrain",
+        "share": 0.0008,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C2",
+        "name": "Bangladesh",
+        "share": 0.0008,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C4",
+        "name": "Bhutan",
+        "share": 0.0008,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C6",
+        "name": "Brunei",
+        "share": 0.0008,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C7",
+        "name": "Cambodia",
+        "share": 0.0008,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C24",
+        "name": "Kuwait",
+        "share": 0.0008,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C26",
+        "name": "Macao SAR China",
+        "share": 0.0008,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C28",
+        "name": "Malaysia",
+        "share": 0.0008,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C32",
+        "name": "Myanmar (Burma)",
+        "share": 0.0008,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C34",
+        "name": "Oman",
+        "share": 0.0008,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C36",
+        "name": "Qatar",
+        "share": 0.0008,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C38",
+        "name": "Saudi Arabia",
+        "share": 0.0008,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C42",
+        "name": "Somalia",
+        "share": 0.0008,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C43",
+        "name": "Sri Lanka",
+        "share": 0.0008,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C53",
+        "name": "Yemen",
+        "share": 0.0008,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C59",
+        "name": "American Samoa",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C60",
+        "name": "Anguilla",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C61",
+        "name": "Antigua & Barbuda",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C62",
+        "name": "Australia",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C63",
+        "name": "Austria",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C64",
+        "name": "Bahamas",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C65",
+        "name": "Barbados",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C66",
+        "name": "Belgium",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C67",
+        "name": "Bermuda",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C68",
+        "name": "Bosnia & Herzegovina",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C69",
+        "name": "British Indian Ocean Territory",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C70",
+        "name": "British Virgin Islands",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C71",
+        "name": "Burundi",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C72",
+        "name": "Cameroon",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C73",
+        "name": "Canada",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C74",
+        "name": "Cayman Islands",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C75",
+        "name": "Christmas Island",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C76",
+        "name": "Cocos (Keeling) Islands",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C77",
+        "name": "Cook Islands",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C78",
+        "name": "Croatia",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C79",
+        "name": "Denmark",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C80",
+        "name": "Egypt",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C81",
+        "name": "Eritrea",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C82",
+        "name": "Estonia",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C83",
+        "name": "Eswatini",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C84",
+        "name": "Ethiopia",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C85",
+        "name": "Fiji",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C86",
+        "name": "Finland",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C87",
+        "name": "France",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C88",
+        "name": "Germany",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C89",
+        "name": "Greece",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C90",
+        "name": "Guam",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C91",
+        "name": "India",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C92",
+        "name": "Israel",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C93",
+        "name": "Italy",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C94",
+        "name": "Jamaica",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C95",
+        "name": "Kiribati",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C96",
+        "name": "Latvia",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C97",
+        "name": "Lesotho",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C98",
+        "name": "Liberia",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C99",
+        "name": "Lithuania",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C100",
+        "name": "Luxembourg",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C101",
+        "name": "Madagascar",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C102",
+        "name": "Marshall Islands",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C103",
+        "name": "Micronesia",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C104",
+        "name": "Montserrat",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C105",
+        "name": "Namibia",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C106",
+        "name": "Nauru",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C107",
+        "name": "Netherlands",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C108",
+        "name": "New Zealand",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C109",
+        "name": "Niue",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C110",
+        "name": "Norfolk Island",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C111",
+        "name": "Northern Mariana Islands",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C112",
+        "name": "Palau",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C113",
+        "name": "Papua New Guinea",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C114",
+        "name": "Philippines",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C115",
+        "name": "Pitcairn Islands",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C116",
+        "name": "Poland",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C117",
+        "name": "Puerto Rico",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C118",
+        "name": "Romania",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C119",
+        "name": "Samoa",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C120",
+        "name": "Sint Maarten",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C121",
+        "name": "Slovenia",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C122",
+        "name": "Solomon Islands",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C123",
+        "name": "South Africa",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C124",
+        "name": "Sweden",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C125",
+        "name": "Switzerland",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C126",
+        "name": "Tokelau",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C127",
+        "name": "Tonga",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C128",
+        "name": "Trinidad & Tobago",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C129",
+        "name": "Turks & Caicos Islands",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C130",
+        "name": "Tuvalu",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C131",
+        "name": "U.S. Outlying Islands",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C132",
+        "name": "U.S. Virgin Islands",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C133",
+        "name": "United States",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      },
+      {
+        "id": "C134",
+        "name": "Vanuatu",
+        "share": 0.0002,
+        "status": "open",
+        "lat": null,
+        "lon": null,
+        "address": null
+      }
+    ],
+    "city": [
+      {
+        "id": "C135",
+        "name": "London",
+        "share": 1.0,
+        "status": "answer",
+        "lat": 51.5072,
+        "lon": -0.1276,
+        "address": null
+      }
+    ]
+  },
+  "methods": {
+    "metadata": "results",
+    "visual_sweep": "results",
+    "text_ocr": "results",
+    "codes": "results",
+    "standards": "results",
+    "culture_style": "results",
+    "reverse_search": "not_applicable",
+    "text_search": "not_applicable",
+    "social_search": "not_applicable",
+    "candidate_enum": "not_applicable",
+    "reference_match": "not_applicable",
+    "window_view": "not_applicable",
+    "consistency": "results"
+  },
+  "coverage": "13/13 core methods resolved",
+  "alternatives": [],
+  "data_handling": {
+    "reverse_search_engines": [],
+    "services": []
+  }
+}

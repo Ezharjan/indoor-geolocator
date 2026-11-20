@@ -1,0 +1,259 @@
+{
+ "ocr": {
+  "backend": "tesseract",
+  "langs": [
+   "eng"
+  ],
+  "lines": [
+   {
+    "text": "THE LARKSPUR",
+    "conf": 0.913,
+    "box": [
+     536,
+     608,
+     944,
+     664
+    ],
+    "passes": [
+     "enhanced",
+     "full"
+    ],
+    "agree": 2,
+    "scripts": {
+     "LATIN": 11
+    },
+    "id": "T1"
+   },
+   {
+    "text": "Guest Wi-Fi",
+    "conf": 0.963,
+    "box": [
+     1220,
+     662,
+     1359,
+     680
+    ],
+    "passes": [
+     "enhanced",
+     "full",
+     "tile"
+    ],
+    "agree": 3,
+    "scripts": {
+     "LATIN": 9
+    },
+    "id": "T2"
+   },
+   {
+    "text": "Welcome to your room",
+    "conf": 0.968,
+    "box": [
+     621,
+     683,
+     861,
+     714
+    ],
+    "passes": [
+     "enhanced",
+     "full",
+     "tile"
+    ],
+    "agree": 3,
+    "scripts": {
+     "LATIN": 17
+    },
+    "id": "T3"
+   },
+   {
+    "text": "Breakfast 7:00 - 10:30",
+    "conf": 0.942,
+    "box": [
+     612,
+     743,
+     868,
+     761
+    ],
+    "passes": [
+     "enhanced",
+     "full",
+     "tile"
+    ],
+    "agree": 3,
+    "scripts": {
+     "LATIN": 9
+    },
+    "id": "T4"
+   },
+   {
+    "text": "£14.50 per person incl. VAT",
+    "conf": 0.961,
+    "box": [
+     583,
+     780,
+     896,
+     804
+    ],
+    "passes": [
+     "enhanced",
+     "full",
+     "tile"
+    ],
+    "agree": 3,
+    "scripts": {
+     "LATIN": 16
+    },
+    "id": "T5"
+   },
+   {
+    "text": "Reception +44 20 7946 0321",
+    "conf": 0.964,
+    "box": [
+     573,
+     819,
+     906,
+     842
+    ],
+    "passes": [
+     "enhanced",
+     "full",
+     "tile"
+    ],
+    "agree": 3,
+    "scripts": {
+     "LATIN": 9
+    },
+    "id": "T6"
+   },
+   {
+    "text": "larkspur.example",
+    "conf": 0.924,
+    "box": [
+     660,
+     857,
+     820,
+     877
+    ],
+    "passes": [
+     "enhanced",
+     "full",
+     "tile"
+    ],
+    "agree": 3,
+    "scripts": {
+     "LATIN": 15
+    },
+    "id": "T7"
+   },
+   {
+    "text": "Larkspur-Guest",
+    "conf": 0.812,
+    "box": [
+     1224,
+     880,
+     1356,
+     897
+    ],
+    "passes": [
+     "enhanced",
+     "full",
+     "tile"
+    ],
+    "agree": 3,
+    "scripts": {
+     "LATIN": 13
+    },
+    "id": "T8"
+   }
+  ],
+  "scripts": {
+   "LATIN": 99
+  },
+  "elapsed_s": 5.7,
+  "notes": [
+   "20 low-quality fragment(s) dropped (single-pass, short or symbol-heavy: typical texture noise)"
+  ]
+ },
+ "codes": {
+  "codes": [
+   {
+    "type": "QR",
+    "raw": "WIFI:T:WPA;S:Larkspur-Guest;P:<redacted>;;",
+    "box": [
+     1215,
+     706,
+     1364,
+     855
+    ],
+    "method": "qr-aruco/full",
+    "kind": "wifi",
+    "ssid": "Larkspur-Guest",
+    "secret": true,
+    "note": "Wi-Fi SSID: venue name often; searchable on WiGLE (user key)",
+    "display": "WIFI:T:WPA;S:Larkspur-Guest;P:<redacted>;;",
+    "id": "Q1"
+   }
+  ],
+  "notes": []
+ },
+ "text_signals": {
+  "scripts": [
+   {
+    "script": "LATIN",
+    "chars": 130
+   }
+  ],
+  "phones": [
+   {
+    "raw": "+44 20 7946 0321",
+    "e164": "+442079460321",
+    "country": "GB",
+    "area": "London",
+    "carrier": "",
+    "timezones": [
+     "Europe/London"
+    ],
+    "assumed_region": "international format"
+   }
+  ],
+  "domains": [
+   {
+    "domain": "larkspur.example",
+    "tld": ".example",
+    "country": null
+   }
+  ],
+  "currencies": [
+   {
+    "token": "£",
+    "sample": "£14.50",
+    "countries": [
+     "AC",
+     "FK",
+     "GB",
+     "GG",
+     "GI",
+     "GS",
+     "IM",
+     "JE",
+     "SH",
+     "SS",
+     "SY",
+     "TA"
+    ],
+    "n_countries": 12,
+    "former_currency_of": [
+     "IE until 1922-01-01",
+     "SD until 1958-01-01",
+     "SL until 1966-02-04",
+     "VG until 1959-01-01"
+    ]
+   }
+  ],
+  "tax_words": [
+   {
+    "sample": "VAT",
+    "suggests": "VAT-using country (UK/EU/many)"
+   }
+  ]
+ }
+}
