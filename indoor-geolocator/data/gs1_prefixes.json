@@ -1,0 +1,716 @@
+{
+ "_meta": {
+  "description": "GS1 company-prefix ranges (first 3 digits of EAN-13/GTIN-13) -> issuing GS1 member organisation. It tells where the barcode was REGISTERED, not where the product was made or sold.",
+  "built": "2026-11-19",
+  "source": "https://en.wikipedia.org/wiki/List_of_GS1_country_codes",
+  "license": "CC BY-SA 4.0 (derived factual table)",
+  "count": 141
+ },
+ "ranges": [
+  {
+   "from": 1,
+   "to": 19,
+   "org": "UPC-A compatible - United States"
+  },
+  {
+   "from": 20,
+   "to": 29,
+   "org": "UPC-A compatible - Used to issue restricted circulation numbers within a geographic region"
+  },
+  {
+   "from": 30,
+   "to": 39,
+   "org": "UPC-A compatible - United States drugs (see United States National Drug Code)"
+  },
+  {
+   "from": 40,
+   "to": 49,
+   "org": "UPC-A compatible - Used to issue restricted circulation numbers within a company"
+  },
+  {
+   "from": 50,
+   "to": 59,
+   "org": "UPC-A compatible - GS1 US reserved for future use"
+  },
+  {
+   "from": 60,
+   "to": 99,
+   "org": "UPC-A compatible - United States"
+  },
+  {
+   "from": 100,
+   "to": 139,
+   "org": "United States"
+  },
+  {
+   "from": 200,
+   "to": 299,
+   "org": "Used to issue GS1 restricted circulation number within a geographic region"
+  },
+  {
+   "from": 300,
+   "to": 379,
+   "org": "France and Monaco"
+  },
+  {
+   "from": 380,
+   "to": 380,
+   "org": "Bulgaria"
+  },
+  {
+   "from": 381,
+   "to": 381,
+   "org": "Kosovo (Used to unofficially use 390 before joining GS1)"
+  },
+  {
+   "from": 383,
+   "to": 383,
+   "org": "Slovenia"
+  },
+  {
+   "from": 385,
+   "to": 385,
+   "org": "Croatia"
+  },
+  {
+   "from": 387,
+   "to": 387,
+   "org": "Bosnia and Herzegovina"
+  },
+  {
+   "from": 389,
+   "to": 389,
+   "org": "Montenegro"
+  },
+  {
+   "from": 400,
+   "to": 440,
+   "org": "Germany (440 code inherited from former East Germany upon reunification in 1990)"
+  },
+  {
+   "from": 450,
+   "to": 459,
+   "org": "Japan (new Japanese Article Number range)"
+  },
+  {
+   "from": 460,
+   "to": 469,
+   "org": "Russia (barcodes inherited from the Soviet Union)"
+  },
+  {
+   "from": 470,
+   "to": 470,
+   "org": "Kyrgyzstan"
+  },
+  {
+   "from": 471,
+   "to": 471,
+   "org": "Taiwan"
+  },
+  {
+   "from": 474,
+   "to": 474,
+   "org": "Estonia"
+  },
+  {
+   "from": 475,
+   "to": 475,
+   "org": "Latvia"
+  },
+  {
+   "from": 476,
+   "to": 476,
+   "org": "Azerbaijan"
+  },
+  {
+   "from": 477,
+   "to": 477,
+   "org": "Lithuania"
+  },
+  {
+   "from": 478,
+   "to": 478,
+   "org": "Uzbekistan"
+  },
+  {
+   "from": 479,
+   "to": 479,
+   "org": "Sri Lanka"
+  },
+  {
+   "from": 480,
+   "to": 480,
+   "org": "Philippines"
+  },
+  {
+   "from": 481,
+   "to": 481,
+   "org": "Belarus"
+  },
+  {
+   "from": 482,
+   "to": 482,
+   "org": "Ukraine"
+  },
+  {
+   "from": 483,
+   "to": 483,
+   "org": "Turkmenistan"
+  },
+  {
+   "from": 484,
+   "to": 484,
+   "org": "Moldova"
+  },
+  {
+   "from": 485,
+   "to": 485,
+   "org": "Armenia"
+  },
+  {
+   "from": 486,
+   "to": 486,
+   "org": "Georgia"
+  },
+  {
+   "from": 487,
+   "to": 487,
+   "org": "Kazakhstan"
+  },
+  {
+   "from": 488,
+   "to": 488,
+   "org": "Tajikistan"
+  },
+  {
+   "from": 489,
+   "to": 489,
+   "org": "Hong Kong"
+  },
+  {
+   "from": 490,
+   "to": 499,
+   "org": "Japan (original Japanese Article Number range)"
+  },
+  {
+   "from": 500,
+   "to": 509,
+   "org": "United Kingdom"
+  },
+  {
+   "from": 520,
+   "to": 521,
+   "org": "Greece"
+  },
+  {
+   "from": 528,
+   "to": 528,
+   "org": "Lebanon"
+  },
+  {
+   "from": 529,
+   "to": 529,
+   "org": "Cyprus"
+  },
+  {
+   "from": 530,
+   "to": 530,
+   "org": "Albania"
+  },
+  {
+   "from": 531,
+   "to": 531,
+   "org": "North Macedonia"
+  },
+  {
+   "from": 535,
+   "to": 535,
+   "org": "Malta"
+  },
+  {
+   "from": 539,
+   "to": 539,
+   "org": "Ireland"
+  },
+  {
+   "from": 540,
+   "to": 549,
+   "org": "Belgium and Luxembourg"
+  },
+  {
+   "from": 560,
+   "to": 560,
+   "org": "Portugal"
+  },
+  {
+   "from": 569,
+   "to": 569,
+   "org": "Iceland"
+  },
+  {
+   "from": 570,
+   "to": 579,
+   "org": "Denmark, Faroe Islands and Greenland"
+  },
+  {
+   "from": 590,
+   "to": 590,
+   "org": "Poland"
+  },
+  {
+   "from": 594,
+   "to": 594,
+   "org": "Romania"
+  },
+  {
+   "from": 599,
+   "to": 599,
+   "org": "Hungary"
+  },
+  {
+   "from": 600,
+   "to": 601,
+   "org": "South Africa"
+  },
+  {
+   "from": 603,
+   "to": 603,
+   "org": "Ghana"
+  },
+  {
+   "from": 604,
+   "to": 604,
+   "org": "Senegal"
+  },
+  {
+   "from": 605,
+   "to": 605,
+   "org": "Uganda"
+  },
+  {
+   "from": 606,
+   "to": 606,
+   "org": "Angola"
+  },
+  {
+   "from": 607,
+   "to": 607,
+   "org": "Oman"
+  },
+  {
+   "from": 608,
+   "to": 608,
+   "org": "Bahrain"
+  },
+  {
+   "from": 609,
+   "to": 609,
+   "org": "Mauritius"
+  },
+  {
+   "from": 611,
+   "to": 611,
+   "org": "Morocco"
+  },
+  {
+   "from": 612,
+   "to": 612,
+   "org": "Somalia"
+  },
+  {
+   "from": 613,
+   "to": 613,
+   "org": "Algeria"
+  },
+  {
+   "from": 615,
+   "to": 615,
+   "org": "Nigeria"
+  },
+  {
+   "from": 616,
+   "to": 616,
+   "org": "Kenya"
+  },
+  {
+   "from": 617,
+   "to": 617,
+   "org": "Cameroon"
+  },
+  {
+   "from": 618,
+   "to": 618,
+   "org": "Ivory Coast"
+  },
+  {
+   "from": 619,
+   "to": 619,
+   "org": "Tunisia"
+  },
+  {
+   "from": 620,
+   "to": 620,
+   "org": "Tanzania"
+  },
+  {
+   "from": 621,
+   "to": 621,
+   "org": "Syria"
+  },
+  {
+   "from": 622,
+   "to": 622,
+   "org": "Egypt"
+  },
+  {
+   "from": 623,
+   "to": 623,
+   "org": "\"Managed by GS1 Global Office for future MO\" (was Brunei until May 2021)"
+  },
+  {
+   "from": 624,
+   "to": 624,
+   "org": "Libya"
+  },
+  {
+   "from": 625,
+   "to": 625,
+   "org": "Jordan"
+  },
+  {
+   "from": 626,
+   "to": 626,
+   "org": "Iran"
+  },
+  {
+   "from": 627,
+   "to": 627,
+   "org": "Kuwait"
+  },
+  {
+   "from": 628,
+   "to": 628,
+   "org": "Saudi Arabia"
+  },
+  {
+   "from": 629,
+   "to": 629,
+   "org": "United Arab Emirates"
+  },
+  {
+   "from": 630,
+   "to": 630,
+   "org": "Qatar"
+  },
+  {
+   "from": 631,
+   "to": 631,
+   "org": "Namibia"
+  },
+  {
+   "from": 632,
+   "to": 632,
+   "org": "Rwanda"
+  },
+  {
+   "from": 640,
+   "to": 649,
+   "org": "Finland"
+  },
+  {
+   "from": 680,
+   "to": 681,
+   "org": "China"
+  },
+  {
+   "from": 690,
+   "to": 699,
+   "org": "China"
+  },
+  {
+   "from": 700,
+   "to": 709,
+   "org": "Norway"
+  },
+  {
+   "from": 729,
+   "to": 729,
+   "org": "Israel"
+  },
+  {
+   "from": 730,
+   "to": 739,
+   "org": "Sweden"
+  },
+  {
+   "from": 740,
+   "to": 740,
+   "org": "Guatemala"
+  },
+  {
+   "from": 741,
+   "to": 741,
+   "org": "El Salvador"
+  },
+  {
+   "from": 742,
+   "to": 742,
+   "org": "Honduras"
+  },
+  {
+   "from": 743,
+   "to": 743,
+   "org": "Nicaragua"
+  },
+  {
+   "from": 744,
+   "to": 744,
+   "org": "Costa Rica"
+  },
+  {
+   "from": 745,
+   "to": 745,
+   "org": "Panama"
+  },
+  {
+   "from": 746,
+   "to": 746,
+   "org": "Dominican Republic"
+  },
+  {
+   "from": 750,
+   "to": 750,
+   "org": "Mexico"
+  },
+  {
+   "from": 754,
+   "to": 755,
+   "org": "Canada"
+  },
+  {
+   "from": 759,
+   "to": 759,
+   "org": "Venezuela"
+  },
+  {
+   "from": 760,
+   "to": 769,
+   "org": "Switzerland and Liechtenstein"
+  },
+  {
+   "from": 770,
+   "to": 771,
+   "org": "Colombia"
+  },
+  {
+   "from": 773,
+   "to": 773,
+   "org": "Uruguay"
+  },
+  {
+   "from": 775,
+   "to": 775,
+   "org": "Peru"
+  },
+  {
+   "from": 777,
+   "to": 777,
+   "org": "Bolivia"
+  },
+  {
+   "from": 778,
+   "to": 779,
+   "org": "Argentina"
+  },
+  {
+   "from": 780,
+   "to": 780,
+   "org": "Chile"
+  },
+  {
+   "from": 784,
+   "to": 784,
+   "org": "Paraguay"
+  },
+  {
+   "from": 786,
+   "to": 786,
+   "org": "Ecuador"
+  },
+  {
+   "from": 789,
+   "to": 790,
+   "org": "Brazil"
+  },
+  {
+   "from": 800,
+   "to": 839,
+   "org": "Italy, San Marino and Vatican City"
+  },
+  {
+   "from": 840,
+   "to": 849,
+   "org": "Spain and Andorra"
+  },
+  {
+   "from": 850,
+   "to": 850,
+   "org": "Cuba"
+  },
+  {
+   "from": 858,
+   "to": 858,
+   "org": "Slovakia"
+  },
+  {
+   "from": 859,
+   "to": 859,
+   "org": "Czech Republic (barcode inherited from Czechoslovakia)"
+  },
+  {
+   "from": 860,
+   "to": 860,
+   "org": "Serbia (barcode inherited from Yugoslavia via Serbia and Montenegro)"
+  },
+  {
+   "from": 865,
+   "to": 865,
+   "org": "Mongolia"
+  },
+  {
+   "from": 867,
+   "to": 867,
+   "org": "North Korea"
+  },
+  {
+   "from": 868,
+   "to": 869,
+   "org": "Turkey"
+  },
+  {
+   "from": 870,
+   "to": 879,
+   "org": "Netherlands"
+  },
+  {
+   "from": 880,
+   "to": 881,
+   "org": "South Korea"
+  },
+  {
+   "from": 883,
+   "to": 883,
+   "org": "Myanmar"
+  },
+  {
+   "from": 884,
+   "to": 884,
+   "org": "Cambodia"
+  },
+  {
+   "from": 885,
+   "to": 885,
+   "org": "Thailand"
+  },
+  {
+   "from": 887,
+   "to": 887,
+   "org": "Laos"
+  },
+  {
+   "from": 888,
+   "to": 888,
+   "org": "Singapore"
+  },
+  {
+   "from": 890,
+   "to": 890,
+   "org": "India"
+  },
+  {
+   "from": 893,
+   "to": 893,
+   "org": "Vietnam"
+  },
+  {
+   "from": 894,
+   "to": 894,
+   "org": "Bangladesh"
+  },
+  {
+   "from": 896,
+   "to": 896,
+   "org": "Pakistan"
+  },
+  {
+   "from": 899,
+   "to": 899,
+   "org": "Indonesia"
+  },
+  {
+   "from": 900,
+   "to": 919,
+   "org": "Austria"
+  },
+  {
+   "from": 930,
+   "to": 939,
+   "org": "Australia"
+  },
+  {
+   "from": 940,
+   "to": 949,
+   "org": "New Zealand"
+  },
+  {
+   "from": 950,
+   "to": 950,
+   "org": "GS1 Global Office: Used to support territories & countries where no GS1 Member Organisation operates"
+  },
+  {
+   "from": 951,
+   "to": 951,
+   "org": "Used to issue General Manager Numbers for the EPC General Identifier (GID) scheme as defined by the EPC Tag Data Standard"
+  },
+  {
+   "from": 952,
+   "to": 952,
+   "org": "Used for demonstrations and examples of the GS1 system"
+  },
+  {
+   "from": 955,
+   "to": 955,
+   "org": "Malaysia"
+  },
+  {
+   "from": 958,
+   "to": 958,
+   "org": "Macau"
+  },
+  {
+   "from": 977,
+   "to": 977,
+   "org": "Serial publications (ISSN)"
+  },
+  {
+   "from": 978,
+   "to": 979,
+   "org": "\"Bookland\" (ISBN-13), 978 encompasses all older 10-digit ISBNs, 979-0 is used for sheet music (\"Musicland\", ISMN-13, replaces deprecated ISMN M- numbers)"
+  },
+  {
+   "from": 980,
+   "to": 980,
+   "org": "Refund receipts"
+  },
+  {
+   "from": 981,
+   "to": 983,
+   "org": "GS1 coupon identification for common currency areas"
+  },
+  {
+   "from": 990,
+   "to": 999,
+   "org": "GS1 coupon identification"
+  }
+ ]
+}

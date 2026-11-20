@@ -1,0 +1,9 @@
+# Optional extras: each one enables a method; the skill works without them (igl.py doctor shows what is active).
+numpy                    # QR/barcode detection and CLAHE enhancement (with OpenCV)
+opencv-python-headless   # QR codes and barcodes
+phonenumbers             # offline phone-number geolocation (country, area, city)
+playwright               # automated reverse image search and page snapshots; then: playwright install chromium
+pillow-heif              # HEIC/HEIF photos (iPhone)
+rapidocr-onnxruntime     # OCR fallback when tesseract is not installed
+# Not pip packages: tesseract OCR with language packs (apt install tesseract-ocr-all | brew install tesseract
+# tesseract-lang | winget install UB-Mannheim.TesseractOCR); exiftool (richer metadata, optional).

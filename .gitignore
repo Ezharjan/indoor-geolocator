@@ -1,0 +1,34 @@
+# Reference material and maintainer caches (not part of the skill)
+reference_projects/
+.data-src/
+
+# Case folders produced by running the skill (they hold your photos and evidence)
+*-geolocation/
+*-geolocation-*/
+.work/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+*.egg-info/
+
+# Build leftovers (the finished indoor-geolocator.zip IS tracked: it is the installable skill)
+*.zip.tmp
+*.json.tmp
+
+# Secrets and local settings
+.env
+.env.*
+*.key
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
