@@ -8,6 +8,8 @@ renvoie le lieu, l'adresse, les coordonnées avec un rayon d'erreur et un niveau
 preuves soutiennent réellement. Elle laisse aussi un dossier de cas bien rangé qui montre chaque étape du
 raisonnement.
 
+C'est un outil OSINT open source de géolocalisation d'images pour agents d'IA : un raisonnement à la GeoGuessr appliqué aux intérieurs, appuyé sur la recherche d'image inversée, l'OCR, les métadonnées EXIF et la vérification par des photos de référence.
+
 **Page du projet et démonstration interactive :** https://ezharjan.github.io/indoor-geolocator/
 
 Joignez une photo et invoquez la skill. Aucun prompt n'est nécessaire. La réponse arrive dans la langue de

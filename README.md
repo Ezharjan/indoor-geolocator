@@ -7,6 +7,8 @@ shop, a station, a museum, a classroom, a car. It returns the venue, the street 
 an error radius and a confidence level that the evidence actually supports. It also leaves one tidy case
 folder that shows every step of the reasoning.
 
+It is an open-source OSINT tool for image geolocation by AI agents: GeoGuessr-style reasoning for interiors, backed by reverse image search, OCR, EXIF metadata and verification against reference photos.
+
 **Project page and interactive demo:** https://ezharjan.github.io/indoor-geolocator/
 
 Attach a photo and invoke the skill. No prompt is needed. The answer comes in the user's language and has

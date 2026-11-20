@@ -126,6 +126,16 @@ def test_versions_agree_and_skill_files_are_linked():
         assert all(f"]({r.name})" in text or r == readme for r in READMES), f"{readme.name}: language links"
         assert _shape(readme) == english, f"{readme.name} has drifted from README.md (headings, lists or commands)"
     assert _zip_builder().__version__ == __version__
+    # what search engines read: one canonical address, used by the sharing tags, the sitemap and the READMEs
+    page = PAGE.read_text(encoding="utf-8")
+    site = re.search(r'<link rel="canonical" href="([^"]+)">', page).group(1)
+    data = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', page, flags=re.S).group(1))
+    assert data["softwareVersion"] == __version__ and data["url"] == site
+    assert f'<meta property="og:url" content="{site}">' in page
+    assert f"<loc>{site}</loc>" in (PAGE.parent / "sitemap.xml").read_text(encoding="utf-8")
+    for image in set(re.findall(r'content="(' + re.escape(site) + r'[^"]+\.(?:png|jpg))"', page)):
+        assert (PAGE.parent / image[len(site):]).is_file(), image
+    assert all(site in r.read_text(encoding="utf-8") for r in READMES)
     skill = (SKILL / "SKILL.md").read_text(encoding="utf-8")
     for ref in (SKILL / "references").glob("*.md"):
         assert f"references/{ref.name}" in skill, f"SKILL.md does not point to {ref.name}"

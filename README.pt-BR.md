@@ -7,6 +7,8 @@ apartamento, um restaurante, uma loja, uma estação, um museu, uma sala de aula
 local, o endereço, as coordenadas com um raio de erro e um nível de confiança que a evidência realmente
 sustenta. Também deixa uma pasta de caso organizada que mostra cada passo do raciocínio.
 
+É uma ferramenta OSINT de código aberto para geolocalização de imagens por agentes de IA: raciocínio no estilo GeoGuessr para interiores, apoiado em busca reversa de imagem, OCR, metadados EXIF e verificação com fotos de referência.
+
 **Página do projeto e demonstração interativa:** https://ezharjan.github.io/indoor-geolocator/
 
 Anexe uma foto e invoque a skill. Nenhum prompt é necessário. A resposta vem no idioma do usuário e tem

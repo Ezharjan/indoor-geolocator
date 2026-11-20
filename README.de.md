@@ -8,6 +8,8 @@ den Ort, die Adresse, Koordinaten mit Fehlerradius und eine Konfidenzstufe, die 
 tatsächlich getragen wird. Außerdem hinterlässt er einen aufgeräumten Fallordner, der jeden Schritt der
 Herleitung zeigt.
 
+Er ist ein quelloffenes OSINT-Werkzeug zur Bild-Geolokalisierung durch KI-Agenten: Schlussfolgern im Stil von GeoGuessr für Innenräume, gestützt auf Rückwärts-Bildersuche, OCR, EXIF-Metadaten und den Abgleich mit Referenzfotos.
+
 **Projektseite und interaktive Demo:** https://ezharjan.github.io/indoor-geolocator/
 
 Foto anhängen und den Skill aufrufen. Ein Prompt ist nicht nötig. Die Antwort kommt in der Sprache des

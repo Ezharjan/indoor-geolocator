@@ -3,11 +3,27 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>indoor-geolocator</title>
-<meta name="description" content="An agent skill for Claude that finds where an indoor photo was taken: venue, address, coordinates and a confidence the evidence actually supports, with an auditable case folder.">
-<meta property="og:title" content="indoor-geolocator">
-<meta property="og:description" content="Where was this indoor photo taken? An agent skill that answers with evidence, a capped confidence and a full audit trail.">
-<meta property="og:image" content="https://ezharjan.github.io/indoor-geolocator/demo/input/larkspur-room.jpg">
+<title>indoor-geolocator: find where an indoor photo was taken (agent skill for Claude)</title>
+<meta name="description" content="Find where an indoor photo was taken. An open-source agent skill for Claude that geolocates interior photos with OSINT methods (reverse image search, OCR, EXIF, reference-photo matching) and reports venue, address, coordinates and an evidence-backed confidence.">
+<meta name="keywords" content="indoor geolocation, image geolocation, photo geolocation, OSINT, GEOINT, reverse image search, where was this photo taken, Claude skill, agent skill, AI agent, EXIF, OCR">
+<meta name="author" content="Alexander Ezharjan">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<link rel="canonical" href="https://ezharjan.github.io/indoor-geolocator/">
+<link rel="sitemap" type="application/xml" href="https://ezharjan.github.io/indoor-geolocator/sitemap.xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="indoor-geolocator">
+<meta property="og:url" content="https://ezharjan.github.io/indoor-geolocator/">
+<meta property="og:title" content="indoor-geolocator: where was this indoor photo taken?">
+<meta property="og:description" content="An open-source agent skill for Claude that geolocates interior photos: venue, address, coordinates, a confidence the evidence supports and a full audit trail.">
+<meta property="og:image" content="https://ezharjan.github.io/indoor-geolocator/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="indoor-geolocator project page: a hotel-room photo located to London with medium confidence.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="indoor-geolocator: where was this indoor photo taken?">
+<meta name="twitter:description" content="An open-source agent skill for Claude that geolocates interior photos with evidence, a capped confidence and a full audit trail.">
+<meta name="twitter:image" content="https://ezharjan.github.io/indoor-geolocator/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "indoor-geolocator", "alternateName": "Indoor photo geolocation skill for Claude", "description": "Find where an indoor photo was taken. An open-source agent skill for Claude that geolocates interior photos with OSINT methods (reverse image search, OCR, EXIF, reference-photo matching) and reports venue, address, coordinates and an evidence-backed confidence.", "url": "https://ezharjan.github.io/indoor-geolocator/", "image": "https://ezharjan.github.io/indoor-geolocator/og-image.png", "applicationCategory": "DeveloperApplication", "operatingSystem": "Windows, macOS, Linux", "softwareVersion": "2.0.0", "license": "https://opensource.org/licenses/MIT", "isAccessibleForFree": true, "downloadUrl": "https://github.com/Ezharjan/indoor-geolocator/releases/latest/download/indoor-geolocator.zip", "codeRepository": "https://github.com/Ezharjan/indoor-geolocator", "programmingLanguage": "Python", "softwareRequirements": "Python 3.9+, Pillow", "keywords": "indoor geolocation, image geolocation, OSINT, GEOINT, photo geolocation, reverse image search, Claude skill, agent skill, AI agent", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Alexander Ezharjan", "url": "https://github.com/Ezharjan"}}</script>
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='2' width='28' height='28' rx='8' fill='%2315171a'/%3E%3Cpath d='M16 7.5c-3.6 0-6.4 2.8-6.4 6.3 0 4.6 6.4 10.7 6.4 10.7s6.4-6.1 6.4-10.7c0-3.5-2.8-6.3-6.4-6.3z' fill='%23e34948'/%3E%3Ccircle cx='16' cy='13.8' r='2.3' fill='%2315171a'/%3E%3C/svg%3E">
 <style>
